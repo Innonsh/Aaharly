@@ -1,16 +1,16 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useMemo, useState } from "react";
 import {
   DefaultTheme,
   MD3DarkTheme,
   PaperProvider,
-  Text,
 } from "react-native-paper";
 import { ThemeMode } from "./src/models/interface";
 import { fontConfig } from "./src/theme/Fonts";
 import { Colors, themeColors } from "./src/theme/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navigator from "./src/navigation/Navigator";
+import { LocalizationProvider } from "./src/contexts/LocalizationContext";
 
 const styles = StyleSheet.create({
   container: {
@@ -56,7 +56,9 @@ const AppContent = () => {
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.container}>
-        <Navigator />
+        <LocalizationProvider>
+          <Navigator />
+        </LocalizationProvider>
       </SafeAreaView>
     </PaperProvider>
   );

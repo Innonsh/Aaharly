@@ -1,12 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { LocalizationContext } from '../../contexts/LocalizationContext';
 
 const styles = StyleSheet.create({})
 
 const LoginScreen = () => {
+
+  const { translations } = useContext(LocalizationContext);
+  const {login} = translations
+
   return (
     <View>
-      <Text>LoginScreen</Text>
+      <Text>{login.test}</Text>
     </View>
   )
 }
