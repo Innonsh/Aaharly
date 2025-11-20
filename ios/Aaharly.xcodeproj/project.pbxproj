@@ -9,14 +9,14 @@
 /* Begin PBXBuildFile section */
 		0C040CCB70BAE0A08C2659AE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		0C80B921A6F3F58F76C31292 /* libPods-Aaharly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Aaharly.a */; };
+		1390617C3E5E488DA7E7A1F0 /* Matter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D12288785426082639697 /* Matter-Bold.otf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		1390617C3E5E488DA7E7A1F0 /* Matter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F2D12288785426082639697 /* Matter-Bold.otf */; };
 		9C1C0105BA5243E9BD9CFF93 /* Matter-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = BB5ACD108D944552B3A601CC /* Matter-Light.otf */; };
 		A541B908305E46BFA0D4D4E9 /* Matter-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8AC72693B42C495CBA8B5A36 /* Matter-Medium.otf */; };
-		DD4B4400EB6044868DEF2353 /* Matter-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C0137BE87F9A46E09673AAE0 /* Matter-Regular.otf */; };
 		BE17E6C569204D73A491ECC0 /* Matter-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B755A80A5F5742058CBB4C2C /* Matter-SemiBold.otf */; };
+		DD4B4400EB6044868DEF2353 /* Matter-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C0137BE87F9A46E09673AAE0 /* Matter-Regular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,17 +24,17 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Aaharly/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Aaharly/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = Aaharly/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		1F2D12288785426082639697 /* Matter-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Matter-Bold.otf"; path = "../src/assets/fonts/Matter-Bold.otf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-Aaharly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aaharly.debug.xcconfig"; path = "Target Support Files/Pods-Aaharly/Pods-Aaharly.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Aaharly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aaharly.release.xcconfig"; path = "Target Support Files/Pods-Aaharly/Pods-Aaharly.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Aaharly.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Aaharly.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Aaharly/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Aaharly/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8AC72693B42C495CBA8B5A36 /* Matter-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Matter-Medium.otf"; path = "../src/assets/fonts/Matter-Medium.otf"; sourceTree = "<group>"; };
+		B755A80A5F5742058CBB4C2C /* Matter-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Matter-SemiBold.otf"; path = "../src/assets/fonts/Matter-SemiBold.otf"; sourceTree = "<group>"; };
+		BB5ACD108D944552B3A601CC /* Matter-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Matter-Light.otf"; path = "../src/assets/fonts/Matter-Light.otf"; sourceTree = "<group>"; };
+		C0137BE87F9A46E09673AAE0 /* Matter-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Matter-Regular.otf"; path = "../src/assets/fonts/Matter-Regular.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		1F2D12288785426082639697 /* Matter-Bold.otf */ = {isa = PBXFileReference; name = "Matter-Bold.otf"; path = "../src/assets/fonts/Matter-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		BB5ACD108D944552B3A601CC /* Matter-Light.otf */ = {isa = PBXFileReference; name = "Matter-Light.otf"; path = "../src/assets/fonts/Matter-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		8AC72693B42C495CBA8B5A36 /* Matter-Medium.otf */ = {isa = PBXFileReference; name = "Matter-Medium.otf"; path = "../src/assets/fonts/Matter-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		C0137BE87F9A46E09673AAE0 /* Matter-Regular.otf */ = {isa = PBXFileReference; name = "Matter-Regular.otf"; path = "../src/assets/fonts/Matter-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		B755A80A5F5742058CBB4C2C /* Matter-SemiBold.otf */ = {isa = PBXFileReference; name = "Matter-SemiBold.otf"; path = "../src/assets/fonts/Matter-SemiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +59,19 @@
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 			);
 			name = Aaharly;
+			sourceTree = "<group>";
+		};
+		1FA490B08D9B477D9CD8390D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1F2D12288785426082639697 /* Matter-Bold.otf */,
+				BB5ACD108D944552B3A601CC /* Matter-Light.otf */,
+				8AC72693B42C495CBA8B5A36 /* Matter-Medium.otf */,
+				C0137BE87F9A46E09673AAE0 /* Matter-Regular.otf */,
+				B755A80A5F5742058CBB4C2C /* Matter-SemiBold.otf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -108,19 +121,6 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		1FA490B08D9B477D9CD8390D /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-				1F2D12288785426082639697 /* Matter-Bold.otf */,
-				BB5ACD108D944552B3A601CC /* Matter-Light.otf */,
-				8AC72693B42C495CBA8B5A36 /* Matter-Medium.otf */,
-				C0137BE87F9A46E09673AAE0 /* Matter-Regular.otf */,
-				B755A80A5F5742058CBB4C2C /* Matter-SemiBold.otf */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 

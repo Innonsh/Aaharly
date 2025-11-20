@@ -9,7 +9,8 @@ import {
 import { ThemeMode } from "./src/models/interface";
 import { fontConfig } from "./src/theme/Fonts";
 import { Colors, themeColors } from "./src/theme/Colors";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
+import Navigator from "./src/navigation/Navigator";
 
 const styles = StyleSheet.create({
   container: {
@@ -54,9 +55,9 @@ const AppContent = () => {
 
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaView>
-        <Text>App</Text>
-        </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <Navigator />
+      </SafeAreaView>
     </PaperProvider>
   );
 };
