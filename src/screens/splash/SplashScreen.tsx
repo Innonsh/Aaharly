@@ -1,0 +1,24 @@
+import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationRoutes } from "../../navigation/NavigationRoutes";
+
+const styles = StyleSheet.create({});
+
+const SplashScreen = () => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.replace(NavigationRoutes.LOGIN);
+    }, 1000);
+  }, []);
+
+  return (
+    <View>
+      <Text>SplashScreen</Text>
+    </View>
+  );
+};
+
+export default SplashScreen;

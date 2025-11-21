@@ -1,0 +1,10 @@
+{
+  "common": {
+    "next": "Next",
+    "cancel": "Cancel",
+    "Ok": "Ok"
+  },
+  "login": {
+    "test": "This is a test message"
+  }
+}

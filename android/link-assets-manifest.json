@@ -1,0 +1,25 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Matter-Bold.otf",
+      "sha1": "87b7d82dffad1e6c9dea5d332bce32b53581222f"
+    },
+    {
+      "path": "src/assets/fonts/Matter-Light.otf",
+      "sha1": "fbb0894c83263248bb47013a625f1ccf86394dc2"
+    },
+    {
+      "path": "src/assets/fonts/Matter-Medium.otf",
+      "sha1": "cce0a5c392c2066086b0bb7d31f00ffd9c90638a"
+    },
+    {
+      "path": "src/assets/fonts/Matter-Regular.otf",
+      "sha1": "ff280b3d188f12c8ba7fb0cef69b82b813a0a8fb"
+    },
+    {
+      "path": "src/assets/fonts/Matter-SemiBold.otf",
+      "sha1": "0885b2ed18f711235e7aaad05cbb5e48e87e725f"
+    }
+  ]
+}
