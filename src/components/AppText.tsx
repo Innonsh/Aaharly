@@ -1,30 +1,38 @@
 import React from "react";
 import { StyleSheet, TextStyle } from "react-native";
 import { Text } from "react-native-paper";
+import { fonts } from "../theme/Fonts";
+import { Colors } from "../theme/Colors";
+
+type TextVariant = "title" | "subtitle" | "body" | "caption" | "button" | "label";
 
 interface AppTextProps {
   children: React.ReactNode;
+  variant?: TextVariant;
   style?: TextStyle;
-  weight?: "regular" | "bold" | "semi";
-  size?: number;
-  color?: string;
   align?: "left" | "center" | "right";
+  color?: string;                    // override color if needed
+  numberOfLines?: number;
 }
 
 export default function AppText({
   children,
+  variant = "body",
   style,
-  weight = "regular",
-  size = 16,
-  color = "#000",
   align = "left",
+  color,
+  numberOfLines,
 }: AppTextProps) {
+  const baseStyle = variantStyles[variant];
+
   return (
     <Text
+      numberOfLines={numberOfLines}
       style={[
-        { fontSize: size, color, textAlign: align },
-        weight === "bold" && styles.bold,
-        weight === "semi" && styles.semi,
+        styles.base,
+        baseStyle,
+        { textAlign: align },
+        color ? { color } : null,
         style,
       ]}
     >
@@ -34,6 +42,57 @@ export default function AppText({
 }
 
 const styles = StyleSheet.create({
-  bold: { fontWeight: "700" },
-  semi: { fontWeight: "600" },
+  base: {
+    color: Colors.secondary,
+  },
 });
+
+const variantStyles: Record<TextVariant, TextStyle> = {
+  // Figma: onboarding title
+  title: {
+    fontFamily: fonts.Bold,
+    fontSize: 20,
+    lineHeight: 24,
+    color: Colors.secondary,
+  },
+
+  // Figma: onboarding subtitle
+  subtitle: {
+    fontFamily: fonts.Regular,
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#A0A0A0",
+  },
+
+  // Default body text
+  body: {
+    fontFamily: fonts.Regular,
+    fontSize: 16,
+    lineHeight: 22,
+    color: Colors.secondary,
+  },
+
+  // Small helper / gray text
+  caption: {
+    fontFamily: fonts.Light,
+    fontSize: 12,
+    lineHeight: 16,
+    color: "#9CA3AF",
+  },
+
+  // Button label style
+  button: {
+    fontFamily: fonts.SemiBold,
+    fontSize: 16,
+    lineHeight: 20,
+    color: "#FFFFFF",
+  },
+
+  // Small label like “Skip”
+  label: {
+    fontFamily: fonts.Regular,
+    fontSize: 14,
+    lineHeight: 18,
+    color: "#B3B3B3",
+  },
+};

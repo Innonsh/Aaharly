@@ -6,5 +6,12 @@
   },
   "login": {
     "test": "This is a test message"
+  },
+  
+  "onboarding": {
+    "mealsTitle": "Meals that match your goals",
+    "mealsSubtitle": "Personalized meals designed for your body and fitness goals."
   }
-}
+} 
+
+
