@@ -1,16 +1,23 @@
-import React, { useEffect } from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, View } from "react-native";
-import { ReactNode } from "react";
+import React, { useEffect, ReactNode } from "react";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  View,
+} from "react-native";
+import { useTheme } from "react-native-paper";
+import { Colors } from "../theme/Colors";
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  icon?: ReactNode;                // Accept icon
-  iconPosition?: "left" | "right"; // Icon alignment
+  icon?: ReactNode;
+  iconPosition?: "left" | "right";
   variant?: "primary" | "secondary" | "outline" | "third";
-  style?: ViewStyle |ViewStyle[] ;
+  style?: ViewStyle | ViewStyle[];
   disabled?: boolean;
-  onChange?: (isDisabled: boolean) => void; // Extra event callback
+  onChange?: (isDisabled: boolean) => void;
 }
 
 export default function Button({
@@ -23,13 +30,32 @@ export default function Button({
   disabled = false,
   onChange,
 }: ButtonProps) {
+  const theme = useTheme();
 
-  // Call onChange whenever disabled changes
   useEffect(() => {
     if (onChange) {
       onChange(disabled);
     }
-  }, [disabled]);
+  }, [disabled, onChange]);
+
+  // Decide text color based on variant + disabled
+  const getTextColor = () => {
+    if (disabled) {
+      return Colors.background; // light text on disabled bg
+    }
+
+    switch (variant) {
+      case "secondary":
+        return Colors.primary;
+      case "third":
+      case "outline":
+        return Colors.secondary;
+      case "primary":
+      default:
+        // use paper theme onPrimary if available, else white
+        return theme.colors?.onPrimary || "#ffffff";
+    }
+  };
 
   return (
     <TouchableOpacity
@@ -40,29 +66,28 @@ export default function Button({
         variant === "primary" && styles.primary,
         variant === "secondary" && styles.secondary,
         variant === "outline" && styles.outline,
-        variant === "third"  && styles.third,
+        variant === "third" && styles.third,
         disabled && styles.disabled,
         style,
       ]}
+      activeOpacity={0.7}
     >
       <View style={styles.row}>
         {/* Left Icon */}
-        {icon && iconPosition === "left" && <View style={styles.icon}>{icon}</View>}
+        {icon && iconPosition === "left" && (
+          <View style={styles.icon}>{icon}</View>
+        )}
 
-        <Text
-          style={[
-            styles.text,
-            variant === "secondary" && {color:"#FF6B35"},
-            variant === "third"  && { color: "#000" },
-            variant === "outline" && {color:" #000000"},
-            disabled && { color: "#ffffff" },
-          ]}
-        >
-          {title}
-        </Text>
+        {!!title && (
+          <Text style={[styles.text, { color: getTextColor() }]}>
+            {title}
+          </Text>
+        )}
 
         {/* Right Icon */}
-        {icon && iconPosition === "right" && <View style={styles.icon}>{icon}</View>}
+        {icon && iconPosition === "right" && (
+          <View style={styles.icon}>{icon}</View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -78,50 +103,43 @@ const styles = StyleSheet.create({
     width: 360,
     alignSelf: "center",
     marginTop: 50,
-    backgroundColor: "#FF6B3C",
+    backgroundColor: Colors.primary,
     borderRadius: 8,
-    
   },
   secondary: {
     width: 360,
     alignSelf: "center",
     marginTop: 50,
-     borderRadius: 8,
-    backgroundColor: " #FFFFFF",
-    borderWidth:1,
-    borderColor:"#FF6B35",
+    borderRadius: 8,
+    backgroundColor: Colors.background,
+    borderWidth: 1,
+    borderColor: Colors.primary,
   },
   outline: {
     borderWidth: 1,
-    borderColor: "#000",
-    backgroundColor: "#ffffff",
+    borderColor: Colors.secondary,
+    backgroundColor: Colors.background,
   },
-  third:{
-     borderWidth:1,
-     borderColor: "#D9D9D9",
-     backgroundColor: "transparent",
-     width: 360,
+  third: {
+    borderWidth: 1,
+    borderColor: "#D9D9D9",
+    backgroundColor: "transparent",
+    width: 360,
     alignSelf: "center",
-
-
-
   },
   disabled: {
-    backgroundColor: "#FFA98A",
+    backgroundColor: Colors.primaryDisabled,
   },
   text: {
-    color: "#fff",
     fontWeight: "600",
     fontSize: 16,
   },
-
   row: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    // `gap` not supported on all RN versions; margins in icon instead
   },
-
   icon: {
-    marginHorizontal: 4,
-  },
+    marginHorizontal: 4,
+  },
 });

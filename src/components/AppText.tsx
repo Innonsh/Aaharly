@@ -1,18 +1,26 @@
-import React from "react";
-import { StyleSheet, TextStyle } from "react-native";
-import { Text } from "react-native-paper";
+import React, { useMemo } from "react";
+import { StyleSheet, TextStyle, StyleProp } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 import { fonts } from "../theme/Fonts";
 import { Colors } from "../theme/Colors";
 
-type TextVariant = "title" | "subtitle" | "body" | "caption" | "button" | "label";
+// Variants for text
+export type TextVariant =
+  | "title"
+  | "subtitle"
+  | "body"
+  | "caption"
+  | "button"
+  | "label";
 
 interface AppTextProps {
   children: React.ReactNode;
   variant?: TextVariant;
-  style?: TextStyle;
+  style?: StyleProp<TextStyle>; // UPDATED
   align?: "left" | "center" | "right";
-  color?: string;                    // override color if needed
+  color?: string;
   numberOfLines?: number;
+  allowFontScaling?: boolean; // ADDED
 }
 
 export default function AppText({
@@ -22,19 +30,29 @@ export default function AppText({
   align = "left",
   color,
   numberOfLines,
+  allowFontScaling = true, // DEFAULT
 }: AppTextProps) {
-  const baseStyle = variantStyles[variant];
+  const paperTheme = useTheme(); // GET COLORS FROM PAPER THEME
+
+  const baseStyle = variantStyles(paperTheme)[variant];
+
+  // useMemo to memoize combined style
+  const memoizedStyle = useMemo(
+    () => [
+      styles.base,
+      baseStyle,
+      { textAlign: align },
+      color ? { color } : null,
+      style,
+    ],
+    [baseStyle, align, color, style]
+  );
 
   return (
     <Text
       numberOfLines={numberOfLines}
-      style={[
-        styles.base,
-        baseStyle,
-        { textAlign: align },
-        color ? { color } : null,
-        style,
-      ]}
+      allowFontScaling={allowFontScaling}
+      style={memoizedStyle}
     >
       {children}
     </Text>
@@ -47,52 +65,42 @@ const styles = StyleSheet.create({
   },
 });
 
-const variantStyles: Record<TextVariant, TextStyle> = {
-  // Figma: onboarding title
+// USING PAPER THEME COLORS INSTEAD OF HARDCODE
+const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
   title: {
     fontFamily: fonts.Bold,
     fontSize: 20,
     lineHeight: 24,
-    color: Colors.secondary,
+    color: theme.colors.onBackground,
   },
-
-  // Figma: onboarding subtitle
   subtitle: {
     fontFamily: fonts.Regular,
     fontSize: 14,
     lineHeight: 20,
-    color: "#A0A0A0",
+    color: theme.colors.outline,
   },
-
-  // Default body text
   body: {
     fontFamily: fonts.Regular,
     fontSize: 16,
     lineHeight: 22,
-    color: Colors.secondary,
+    color: theme.colors.onBackground,
   },
-
-  // Small helper / gray text
   caption: {
     fontFamily: fonts.Light,
     fontSize: 12,
     lineHeight: 16,
-    color: "#9CA3AF",
+    color: theme.colors.outlineVariant,
   },
-
-  // Button label style
   button: {
     fontFamily: fonts.SemiBold,
     fontSize: 16,
     lineHeight: 20,
-    color: "#FFFFFF",
+    color: theme.colors.onPrimary,
   },
-
-  // Small label like “Skip”
   label: {
     fontFamily: fonts.Regular,
     fontSize: 14,
     lineHeight: 18,
-    color: "#B3B3B3",
-  },
-};
+    color: theme.colors.secondary,
+  },
+});
