@@ -3,6 +3,7 @@ export const Colors = {
   primaryDisabled: '#FFA98A',
   secondary: '#000000',
   background: '#ffffff',
+  outlineVariant:'#000000'
 }
 
 export const themeColors = {

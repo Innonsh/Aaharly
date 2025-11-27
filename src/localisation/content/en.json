@@ -2,9 +2,27 @@
   "common": {
     "next": "Next",
     "cancel": "Cancel",
-    "Ok": "Ok"
+    "Ok": "Ok",
+    "continue": "Continue",
+    "skip":"Skip"
   },
   "login": {
-    "test": "This is a test message"
+    "title": "Login" ,
+    "subtitle": "Enter your phone number to continue!",
+    "phonePlaceholder": "+91 -",
+    "orLoginWith": "Or login with"
+  },
+  "Email":{
+    "title":"Login With Email",
+    "subtitle":"Email address",
+    "verification":"To confirm your email addrees, please enter the OTP we sent to"
+  },
+  "Verification":{
+    "title":"Verification",
+    "subtitle":"Please enter the 4-digit verification code sent to"
   }
+    
+  
+  
 }
+
