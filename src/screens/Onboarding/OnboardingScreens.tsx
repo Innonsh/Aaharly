@@ -60,7 +60,7 @@ const OnboardingScreen: React.FC = () => {
   const { Illustration, title, subtitle } = SLIDES[index];
 
   const goToLogin = () => {
-    navigation.replace(NavigationRoutes.LOGIN);
+    navigation.replace(NavigationRoutes.PROFILE_STEP1);
   };
 
   const handleNext = () => {

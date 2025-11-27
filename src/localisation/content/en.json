@@ -17,8 +17,63 @@
     "screen3Subtitle": "Home, office, or college!\n We deliver wherever you are.",
     
     "getStarted": "Get Started"
-}
+},
  
+"profile": {
+  "setupTitle": "Set Up Profile",
+
+  "step1Title": "Basic Information",
+  "step1Subtitle": "Tell about yourself to get started",
+
+  "step2Title": "Physical Stats",
+  "step2Subtitle": "Help us calculate your nutritional needs",
+
+  "step3Title": "Goal & Preferences",
+  "step3Subtitle": "Customize your meal plan",
+
+  
+  "fullName": "Full Name",
+  "fullNamePlaceholder": "Enter your full name",
+  "age": "Age",
+  "agePlaceholder": "22",
+  "gender": "Gender",
+  "male": "Male",
+  "female": "Female",
+
+  "heightLabel": "Height (cm)",
+  "heightPlaceholder": "180cm",
+  "weightLabel": "Weight (kg)",
+  "weightPlaceholder": "68kg",
+
+  "activityLevelLabel": "Activity Level",
+  "activitySedentaryTitle": "Sedentary",
+  "activitySedentarySubtitle": "Little to no exercise",
+  "activityModerateTitle": "Moderate",
+  "activityModerateSubtitle": "Moderate exercise 3–5 days/week",
+  "activityActiveTitle": "Active",
+  "activityActiveSubtitle": "Heavy exercise 6–7 days/week",
+
+  "fitnessGoalsLabel": "Fitness Goals",
+  "goalLoseTitle": "Loose Weight",
+  "goalLoseSubtitle": "Reduce body fat and weight",
+  "goalMaintainTitle": "Maintain Weight",
+  "goalMaintainSubtitle": "Stay at current weight",
+  "goalGainTitle": "Gain Muscle",
+  "goalGainSubtitle": "Build muscle mass",
+
+  "dietPreferenceLabel": "Dietary preference",
+  "dietVeg": "Vegetarian",
+  "dietNonVeg": "Non-Vegetarian",
+  "dietVegan": "Vegan",
+
+  "allergiesLabel": "Allergies (Optional)",
+  "allergiesPlaceholder": "e.g. Nuts, Dairy, Gluten",
+
+  "back": "Back",
+  "next": "Next",
+  "generatePlan": "Generate Plan",
+  "cancel": "Cancel"
+}
 
 } 
 

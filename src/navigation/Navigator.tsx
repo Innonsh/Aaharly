@@ -1,4 +1,3 @@
-
 import React, { useMemo } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -14,9 +13,18 @@ import { fonts } from "../theme/Fonts";
 import LoginScreen from "../screens/login/LoginScreen";
 import { NavigationRoutes } from "./NavigationRoutes";
 import OnboardingScreen from "../screens/Onboarding/OnboardingScreens";
+import { RootStackParamList } from "./NavigationRoutes";
+
+// ⬇️ add your new profile screens
+import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
+import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
+import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
+// optional home
+// import HomeScreen from "../screens/home/HomeScreen";
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Navigator = () => {
-  const Stack = createNativeStackNavigator();
   const themeMode = ThemeMode.Light;
 
   const navigationTheme = useMemo<Theme>(() => {
@@ -90,21 +98,45 @@ const Navigator = () => {
           component={SplashScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-        
+
         <Stack.Screen
           name={NavigationRoutes.ONBOARDING}
           component={OnboardingScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-        
+
         <Stack.Screen
           name={NavigationRoutes.LOGIN}
           component={LoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />
+
+        {/* Profile setup flow */}
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE_STEP1}
+          component={ProfileStep1Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE_STEP2}
+          component={ProfileStep2Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE_STEP3}
+          component={ProfileStep3Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+
+        {/* Main app / home */}
+        {/* <Stack.Screen
+          name={NavigationRoutes.HOME}
+          component={HomeScreen}
+          options={{ headerShown: false, animation: "none" }}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default Navigator;
+export default Navigator;

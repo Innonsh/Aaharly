@@ -97,10 +97,17 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
     lineHeight: 20,
     color: theme.colors.onPrimary,
   },
-  label: {
-    fontFamily: fonts.Regular,
-    fontSize: 14,
-    lineHeight: 18,
-    color: theme.colors.secondary,
-  },
+//   label: {
+//     fontFamily: fonts.Regular,
+//     fontSize: 14,
+//     lineHeight: 18,
+//     color: theme.colors.secondary,
+// //   },
+label: {
+  fontFamily: fonts.SemiBold,
+  fontSize: 14,
+  lineHeight: 19,
+  color: theme.colors.onBackground,
+},
+
 });
