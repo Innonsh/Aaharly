@@ -2,16 +2,24 @@
   "common": {
     "next": "Next",
     "cancel": "Cancel",
-    "Ok": "Ok"
+    "Ok": "Ok",
+    "skip": "Skip"
   },
   "login": {
     "test": "This is a test message"
   },
-  
   "onboarding": {
-    "mealsTitle": "Meals that match your goals",
-    "mealsSubtitle": "Personalized meals designed for your body and fitness goals."
-  }
+    "screen1Title": "Meals that match your goals",
+    "screen1Subtitle": "Personalized meals designed for\n your body and fitness goals.",
+    "screen2Title": "One Tap & You’re Set for\n the Meal Plan",
+    "screen2Subtitle": "Subscribe once, & meals arrive effortlessly",
+    "screen3Title": "Your Routine, Your Rules.",
+    "screen3Subtitle": "Home, office, or college!\n We deliver wherever you are.",
+    
+    "getStarted": "Get Started"
+}
+ 
+
 } 
 
 
