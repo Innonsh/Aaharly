@@ -1,91 +1,131 @@
-// src/screens/onboarding/OnboardingScreen.tsx
-
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { Colors } from "../../theme/Colors";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
-import { RootStackParamList } from "../../navigation/Navigator";
-import Button from "../../components/Button";
+import { RootStackParamList } from "../../navigation/NavigationRoutes";
 import AppText from "../../components/AppText";
+
+import Onboarding1 from "../../assets/Onboarding/Onboarding1.svg";
+import Onboarding2 from "../../assets/Onboarding/Onboarding2.svg";
+import Onboarding3 from "../../assets/Onboarding/Onboarding3.svg";
+import NextArrowButton from "../../assets/Onboarding/Arrow.svg";
+import strings from "../../localisation/content/en.json";
 
 type OnboardingNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   NavigationRoutes.ONBOARDING
 >;
 
+type Slide = {
+  key: string;
+  Illustration: React.ComponentType<any>;
+  title: string;
+  subtitle: string;
+};
+
+const SLIDES: Slide[] = [
+  {
+    key: "meals",
+    Illustration: Onboarding1,
+    title: strings.onboarding.screen1Title,
+    subtitle: strings.onboarding.screen1Subtitle,
+  },
+  {
+    key: "screen1",
+    Illustration: Onboarding2,
+    title: strings.onboarding.screen2Title,
+    subtitle: strings.onboarding.screen2Subtitle,
+  },
+  {
+    key: "screen2",
+    Illustration: Onboarding3,
+    title: strings.onboarding.screen3Title,
+    subtitle: strings.onboarding.screen3Subtitle,
+  },
+];
+
 const OnboardingScreen: React.FC = () => {
   const navigation = useNavigation<OnboardingNavigationProp>();
+  const [index, setIndex] = useState(0);
 
-  const handleNext = () => {
+  const isLast = index === SLIDES.length - 1;
+  const { Illustration, title, subtitle } = SLIDES[index];
+
+  const goToLogin = () => {
     navigation.replace(NavigationRoutes.LOGIN);
   };
 
-  const handleSkip = () => {
-    navigation.replace(NavigationRoutes.LOGIN);
+  const handleNext = () => {
+    if (isLast) {
+      goToLogin();
+    } else {
+      setIndex((prev) => prev + 1);
+    }
   };
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Top row */}
-      <View style={styles.topRow}>
-        <View />
-        <TouchableOpacity onPress={handleSkip}>
-          <AppText variant="label">Skip</AppText>
+      {/* Skip */}
+      {!isLast && (
+        <TouchableOpacity onPress={goToLogin} style={styles.skipButton}>
+          <AppText variant="label">{strings.common.skip}</AppText>
         </TouchableOpacity>
+      )}
+
+      {/* Main Image */}
+      <View style={styles.illustrationWrapper}>
+        <Illustration width={245} height={280} />
       </View>
 
-      {/* Illustration */}
-      <View style={styles.illustrationContainer}>
-        <Image
-          source={require("../../assets/Onboarding/Image1.png")}
-          style={styles.illustration}
-          resizeMode="contain"
-        />
+      {/* Three dots */}
+      <View style={styles.dotsWrapper}>
+        {SLIDES.map((slide, i) => (
+          <View
+            key={slide.key}
+            style={[styles.dot, i === index && styles.activeDot]}
+          />
+        ))}
       </View>
 
-      {/* Dots */}
-      <View style={styles.dotsRow}>
-        <View style={[styles.dot, styles.dotActive]} />
-        <View style={styles.dot} />
-        <View style={styles.dot} />
-      </View>
-
-      {/* Text content */}
-      <View style={styles.textContainer}>
+      {/* Text */}
+      <View style={styles.textWrapper}>
         <AppText variant="title" align="center">
-          Meals that match your goals
+          {title}
         </AppText>
 
         <AppText variant="subtitle" align="center">
-          Personalized meals designed for your body and fitness goals.
+          {subtitle}
         </AppText>
       </View>
 
-      {/* Circular arrow button */}
-      <View style={styles.bottomContainer}>
-        <Button
-          title=" "   // single space
+      {/* Bottom CTA: arrow (screens 1–2) or big "Get Started" (screen 3) */}
+      {isLast ? (
+        <TouchableOpacity
+          style={styles.getStartedButton}
+          activeOpacity={0.85}
           onPress={handleNext}
-          variant="primary"
-          icon={
-            <AppText color="#fff" style={{ fontSize: 28 }}>
-              {`\u2192`}
-            </AppText>
-          }
-          iconPosition="right"
-          style={styles.circleButton}
-        />
-      </View>
-
+        >
+          <AppText variant="button" align="center" color="#FFFFFF">
+            {strings.onboarding.getStarted}
+          </AppText>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.arrowButton}
+          activeOpacity={0.8}
+          onPress={handleNext}
+        >
+          <NextArrowButton width={20} height={20} />
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };
@@ -97,54 +137,94 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
-  topRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 24,
-    paddingTop: 8,
+
+  /* skip button absolute positioning */
+  skipButton: {
+    position: "absolute",
+    top: 46,
+    right: 34,
   },
-  illustrationContainer: {
-    flex: 3,
+
+  /* main illustration */
+  illustrationWrapper: {
+    position: "absolute",
+    top: 91,
+    left: 74,
+    right: 74,
+    height: 280,
+    alignItems: "center",
+  },
+
+  /* pagination dots */
+  dotsWrapper: {
+    position: "absolute",
+    top: 450,
+    left: 174,
+    right: 175,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
-  illustration: {
-    width: "80%",
-    height: "80%",
-  },
-  dotsRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 24,
-  },
+
   dot: {
     width: 6,
     height: 6,
     borderRadius: 3,
     backgroundColor: "#D9D9D9",
-    marginHorizontal: 3,
+    marginHorizontal: 4,
   },
-  dotActive: {
+  activeDot: {
     width: 18,
-    borderRadius: 3,
     backgroundColor: Colors.primary,
   },
-  textContainer: {
-    paddingHorizontal: 32,
+
+  /* text box */
+  textWrapper: {
+    position: "absolute",
+    top: 500,
+    left: 41,
+    right: 41,
     alignItems: "center",
-    gap: 8,
+    gap: 10,
   },
-  bottomContainer: {
-    paddingBottom: 40,
-  },
-  circleButton: {
+
+  /* bottom arrow button (orange circle) */
+  arrowButton: {
+    position: "absolute",
+    bottom: 96,
+    alignSelf: "center",
+    top: 692,
     width: 64,
     height: 64,
     borderRadius: 32,
+    backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center",
+
+    // optional shadow to match Figma
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  /* full-width Get Started button for last screen */
+  getStartedButton: {
+    position: "absolute",
+    bottom: 96,
+    left: 24,
+    right: 24,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: Colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
   },
 });
