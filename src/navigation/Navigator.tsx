@@ -1,3 +1,4 @@
+
 import React, { useMemo } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -94,7 +95,6 @@ const Navigator = () => {
           component={SplashScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-
         
         <Stack.Screen
           name={NavigationRoutes.LOGIN }
@@ -122,4 +122,4 @@ const Navigator = () => {
   );
 };
 
-export default Navigator;
+export default Navigator;
