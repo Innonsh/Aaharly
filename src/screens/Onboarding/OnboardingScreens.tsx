@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  PanResponder,
+  Animated,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import { Colors } from "../../theme/Colors";
-import { NavigationRoutes } from "../../navigation/NavigationRoutes";
-import { RootStackParamList } from "../../navigation/NavigationRoutes";
+import {
+  NavigationRoutes,
+  RootStackParamList,
+} from "../../navigation/NavigationRoutes";
 import AppText from "../../components/AppText";
 
 import Onboarding1 from "../../assets/Onboarding/Onboarding1.svg";
@@ -59,73 +67,136 @@ const OnboardingScreen: React.FC = () => {
   const isLast = index === SLIDES.length - 1;
   const { Illustration, title, subtitle } = SLIDES[index];
 
-  const goToLogin = () => {
+  const goToProfile = () => {
     navigation.replace(NavigationRoutes.PROFILE_STEP1);
+  };
+
+  const goToIndex = (newIndex: number) => {
+    if (newIndex < 0 || newIndex >= SLIDES.length) return;
+    setIndex(newIndex);
   };
 
   const handleNext = () => {
     if (isLast) {
-      goToLogin();
+      goToProfile();
     } else {
-      setIndex((prev) => prev + 1);
+      goToIndex(index + 1);
     }
   };
 
+  // 🔥 Animation setup
+  const anim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // reset then animate in whenever `index` changes
+    anim.setValue(0);
+    Animated.timing(anim, {
+      toValue: 1,
+      duration: 280,
+      useNativeDriver: true,
+    }).start();
+  }, [index, anim]);
+
+  const animatedSlideStyle = {
+    opacity: anim,
+    transform: [
+      {
+        translateX: anim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [20, 0], // start slightly right, slide to position
+        }),
+      },
+    ],
+  };
+
+  // 👇 Swipe left/right to change slide
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) => {
+        return (
+          Math.abs(gesture.dx) > Math.abs(gesture.dy) &&
+          Math.abs(gesture.dx) > 10
+        );
+      },
+      onPanResponderRelease: (_, gesture) => {
+        // swipe left → next
+        if (gesture.dx < -40) {
+          goToIndex(index + 1);
+        }
+        // swipe right → previous
+        else if (gesture.dx > 40) {
+          goToIndex(index - 1);
+        }
+      },
+    })
+  ).current;
+
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Skip */}
-      {!isLast && (
-        <TouchableOpacity onPress={goToLogin} style={styles.skipButton}>
-          <AppText variant="label">{strings.common.skip}</AppText>
-        </TouchableOpacity>
-      )}
+      <View style={styles.flex} {...panResponder.panHandlers}>
+        {/* Skip (hidden on last) */}
+        {!isLast && (
+          <TouchableOpacity onPress={goToProfile} style={styles.skipButton}>
+            <AppText
+              variant="label"
+              style={styles.skipLabel}
+              allowFontScaling={false}
+            >
+              {strings.common.skip}
+            </AppText>
+          </TouchableOpacity>
+        )}
 
-      {/* Main Image */}
-      <View style={styles.illustrationWrapper}>
-        <Illustration width={245} height={280} />
+        {/* 🔥 Animated content wrapper */}
+        <Animated.View style={[styles.slideContainer, animatedSlideStyle]}>
+          {/* Main Image */}
+          <View style={styles.illustrationWrapper}>
+            <Illustration width={wp("63%")} height={hp("32%")} />
+          </View>
+
+          {/* Three dots */}
+          <View style={styles.dotsWrapper}>
+            {SLIDES.map((slide, i) => (
+              <View
+                key={slide.key}
+                style={[styles.dot, i === index && styles.activeDot]}
+              />
+            ))}
+          </View>
+
+          {/* Text */}
+          <View style={styles.textWrapper}>
+            <AppText variant="title" align="center">
+              {title}
+            </AppText>
+
+            <AppText variant="subtitle" align="center">
+              {subtitle}
+            </AppText>
+          </View>
+        </Animated.View>
+
+        {/* Bottom CTA: arrow (screens 1–2) or "Get Started" (screen 3) */}
+        {isLast ? (
+          <TouchableOpacity
+            style={styles.getStartedButton}
+            activeOpacity={0.85}
+            onPress={handleNext}
+          >
+            <AppText variant="button" align="center" color="#FFFFFF">
+              {strings.onboarding.getStarted}
+            </AppText>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.arrowButton}
+            activeOpacity={0.8}
+            onPress={handleNext}
+          >
+            <NextArrowButton width={20} height={20} />
+          </TouchableOpacity>
+        )}
       </View>
-
-      {/* Three dots */}
-      <View style={styles.dotsWrapper}>
-        {SLIDES.map((slide, i) => (
-          <View
-            key={slide.key}
-            style={[styles.dot, i === index && styles.activeDot]}
-          />
-        ))}
-      </View>
-
-      {/* Text */}
-      <View style={styles.textWrapper}>
-        <AppText variant="title" align="center">
-          {title}
-        </AppText>
-
-        <AppText variant="subtitle" align="center">
-          {subtitle}
-        </AppText>
-      </View>
-
-      {/* Bottom CTA: arrow (screens 1–2) or big "Get Started" (screen 3) */}
-      {isLast ? (
-        <TouchableOpacity
-          style={styles.getStartedButton}
-          activeOpacity={0.85}
-          onPress={handleNext}
-        >
-          <AppText variant="button" align="center" color="#FFFFFF">
-            {strings.onboarding.getStarted}
-          </AppText>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.arrowButton}
-          activeOpacity={0.8}
-          onPress={handleNext}
-        >
-          <NextArrowButton width={20} height={20} />
-        </TouchableOpacity>
-      )}
     </SafeAreaView>
   );
 };
@@ -137,63 +208,83 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
-
-  /* skip button absolute positioning */
-  skipButton: {
-    position: "absolute",
-    top: 46,
-    right: 34,
+  flex: {
+    flex: 1,
   },
 
-  /* main illustration */
+  slideContainer: {
+    flex: 1,
+  },
+
+  // Skip button (top-right)
+  skipButton: {
+    position: "absolute",
+    top: hp("5.5%"), // ~46px
+    right: wp("8.5%"), // ~34px
+    width: wp("12%"),
+    height: hp("3%"),
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 2,
+  },
+
+  skipLabel: {
+    fontSize: 20,
+    fontWeight: "400",
+    letterSpacing: 0.8, // 4% of 20px
+    lineHeight: 20,
+    color: "#A9A9A9",
+    textAlign: "center",
+  },
+
+  // Main illustration
   illustrationWrapper: {
     position: "absolute",
-    top: 91,
-    left: 74,
-    right: 74,
-    height: 280,
+    top: hp("12%"), // ~91px
+    width: "100%",
     alignItems: "center",
   },
 
-  /* pagination dots */
+  // Pagination dots
   dotsWrapper: {
     position: "absolute",
-    top: 450,
-    left: 174,
-    right: 175,
+    top: hp("54%"), // ~450px
+    width: "100%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
 
   dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: 8,
+    height: 8,
+    borderRadius: 100,
     backgroundColor: "#D9D9D9",
-    marginHorizontal: 4,
+    marginHorizontal: 2,
   },
+
   activeDot: {
-    width: 18,
+    width: 20,
+    height: 8,
+    borderRadius: 100,
     backgroundColor: Colors.primary,
   },
 
-  /* text box */
+  // Text block (title + subtitle)
   textWrapper: {
     position: "absolute",
-    top: 500,
-    left: 41,
-    right: 41,
+    top: hp("59%"), // ~500px
+    left: wp("10.5%"),
+    right: wp("10.5%"),
     alignItems: "center",
     gap: 10,
   },
 
-  /* bottom arrow button (orange circle) */
+  // bottom arrow button (orange circle)
   arrowButton: {
     position: "absolute",
-    bottom: 96,
+    bottom: hp("11.5%"), // ~96px
     alignSelf: "center",
-    top: 692,
     width: 64,
     height: 64,
     borderRadius: 32,
@@ -201,7 +292,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
 
-    // optional shadow to match Figma
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
@@ -209,12 +299,12 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 
-  /* full-width Get Started button for last screen */
+  // full-width Get Started button for last screen
   getStartedButton: {
     position: "absolute",
-    bottom: 96,
-    left: 24,
-    right: 24,
+    bottom: hp("11.5%"),
+    left: wp("6.5%"),
+    right: wp("6.5%"),
     height: 56,
     borderRadius: 16,
     backgroundColor: Colors.primary,
