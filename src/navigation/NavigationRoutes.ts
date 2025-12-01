@@ -1,6 +1,6 @@
 export enum NavigationRoutes {
   SPLASH = "SPLASH",
-  ONBOARDING = "ONBOARDING",
+  // ONBOARDING = "ONBOARDING",
   LOGIN = "LOGIN",
   OTP ="OTP",
   EMAIL = "Email",
@@ -12,6 +12,6 @@ export type RootStackParamList = {
   [NavigationRoutes.OTP]: { phone: string };
   [NavigationRoutes.EMAIL]:undefined;
   [NavigationRoutes.EMAIL_VERIFICATION]: {email: string};
-  [NavigationRoutes.ONBOARDING]: undefined;
+  // [NavigationRoutes.ONBOARDING]: undefined;
 };
 

@@ -1,26 +1,5 @@
-// // import { StyleSheet, Text, View } from 'react-native'
-// // import React, { useContext } from 'react'
-// // import { LocalizationContext } from '../../contexts/LocalizationContext';
-
-// // const styles = StyleSheet.create({})
-
-// // const LoginScreen = () => {
-
-// //   const { translations } = useContext(LocalizationContext);
-// //   const {login} = translations
-
-// //   return (
-// //     <View>
-// //       <Text>{login.title}</Text>
-// //     </View>
-// //   )
-// // }
-
-// // export default LoginScreen
-
-
 import React, { useState, useContext } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
 import Input from "../../components/TextInput";
@@ -33,9 +12,11 @@ import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { TextInput } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
-import TextInputAffix from "react-native-paper/lib/typescript/components/TextInput/Adornment/TextInputAffix";
-import { TouchableOpacity } from "react-native";
 
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 interface Props {
   navigation: NavigationProp<any>;
@@ -44,23 +25,14 @@ interface Props {
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const { translations } = useContext(LocalizationContext);
 
-  const [phone, setPhone] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // -----------------------------
-  // Validate Indian Phone Number
-  // -----------------------------
-  const validatePhone = (num: string): boolean => {
-    const regex = /^[6-9]\d{9}$/;
-    return regex.test(num);
-  };
+  const validatePhone = (num: string) => /^[6-9]\d{9}$/.test(num);
 
-  // -----------------------------
-  // Continue Handler
-  // -----------------------------
   const handleContinue = async () => {
-    setError(" ");
+    setError("");
 
     if (!validatePhone(phone)) {
       setError("Please enter a valid mobile number");
@@ -69,34 +41,17 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
     setLoading(true);
 
-    try {
-      // Fake API delay (add your API here)
-      await new Promise<void>((resolve) => setTimeout(resolve, 1200));
+await new Promise<void>((resolve) => setTimeout(resolve, 1200));
 
-      const isRegistered = true; // Replace this with real backend response  
-
-      if (!isRegistered) {
-        setError("This number is not registered");
-        setLoading(false);
-        return;
-      }
-
-      // Navigate to OTP screen
-      navigation.navigate(NavigationRoutes.OTP, { phone });
-
-      setLoading(false);
-    } catch (error) {
-      setError("Something went wrong. Please try again.");
-      setLoading(false);
-    }
+    navigation.navigate(NavigationRoutes.OTP, { phone });
+    setLoading(false);
   };
 
   return (
     <View style={styles.container}>
-
       {/* Illustration */}
       <View style={styles.imageWrapper}>
-        <LoginIllustration width={230} height={230} />
+        <LoginIllustration width={wp("60%")} height={wp("60%")} />
       </View>
 
       {/* Title */}
@@ -113,8 +68,8 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       <Input
         mode="outlined"
         value={phone}
-        onChangeText={(text: string) => {
-          setPhone(text.replace(/[^0-9]/g, "")); // accept only numbers
+        onChangeText={(t) => {
+          setPhone(t.replace(/[^0-9]/g, ""));
           setError("");
         }}
         keyboardType="phone-pad"
@@ -122,14 +77,11 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         activeOutlineColor="#FFE9E1"
         style={styles.input}
         left={<TextInput.Affix text="+91" />}
-        // placeholder="Enter mobile number"
         maxLength={10}
       />
 
       {/* Error Message */}
-      {error !== "" && (
-        <AppText style={styles.errorText}>{error}</AppText>
-      )}
+      {error !== "" && <AppText style={styles.errorText}>{error}</AppText>}
 
       {/* Continue Button */}
       <Button
@@ -141,7 +93,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       />
 
       {/* OR */}
-      <AppText variant="subtitle" align="center" style={styles.orText}>
+      <AppText align="center" style={styles.orText}>
         {translations.login.orLoginWith}
       </AppText>
 
@@ -152,13 +104,15 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         <View style={styles.iconBox}>
-          <AppleIcon width={20} height={24} />
+          <AppleIcon width={24} height={24} />
         </View>
 
-        <TouchableOpacity style={styles.iconBox} onPress={() => navigation.navigate(NavigationRoutes.EMAIL)}>
-          <MailIcon width={24} height={19} />
+        <TouchableOpacity
+          style={styles.iconBox}
+          onPress={() => navigation.navigate(NavigationRoutes.EMAIL)}
+        >
+          <MailIcon width={24} height={20} />
         </TouchableOpacity>
-
       </View>
     </View>
   );
@@ -170,52 +124,63 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
-    paddingHorizontal: 20,
+    paddingHorizontal: wp("5%"),
   },
+
   imageWrapper: {
     alignItems: "center",
-    marginTop: 69,
+    marginTop: hp("8.5%"),
   },
+
   title: {
-    marginTop: 67,
+    marginTop: hp("7%"),
   },
+
   subtitle: {
-    marginTop: 8,
-    marginBottom: 14,
+    marginTop: hp("1%"),
+    marginBottom: hp("1.7%"),
   },
+
   input: {
     backgroundColor: "#FFF",
-    marginTop: 14,
+    marginTop: hp("1.7%"),
+    borderRadius: wp("3.9%"), // 14px responsive
   },
+
   errorText: {
     color: "red",
-    fontSize: 13,
-    marginTop: 6,
+    fontSize: wp("3.2%"),
+    marginTop: hp("0.8%"),
   },
+
   continueBtn: {
-    marginTop: 26,
+    marginTop: hp("3%"),
     width: "100%",
+    height: hp("5.9%"),       // 48px responsive
+    borderRadius: wp("2.2%"), // 8px responsive
   },
+
   orText: {
-    marginTop: 34,
-    marginBottom: 12,
+    marginTop: hp("4%"),
+    marginBottom: hp("1.5%"),
   },
+
   socialRow: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 26,
+    gap: wp("7%"),
   },
+
   iconBox: {
-    width: 44,
-    height: 44,
-    marginTop: 24,
+    width: wp("12%"),
+    height: wp("12%"),
+    marginTop: hp("3%"),
     backgroundColor: "#fff",
     elevation: 4,
-    borderRadius: 10,
+    borderRadius: wp("2.8%"),
     alignItems: "center",
     justifyContent: "center",
 
-    // iOS shadow
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.12,
