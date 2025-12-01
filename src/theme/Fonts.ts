@@ -42,4 +42,9 @@ export const fontConfig = {
     fontWeight: 'bold' as const,
     letterSpacing: 0.2,
   },
+  Light:{
+    fontFamily: fonts.Light,
+    fontWeight: '300' as const,
+    letterSpacing: 0,
+  }
 };

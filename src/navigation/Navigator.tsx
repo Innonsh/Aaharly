@@ -25,6 +25,15 @@ import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Navigator = () => {
+import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen";
+import { RootStackParamList } from "./NavigationRoutes";
+import EmailLoginScreen from "../screens/login/EmailLoginScreen";
+import EmailVerification from "../screens/verification/EmailVerification";
+
+const Navigator = () => {
+  // const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNavigator<RootStackParamList>();
+
   const themeMode = ThemeMode.Light;
 
   const navigationTheme = useMemo<Theme>(() => {
@@ -107,6 +116,7 @@ const Navigator = () => {
 
         <Stack.Screen
           name={NavigationRoutes.LOGIN}
+          name={NavigationRoutes.LOGIN }
           component={LoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />
@@ -134,6 +144,21 @@ const Navigator = () => {
           component={HomeScreen}
           options={{ headerShown: false, animation: "none" }}
         /> */}
+        <Stack.Screen
+          name={NavigationRoutes.OTP }
+          component={OTPVerificationScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+          <Stack.Screen
+          name={NavigationRoutes.EMAIL }
+          component={EmailLoginScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+         <Stack.Screen 
+         name={NavigationRoutes.EMAIL_VERIFICATION}
+        component={EmailVerification}
+         options={{headerShown: false, animation: "none"}}/>
+
       </Stack.Navigator>
     </NavigationContainer>
   );

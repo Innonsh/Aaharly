@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
 // USING PAPER THEME COLORS INSTEAD OF HARDCODE
 const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
   title: {
-    fontFamily: fonts.Bold,
-    fontSize: 20,
+    fontFamily: fonts.Medium,
+    fontSize: 18,
     lineHeight: 24,
     color: theme.colors.onBackground,
   },
@@ -83,7 +83,7 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
   },
   subtitle: {
     fontFamily: fonts.Regular,
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: 20,
     color: theme.colors.outline,
   },
