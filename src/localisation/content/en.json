@@ -33,17 +33,17 @@
 
   
   "fullName": "Full Name",
-  "fullNamePlaceholder": "Enter your full name",
+ 
   "age": "Age",
-  "agePlaceholder": "22",
+ 
   "gender": "Gender",
   "male": "Male",
   "female": "Female",
 
   "heightLabel": "Height (cm)",
-  "heightPlaceholder": "180cm",
+  
   "weightLabel": "Weight (kg)",
-  "weightPlaceholder": "68kg",
+  
 
   "activityLevelLabel": "Activity Level",
   "activitySedentaryTitle": "Sedentary",
@@ -71,7 +71,7 @@
 
   "back": "Back",
   "next": "Next",
-  "generatePlan": "Generate Plan",
+  "generatePlan": "Next",
   "cancel": "Cancel"
 }
 

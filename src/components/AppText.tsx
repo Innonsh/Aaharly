@@ -101,7 +101,7 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
   },
   button: {
     fontFamily: fonts.SemiBold,
-    fontSize: 20,  //16
+    fontSize: 15,  //16
     lineHeight: 20,
     color: theme.colors.onPrimary,
   },
@@ -113,9 +113,9 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
   },
  labels: {
   fontFamily: fonts.SemiBold,
-  fontSize: 14,
+  fontSize: 15,
   lineHeight: 19,
-  color: theme.colors.onBackground,
+  color: theme.colors.secondary,
 },
 
 });

@@ -8,11 +8,18 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import BackIcon from "../../assets/Icons/back_arrow.svg";
 import AppText from "../../components/AppText";
 import Input from "../../components/TextInput";
 import { Colors } from "../../theme/Colors";
 import GoalsIcon from "../../assets/Icons/goal_preference.svg";
+import VegIcon from "../../assets/Icons/veg.svg";
+import NonVegIcon from "../../assets/Icons/nonveg.svg";
+import VeganIcon from "../../assets/Icons/vegan.svg";
 import {
   NavigationRoutes,
   RootStackParamList,
@@ -34,13 +41,21 @@ const ProfileStep3Screen: React.FC = () => {
   return (
     <SafeAreaView style={styles.safe}>
       {/* FIXED HEADER (not scrolling) */}
-      <View style={styles.header}>
-        <View style={{ width: 22 }} />
-        <AppText variant="title" align="center">
-          {strings.profile.setupTitle}
-        </AppText>
-        <View style={{ width: 22 }} />
-      </View>
+    <View style={styles.header}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backBtn}
+        activeOpacity={0.7}
+      >
+        <BackIcon width={16} height={16} />
+      </TouchableOpacity>
+
+      <AppText variant="title" align="center">
+        {strings.profile.setupTitle}
+      </AppText>
+
+      <View style={{ width: 44 }} /> {/* layout balance */}
+    </View>
 
       {/* EVERYTHING BELOW SCROLLS */}
       <ScrollView
@@ -75,7 +90,7 @@ const ProfileStep3Screen: React.FC = () => {
           </AppText>
 
           {/* Fitness goals */}
-          <AppText variant="label" style={styles.sectionLabel}>
+          <AppText variant="labels" style={styles.sectionLabel}>
             {strings.profile.fitnessGoalsLabel}
           </AppText>
 
@@ -105,7 +120,7 @@ const ProfileStep3Screen: React.FC = () => {
               onPress={() => setGoal(item.key as any)}
               activeOpacity={0.8}
             >
-              <AppText variant="label">{item.title}</AppText>
+              <AppText variant="labels">{item.title}</AppText>
               <AppText variant="caption" style={styles.optionSubtitle}>
                 {item.subtitle}
               </AppText>
@@ -113,17 +128,24 @@ const ProfileStep3Screen: React.FC = () => {
           ))}
 
           {/* Diet preference */}
-          <AppText variant="label" style={styles.sectionLabel}>
+          <AppText variant="labels" style={styles.sectionLabel}>
             {strings.profile.dietPreferenceLabel}
           </AppText>
 
+          {/* Row 1: Vegetarian + Non-Vegetarian */}
           <View style={styles.dietRow}>
             <TouchableOpacity
-              style={[styles.dietBtn, diet === "veg" && styles.dietSelected]}
+              style={[
+                styles.dietBtn,
+                diet === "veg" && styles.dietSelected,
+              ]}
               onPress={() => setDiet("veg")}
               activeOpacity={0.8}
             >
-              <AppText variant="label">{strings.profile.dietVeg}</AppText>
+              <VegIcon width={20} height={20} />
+              <AppText variant="labels" style={styles.dietText}>
+                {strings.profile.dietVeg}
+              </AppText>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -135,12 +157,14 @@ const ProfileStep3Screen: React.FC = () => {
               onPress={() => setDiet("nonveg")}
               activeOpacity={0.8}
             >
-              <AppText variant="label">
+              <NonVegIcon width={20} height={20} />
+              <AppText variant="labels" style={styles.dietText}>
                 {strings.profile.dietNonVeg}
               </AppText>
             </TouchableOpacity>
           </View>
 
+          {/* Row 2: Vegan on the left */}
           <View style={styles.dietRow}>
             <TouchableOpacity
               style={[
@@ -151,12 +175,15 @@ const ProfileStep3Screen: React.FC = () => {
               onPress={() => setDiet("vegan")}
               activeOpacity={0.8}
             >
-              <AppText variant="label">{strings.profile.dietVegan}</AppText>
+              <VeganIcon width={20} height={20} />
+              <AppText variant="labels" style={styles.dietText}>
+                {strings.profile.dietVegan}
+              </AppText>
             </TouchableOpacity>
           </View>
 
           {/* Allergies */}
-          <AppText variant="label" style={styles.sectionLabel}>
+          <AppText variant="labels" style={styles.sectionLabel}>
             {strings.profile.allergiesLabel}
           </AppText>
           <Input
@@ -174,14 +201,13 @@ const ProfileStep3Screen: React.FC = () => {
             onPress={() => navigation.goBack()}
             activeOpacity={0.8}
           >
-            <AppText variant="button" color={Colors.primary}>
+            <AppText variant="button" color="#6B7280">
               {strings.profile.back}
             </AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.primaryBtn}
-            // onPress={() => navigation.replace(NavigationRoutes.HOME)}
             activeOpacity={0.8}
           >
             <AppText variant="button" color="#FFFFFF">
@@ -202,29 +228,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
 
-  // fixed header
+  // fixed header (not scrolling)
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 15,
-    paddingHorizontal: 24,
+    marginTop: hp("1.8%"),
+    paddingHorizontal: wp("6%"),
   },
 
-  // scrollable area
+  // scrollable area below header
   scrollContent: {
-    paddingTop: 24,
-    paddingBottom: 40,
+    paddingTop: hp("2.8%"),
+    paddingBottom: hp("4.7%"),
   },
 
   stepText: {
-    paddingHorizontal: 24,
+    paddingHorizontal: wp("6%"),
   },
 
   progressBarWrapper: {
     flexDirection: "row",
-    marginTop: 6,
-    paddingHorizontal: 24,
+    marginTop: hp("0.7%"),
+    paddingHorizontal: wp("6%"),
   },
 
   progressActive3: {
@@ -235,18 +261,13 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    marginTop: 24,
-    marginHorizontal: 16,
+    marginTop: hp("2.8%"),
+    marginHorizontal: wp("4.1%"),
     borderRadius: 16,
     backgroundColor: "#FFF",
     padding: 24,
-
-    // shadow (box-shadow: 0 0 10px #0000001A)
-    shadowColor: "#000000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 10,
-    elevation: 6,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
 
   iconWrapper: {
@@ -292,34 +313,53 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF3EB",
   },
 
+  /* --- Diet layout --- */
+
   dietRow: {
     flexDirection: "row",
     marginTop: 8,
+    justifyContent: "flex-start",
   },
 
   dietBtn: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#E1E1E1",
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    alignItems: "center",
-    marginRight: 8,
-    backgroundColor: "#FFFFFF",
-  },
+  width: wp("39%"),         // ~126px on 390w
+  height: hp("10.6%"),      // ~90px on 844h
+  borderWidth: 1,
+  borderColor: "#E1E1E1",
+  borderRadius: 14,
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "#FFFFFF",
+  marginRight: wp("3%"),
+  paddingTop: hp("2.3%"),
+  paddingBottom: hp("2.3%"),
+},
+
 
   lastDietBtnInRow: {
     marginRight: 0,
   },
+singleDietBtn: {
+  width: wp("39%"),
+  height: hp("10.6%"),
+  borderWidth: 1,
+  borderColor: "#E1E1E1",
+  borderRadius: 14,
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "#FFFFFF",
+  marginRight: 0,
+  marginTop: hp("1%"),
+},
 
-  singleDietBtn: {
-    marginRight: 0,
-  },
 
   dietSelected: {
     borderColor: Colors.primary,
     backgroundColor: "#FFF3EB",
+  },
+
+  dietText: {
+    marginTop: 6,
   },
 
   allergyInput: {
@@ -329,7 +369,7 @@ const styles = StyleSheet.create({
   btnRow: {
     flexDirection: "row",
     marginTop: 24,
-    marginHorizontal: 16,
+    marginHorizontal: wp("4.1%"),
   },
 
   secondaryBtn: {
@@ -337,10 +377,11 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: Colors.primary,
+    borderColor: "#E5E7EB",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
+    // backgroundColor: "#F8F8F8",
   },
 
   primaryBtn: {
@@ -351,4 +392,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  backBtn: {
+  width: 44,
+  height: 44,
+  borderRadius: 22,
+  backgroundColor: "#FFFFFF",
+
+  justifyContent: "center",
+  alignItems: "center",
+
+  // soft floating shadow
+  shadowColor: "#000",
+  shadowOpacity: 0.08,
+  shadowOffset: { width: 0, height: 2 },
+  shadowRadius: 4,
+  elevation: 2,
+},
+
 });

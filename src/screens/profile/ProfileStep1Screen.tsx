@@ -8,16 +8,23 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import BackIcon from "../../assets/Icons/back_arrow.svg";
 import AppText from "../../components/AppText";
 import Input from "../../components/TextInput";
 import { Colors } from "../../theme/Colors";
+import UserIcon from "../../assets/Icons/user_profile.svg";
+import MaleIcon from "../../assets/Icons/male.svg";      // 👈 add
+import FemaleIcon from "../../assets/Icons/female.svg";  // 👈 add
 import {
   NavigationRoutes,
   RootStackParamList,
 } from "../../navigation/NavigationRoutes";
-import UserIcon from "../../assets/Icons/user_profile.svg";
 import strings from "../../localisation/content/en.json";
+import { white } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 type Step1NavProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -33,123 +40,141 @@ const ProfileStep1Screen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={{ width: 22 }} />
-        <AppText variant="title" align="center">
-          {strings.profile.setupTitle}
-        </AppText>
-        <View style={{ width: 22 }} />
-      </View>
+      {/* FIXED HEADER */}
+     <View style={styles.header}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backBtn}
+        activeOpacity={0.7}
+      >
+        <BackIcon width={16} height={16} />
+      </TouchableOpacity>
 
-      {/* Progress */}
-      <AppText variant="label" style={styles.stepText}>
-        Step 1 of 3
+      <AppText variant="title" align="center">
+        {strings.profile.setupTitle}
       </AppText>
-      <View style={styles.progressBar}>
-        <View style={styles.active1} />
-        <View style={styles.inactive1} />
-      </View>
 
-      {/* Main card (fixed size, scrollable content) */}
-      <View style={styles.cardWrapper}>
-        <View style={styles.card}>
-          <ScrollView
-            contentContainerStyle={styles.cardContent}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.iconBox}>
-              <UserIcon width={36} height={36} />
-            </View>
+      <View style={{ width: 44 }} /> {/* layout balance */}
+    </View>
 
-            <AppText variant="title" align="center">
-              {strings.profile.step1Title}
-            </AppText>
-            <AppText
-              variant="subtitle"
-              align="center"
-              style={styles.subtitleSpacing}
-            >
-              {strings.profile.step1Subtitle}
-            </AppText>
 
-            {/* Full Name */}
-            <AppText variant="label">{strings.profile.fullName}</AppText>
-            <Input
-              mode="outlined"
-              placeholder={strings.profile.fullNamePlaceholder}
-              value={name}
-              onChangeText={setName}
-              outlineColor="#DCDCDC"
-              activeOutlineColor={Colors.primary}
-              style={styles.input}
-            />
 
-            {/* Age */}
-            <AppText variant="label" style={styles.labelTop}>
-              {strings.profile.age}
-            </AppText>
-            <Input
-              mode="outlined"
-              placeholder={strings.profile.agePlaceholder}
-              value={age}
-              onChangeText={setAge}
-              keyboardType="numeric"
-              outlineColor="#DCDCDC"
-              activeOutlineColor={Colors.primary}
-              style={styles.input}
-            />
+      {/* EVERYTHING BELOW SCROLLS */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Step indicator */}
+        <AppText variant="labels" style={styles.stepText}>
+          Step 1 of 3
+        </AppText>
 
-            {/* Gender */}
-            <AppText variant="label" style={styles.labelTop}>
-              {strings.profile.gender}
-            </AppText>
-            <View style={styles.twoBtnRow}>
-              <TouchableOpacity
-                style={[
-                  styles.selectBtn,
-                  gender === "male" && styles.selected,
-                ]}
-                onPress={() => setGender("male")}
-                activeOpacity={0.8}
-              >
-                <AppText variant="label">{strings.profile.male}</AppText>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.selectBtn,
-                  styles.lastSelectBtn,
-                  gender === "female" && styles.selected,
-                ]}
-                onPress={() => setGender("female")}
-                activeOpacity={0.8}
-              >
-                <AppText variant="label">{strings.profile.female}</AppText>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
+        <View style={styles.progressBar}>
+          <View style={styles.active1} />
+          <View style={styles.inactive1} />
         </View>
-      </View>
 
-      {/* Bottom Buttons */}
-      <View style={styles.bottomBtnRow}>
-        <TouchableOpacity style={styles.secondaryBtn} activeOpacity={0.8}>
-          <AppText variant="button" color={Colors.primary}>
-            {strings.profile.cancel}
-          </AppText>
-        </TouchableOpacity>
+        {/* Card */}
+        <View style={styles.card}>
+          <View style={styles.iconBox}>
+            <UserIcon width={36} height={36} />
+          </View>
 
-        <TouchableOpacity
-          style={styles.primaryBtn}
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate(NavigationRoutes.PROFILE_STEP2)}
-        >
-          <AppText variant="button" color="#FFFFFF">
-            {strings.profile.next}
+          <AppText variant="title" align="center">
+            {strings.profile.step1Title}
           </AppText>
-        </TouchableOpacity>
-      </View>
+
+          <AppText
+            variant="subtitle"
+            align="center"
+            style={styles.subtitleSpacing}
+          >
+            {strings.profile.step1Subtitle}
+          </AppText>
+
+          {/* Full Name */}
+          <AppText variant="labels">{strings.profile.fullName}</AppText>
+          <Input
+            // placeholder={strings.profile.fullNamePlaceholder}
+            value={name}
+            onChangeText={setName}
+            style={styles.input}
+          />
+
+          {/* Age */}
+          <AppText variant="labels" style={styles.labelTop}>
+            {strings.profile.age}
+          </AppText>
+          <Input
+            // placeholder={strings.profile.agePlaceholder}
+            value={age}
+            onChangeText={setAge}
+            keyboardType="numeric"
+            style={styles.input}
+          />
+
+          {/* Gender */}
+          <AppText variant="labels" style={styles.labelTop}>
+            {strings.profile.gender}
+          </AppText>
+          <View style={styles.twoBtnRow}>
+            <TouchableOpacity
+              style={[
+                styles.selectBtn,
+                gender === "male" && styles.selected,
+              ]}
+              onPress={() => setGender("male")}
+              activeOpacity={0.8}
+            >
+              <View style={styles.btnContent}>
+                <MaleIcon width={18} height={18} />
+                <AppText variant="label" style={styles.btnText}>
+                  {strings.profile.male}
+                </AppText>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.selectBtn,
+                styles.lastSelectBtn,
+                gender === "female" && styles.selected,
+              ]}
+              onPress={() => setGender("female")}
+              activeOpacity={0.8}
+            >
+              <View style={styles.btnContent}>
+                <FemaleIcon width={18} height={18} />
+                <AppText variant="label" style={styles.btnText}>
+                  {strings.profile.female}
+                </AppText>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Buttons - scroll with page */}
+        <View style={styles.btnRow}>
+          <TouchableOpacity
+            style={styles.secondaryBtn}
+            activeOpacity={0.8}
+          >
+            <AppText variant="button" color="#6B7280">
+              {strings.profile.cancel}
+            </AppText>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.primaryBtn}
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate(NavigationRoutes.PROFILE_STEP2)}
+          >
+            <AppText variant="button" color="#FFFFFF">
+              {strings.profile.next}
+            </AppText>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -157,25 +182,32 @@ const ProfileStep1Screen: React.FC = () => {
 export default ProfileStep1Screen;
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#FFF" },
+  safe: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
 
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 15,
-    paddingHorizontal: 24,
     alignItems: "center",
+    marginTop: hp("1.8%"),
+    paddingHorizontal: wp("6%"),
+  },
+
+  scrollContent: {
+    paddingTop: hp("2.8%"),
+    paddingBottom: hp("4.7%"),
   },
 
   stepText: {
-    marginTop: 30,
-    paddingHorizontal: 24,
+    paddingHorizontal: wp("6%"),
   },
 
   progressBar: {
     flexDirection: "row",
-    marginTop: 6,
-    paddingHorizontal: 24,
+    marginTop: hp("0.7%"),
+    paddingHorizontal: wp("6%"),
   },
 
   active1: {
@@ -192,35 +224,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#E0E0E0",
   },
 
-  // main box measurements
-  cardWrapper: {
-    position: "absolute",
-    top: 183,
-    left: 16,
-    right: 16,
-    height: 528, // fixed height
-  },
-
- card: {
-  flex: 1,
-  borderRadius: 16,
-  backgroundColor: "#FFFFFF",
-
-  // iOS shadow
-  shadowColor: "#000000",
-  shadowOpacity: 0.10,
-  shadowOffset: { width: 0, height: 0 },
-  shadowRadius: 10,
-
-  // Android shadow
-  elevation: 6,
-
-  overflow: "hidden",
-},
-
-
-  cardContent: {
+  card: {
+    marginTop: hp("2.8%"),
+    marginHorizontal: wp("4.1%"),
+    borderRadius: 16,
+    backgroundColor: "#FFF",
     padding: 24,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
 
   iconBox: {
@@ -234,7 +245,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  subtitleSpacing: { marginBottom: 20 },
+  subtitleSpacing: {
+    marginBottom: 20,
+  },
 
   input: {
     marginTop: 4,
@@ -270,29 +283,32 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF3EB",
   },
 
-  // bottomBtnRow: {
-  //   flexDirection: "row",
-  //   marginTop: 30,
-  //   marginHorizontal: 24,
-  // },
-  bottomBtnRow: {
-  position: "absolute",
-  bottom: 77,
-  left: 16,
-  right: 16,
-  flexDirection: "row",
-},
+  btnContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
 
+  btnText: {
+    // optional extra tweaks if needed
+  },
+
+  btnRow: {
+    flexDirection: "row",
+    marginTop: 24,
+    marginHorizontal: wp("4.1%"),
+  },
 
   secondaryBtn: {
     flex: 1,
     height: 48,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: Colors.primary,
+    borderColor: "#E5E7EB",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
+    // backgroundColor: "#F8F8F8",
   },
 
   primaryBtn: {
@@ -303,4 +319,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  backBtn: {
+  width: 44,
+  height: 44,
+  borderRadius: 22,
+  backgroundColor: "#FFFFFF",
+
+  justifyContent: "center",
+  alignItems: "center",
+
+  // soft floating shadow
+  shadowColor: "#000",
+  shadowOpacity: 0.08,
+  shadowOffset: { width: 0, height: 2 },
+  shadowRadius: 4,
+  elevation: 2,
+},
+
+
+
 });
