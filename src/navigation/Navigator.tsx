@@ -113,17 +113,17 @@ const Navigator = () => {
 
         {/* Profile setup flow */}
         <Stack.Screen
-          name={NavigationRoutes.PROFILE_STEP1}
+          name={NavigationRoutes.PROFILE_SETUP1}
           component={ProfileStep1Screen}
           options={{ headerShown: false, animation: "none" }}
         />
         <Stack.Screen
-          name={NavigationRoutes.PROFILE_STEP2}
+          name={NavigationRoutes.PROFILE_SETUP2}
           component={ProfileStep2Screen}
           options={{ headerShown: false, animation: "none" }}
         />
         <Stack.Screen
-          name={NavigationRoutes.PROFILE_STEP3}
+          name={NavigationRoutes.PROFILE_SETUP3}
           component={ProfileStep3Screen}
           options={{ headerShown: false, animation: "none" }}
         />

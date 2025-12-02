@@ -73,7 +73,7 @@ const OnboardingScreen: React.FC = () => {
   const isLast = index === SLIDES.length - 1;
 
   const goToProfile = () => {
-    navigation.replace(NavigationRoutes.PROFILE_STEP1);
+    navigation.replace(NavigationRoutes.PROFILE_SETUP1);
   };
 
   const handleNext = () => {
@@ -97,7 +97,7 @@ const OnboardingScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Skip button (hidden on last screen) */}
+     
       {!isLast && (
         <TouchableOpacity onPress={goToProfile} style={styles.skipButton}>
           <AppText
@@ -110,7 +110,7 @@ const OnboardingScreen: React.FC = () => {
         </TouchableOpacity>
       )}
 
-      {/* Pager */}
+     
       <Animated.ScrollView
         ref={scrollRef}
         horizontal
@@ -125,12 +125,12 @@ const OnboardingScreen: React.FC = () => {
       >
         {SLIDES.map((slide, i) => (
           <View key={slide.key} style={styles.slide}>
-            {/* Illustration */}
+        
             <View style={styles.illustrationWrapper}>
               <slide.Illustration width={wp("63%")} height={hp("32%")} />
             </View>
 
-            {/* Dots */}
+          
             <View style={styles.dotsWrapper}>
               {SLIDES.map((_, dotIdx) => {
                 const inputRange = [
@@ -161,7 +161,7 @@ const OnboardingScreen: React.FC = () => {
               })}
             </View>
 
-            {/* Text */}
+           
             <View style={styles.textWrapper}>
               <AppText variant="title" align="center">
                 {slide.title}
@@ -175,7 +175,7 @@ const OnboardingScreen: React.FC = () => {
         ))}
       </Animated.ScrollView>
 
-      {/* Bottom CTA: arrow or Get Started */}
+     
       {isLast ? (
         <TouchableOpacity
           style={styles.getStartedButton}
@@ -212,7 +212,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // Skip button
   skipButton: {
     position: "absolute",
     top: hp("5.5%"),
@@ -233,7 +232,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // Illustration
   illustrationWrapper: {
     position: "absolute",
     top: hp("12%"),
@@ -241,7 +239,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  // Dots
+  
   dotsWrapper: {
     position: "absolute",
     top: hp("54%"),
@@ -254,11 +252,11 @@ const styles = StyleSheet.create({
   dot: {
     height: 8,
     borderRadius: 100,
-    backgroundColor: "#D9D9D9", // default for inactive
+    backgroundColor: "#D9D9D9",
     marginHorizontal: 2,
   },
 
-  // Text
+  
   textWrapper: {
     position: "absolute",
     top: hp("59%"),
@@ -268,7 +266,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 
-  // Arrow button
   arrowButton: {
     position: "absolute",
     bottom: hp("11.5%"),
@@ -287,7 +284,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 
-  // Get started button
+ 
   getStartedButton: {
     position: "absolute",
     bottom: hp("11.5%"),

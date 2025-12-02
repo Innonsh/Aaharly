@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
+import React, { useState, useContext } from "react";
+import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import BackIcon from "../../assets/Icons/back_arrow.svg";
 import AppText from "../../components/AppText";
 import Input from "../../components/TextInput";
@@ -24,15 +20,17 @@ import {
   NavigationRoutes,
   RootStackParamList,
 } from "../../navigation/NavigationRoutes";
-import strings from "../../localisation/content/en.json";
+import { LocalizationContext } from "../../contexts/LocalizationContext";
 
 type ProfileNavProp = NativeStackNavigationProp<
   RootStackParamList,
-  NavigationRoutes.PROFILE_STEP3
+  NavigationRoutes.PROFILE_SETUP3
 >;
 
 const ProfileStep3Screen: React.FC = () => {
   const navigation = useNavigation<ProfileNavProp>();
+  const { translations } = useContext(LocalizationContext);
+  const strings = translations as any;
 
   const [goal, setGoal] = useState<"lose" | "maintain" | "gain" | null>(null);
   const [diet, setDiet] = useState<"veg" | "nonveg" | "vegan" | null>(null);
@@ -40,30 +38,30 @@ const ProfileStep3Screen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* FIXED HEADER (not scrolling) */}
-    <View style={styles.header}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backBtn}
-        activeOpacity={0.7}
-      >
-        <BackIcon width={16} height={16} />
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backBtn}
+          activeOpacity={0.7}
+        >
+          <BackIcon width={16} height={16} />
+        </TouchableOpacity>
 
-      <AppText variant="title" align="center">
-        {strings.profile.setupTitle}
-      </AppText>
+        <AppText variant="title" align="center">
+          {strings.profile.setupTitle}
+        </AppText>
 
-      <View style={{ width: 44 }} /> {/* layout balance */}
-    </View>
+        <View style={{ width: 44 }} />
+      </View>
 
-      {/* EVERYTHING BELOW SCROLLS */}
-      <ScrollView
+      <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        enableOnAndroid
+        keyboardShouldPersistTaps="handled"
+        extraScrollHeight={24}
       >
-        {/* Step indicator */}
-        <AppText variant="label" style={styles.stepText}>
+        <AppText variant="labels" style={styles.stepText}>
           Step 3 of 3
         </AppText>
 
@@ -71,10 +69,9 @@ const ProfileStep3Screen: React.FC = () => {
           <View style={styles.progressActive3} />
         </View>
 
-        {/* Card */}
         <View style={styles.card}>
           <View style={styles.iconWrapper}>
-            <GoalsIcon width={36} height={36} />
+            <GoalsIcon width={46} height={46} />
           </View>
 
           <AppText variant="title" align="center" style={styles.cardTitle}>
@@ -89,7 +86,6 @@ const ProfileStep3Screen: React.FC = () => {
             {strings.profile.step3Subtitle}
           </AppText>
 
-          {/* Fitness goals */}
           <AppText variant="labels" style={styles.sectionLabel}>
             {strings.profile.fitnessGoalsLabel}
           </AppText>
@@ -127,18 +123,13 @@ const ProfileStep3Screen: React.FC = () => {
             </TouchableOpacity>
           ))}
 
-          {/* Diet preference */}
           <AppText variant="labels" style={styles.sectionLabel}>
             {strings.profile.dietPreferenceLabel}
           </AppText>
 
-          {/* Row 1: Vegetarian + Non-Vegetarian */}
           <View style={styles.dietRow}>
             <TouchableOpacity
-              style={[
-                styles.dietBtn,
-                diet === "veg" && styles.dietSelected,
-              ]}
+              style={[styles.dietBtn, diet === "veg" && styles.dietSelected]}
               onPress={() => setDiet("veg")}
               activeOpacity={0.8}
             >
@@ -164,7 +155,6 @@ const ProfileStep3Screen: React.FC = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Row 2: Vegan on the left */}
           <View style={styles.dietRow}>
             <TouchableOpacity
               style={[
@@ -182,7 +172,6 @@ const ProfileStep3Screen: React.FC = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Allergies */}
           <AppText variant="labels" style={styles.sectionLabel}>
             {strings.profile.allergiesLabel}
           </AppText>
@@ -191,10 +180,10 @@ const ProfileStep3Screen: React.FC = () => {
             value={allergies}
             onChangeText={setAllergies}
             style={styles.allergyInput}
+            returnKeyType="done"
           />
         </View>
 
-        {/* Buttons - scroll with page */}
         <View style={styles.btnRow}>
           <TouchableOpacity
             style={styles.secondaryBtn}
@@ -206,16 +195,13 @@ const ProfileStep3Screen: React.FC = () => {
             </AppText>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.primaryBtn}
-            activeOpacity={0.8}
-          >
+          <TouchableOpacity style={styles.primaryBtn} activeOpacity={0.8}>
             <AppText variant="button" color="#FFFFFF">
               {strings.profile.generatePlan}
             </AppText>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -227,8 +213,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-
-  // fixed header (not scrolling)
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -236,30 +220,24 @@ const styles = StyleSheet.create({
     marginTop: hp("1.8%"),
     paddingHorizontal: wp("6%"),
   },
-
-  // scrollable area below header
   scrollContent: {
     paddingTop: hp("2.8%"),
     paddingBottom: hp("4.7%"),
   },
-
   stepText: {
     paddingHorizontal: wp("6%"),
   },
-
   progressBarWrapper: {
     flexDirection: "row",
     marginTop: hp("0.7%"),
     paddingHorizontal: wp("6%"),
   },
-
   progressActive3: {
     width: "100%",
     height: 6,
     borderRadius: 4,
     backgroundColor: Colors.primary,
   },
-
   card: {
     marginTop: hp("2.8%"),
     marginHorizontal: wp("4.1%"),
@@ -269,10 +247,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E7EB",
   },
-
   iconWrapper: {
-    width: 70,
-    height: 70,
+    width: 64,
+    height:64,
     borderRadius: 35,
     backgroundColor: "#FFE7D7",
     alignSelf: "center",
@@ -280,98 +257,80 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 16,
   },
-
   cardTitle: {
     marginBottom: 4,
   },
-
   cardSubtitle: {
     marginBottom: 20,
   },
-
   sectionLabel: {
     marginTop: 16,
     marginBottom: 6,
   },
-
   goalOption: {
     marginTop: 8,
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: "#E1E1E1",
     borderRadius: 10,
     backgroundColor: "#FFFFFF",
   },
-
   optionSubtitle: {
     marginTop: 2,
   },
-
   goalSelected: {
     borderColor: Colors.primary,
     backgroundColor: "#FFF3EB",
   },
-
-  /* --- Diet layout --- */
-
   dietRow: {
     flexDirection: "row",
     marginTop: 8,
     justifyContent: "flex-start",
   },
-
   dietBtn: {
-  width: wp("39%"),         // ~126px on 390w
-  height: hp("10.6%"),      // ~90px on 844h
-  borderWidth: 1,
-  borderColor: "#E1E1E1",
-  borderRadius: 14,
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: "#FFFFFF",
-  marginRight: wp("3%"),
-  paddingTop: hp("2.3%"),
-  paddingBottom: hp("2.3%"),
-},
-
-
+    width: wp("39%"),
+    height: hp("10.6%"),
+    borderWidth: 1,
+    borderColor: "#E1E1E1",
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
+    marginRight: wp("3%"),
+    paddingTop: hp("2.3%"),
+    paddingBottom: hp("2.3%"),
+  },
   lastDietBtnInRow: {
     marginRight: 0,
   },
-singleDietBtn: {
-  width: wp("39%"),
-  height: hp("10.6%"),
-  borderWidth: 1,
-  borderColor: "#E1E1E1",
-  borderRadius: 14,
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: "#FFFFFF",
-  marginRight: 0,
-  marginTop: hp("1%"),
-},
-
-
+  singleDietBtn: {
+    width: wp("39%"),
+    height: hp("10.6%"),
+    borderWidth: 1,
+    borderColor: "#E1E1E1",
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
+    marginRight: 0,
+    marginTop: hp("1%"),
+  },
   dietSelected: {
     borderColor: Colors.primary,
     backgroundColor: "#FFF3EB",
   },
-
   dietText: {
     marginTop: 6,
   },
-
   allergyInput: {
     marginTop: 4,
   },
-
   btnRow: {
     flexDirection: "row",
     marginTop: 24,
     marginHorizontal: wp("4.1%"),
   },
-
   secondaryBtn: {
     flex: 1,
     height: 48,
@@ -381,9 +340,7 @@ singleDietBtn: {
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
-    // backgroundColor: "#F8F8F8",
   },
-
   primaryBtn: {
     flex: 1,
     height: 48,
@@ -393,20 +350,16 @@ singleDietBtn: {
     alignItems: "center",
   },
   backBtn: {
-  width: 44,
-  height: 44,
-  borderRadius: 22,
-  backgroundColor: "#FFFFFF",
-
-  justifyContent: "center",
-  alignItems: "center",
-
-  // soft floating shadow
-  shadowColor: "#000",
-  shadowOpacity: 0.08,
-  shadowOffset: { width: 0, height: 2 },
-  shadowRadius: 4,
-  elevation: 2,
-},
-
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
+  },
 });

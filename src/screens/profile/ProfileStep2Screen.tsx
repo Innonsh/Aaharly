@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
+import React, { useState, useContext, useRef } from "react";
+import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import BackIcon from "../../assets/Icons/back_arrow.svg";
 import AppText from "../../components/AppText";
 import Input from "../../components/TextInput";
@@ -21,15 +17,17 @@ import {
   NavigationRoutes,
   RootStackParamList,
 } from "../../navigation/NavigationRoutes";
-import strings from "../../localisation/content/en.json";
+import { LocalizationContext } from "../../contexts/LocalizationContext";
 
 type Step2NavProp = NativeStackNavigationProp<
   RootStackParamList,
-  NavigationRoutes.PROFILE_STEP2
+  NavigationRoutes.PROFILE_SETUP2
 >;
 
 const ProfileStep2Screen: React.FC = () => {
   const navigation = useNavigation<Step2NavProp>();
+  const { translations } = useContext(LocalizationContext);
+  const strings = translations as any;
 
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
@@ -37,32 +35,32 @@ const ProfileStep2Screen: React.FC = () => {
     "sedentary" | "moderate" | "active" | null
   >(null);
 
+  const weightRef = useRef<any>(null);
+
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Header fixed */}
-     <View style={styles.header}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backBtn}
-        activeOpacity={0.7}
-      >
-        <BackIcon width={18} height={18} />
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backBtn}
+          activeOpacity={0.7}
+        >
+          <BackIcon width={16} height={16} />
+        </TouchableOpacity>
 
-      <AppText variant="title" align="center">
-        {strings.profile.setupTitle}
-      </AppText>
+        <AppText variant="title" align="center">
+          {strings.profile.setupTitle}
+        </AppText>
+        <View style={{ width: 44 }} />
+      </View>
 
-      <View style={{ width: 44 }} /> {/* layout balance */}
-    </View>
-
-
-      {/* Scrollable content */}
-      <ScrollView
+      <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        enableOnAndroid
+        keyboardShouldPersistTaps="handled"
+        extraScrollHeight={24}
       >
-        {/* Step indicator */}
         <AppText variant="labels" style={styles.stepText}>
           Step 2 of 3
         </AppText>
@@ -72,10 +70,9 @@ const ProfileStep2Screen: React.FC = () => {
           <View style={styles.inactive2} />
         </View>
 
-        {/* Card */}
         <View style={styles.card}>
           <View style={styles.iconBox}>
-            <PhysicalIcon width={36} height={36} />
+            <PhysicalIcon width={46} height={46} />
           </View>
 
           <AppText variant="title" align="center">
@@ -89,18 +86,22 @@ const ProfileStep2Screen: React.FC = () => {
             {strings.profile.step2Subtitle}
           </AppText>
 
-          {/* Height & Weight */}
           <View style={styles.row}>
             <View style={{ flex: 1, marginRight: 8 }}>
               <AppText variant="labels">
                 {strings.profile.heightLabel}
               </AppText>
               <Input
-                // placeholder={strings.profile.heightPlaceholder}
                 value={height}
-                onChangeText={setHeight}
+                onChangeText={(text: string) => {
+                  const cleaned = text.replace(/[^0-9]/g, "");
+                  setHeight(cleaned);
+                }}
                 keyboardType="numeric"
                 style={styles.input}
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onSubmitEditing={() => weightRef.current?.focus()}
               />
             </View>
 
@@ -109,16 +110,19 @@ const ProfileStep2Screen: React.FC = () => {
                 {strings.profile.weightLabel}
               </AppText>
               <Input
-                // placeholder={strings.profile.weightPlaceholder}
+                ref={weightRef}
                 value={weight}
-                onChangeText={setWeight}
+                onChangeText={(text: string) => {
+                  const cleaned = text.replace(/[^0-9]/g, "");
+                  setWeight(cleaned);
+                }}
                 keyboardType="numeric"
                 style={styles.input}
+                returnKeyType="done"
               />
             </View>
           </View>
 
-          {/* Activity Level */}
           <AppText variant="labels" style={styles.sectionLabel}>
             {strings.profile.activityLevelLabel}
           </AppText>
@@ -157,7 +161,6 @@ const ProfileStep2Screen: React.FC = () => {
           ))}
         </View>
 
-        {/* Bottom Buttons */}
         <View style={styles.btnRow}>
           <TouchableOpacity
             style={styles.secondaryBtn}
@@ -171,7 +174,7 @@ const ProfileStep2Screen: React.FC = () => {
 
           <TouchableOpacity
             style={styles.primaryBtn}
-            onPress={() => navigation.navigate(NavigationRoutes.PROFILE_STEP3)}
+            onPress={() => navigation.navigate(NavigationRoutes.PROFILE_SETUP3)}
             activeOpacity={0.8}
           >
             <AppText variant="button" color="#FFFFFF">
@@ -179,7 +182,7 @@ const ProfileStep2Screen: React.FC = () => {
             </AppText>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -188,7 +191,6 @@ export default ProfileStep2Screen;
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#FFF" },
-
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -196,36 +198,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("6%"),
     alignItems: "center",
   },
-
   scrollContent: {
     paddingTop: hp("2.8%"),
     paddingBottom: hp("4.7%"),
   },
-
   stepText: {
     paddingHorizontal: wp("6%"),
   },
-
   progressBar: {
     flexDirection: "row",
     marginTop: hp("0.7%"),
     paddingHorizontal: wp("6%"),
   },
-
   active2: {
     width: "66%",
     height: 6,
     borderRadius: 4,
     backgroundColor: Colors.primary,
   },
-
   inactive2: {
     width: "34%",
     height: 6,
     borderRadius: 4,
     backgroundColor: "#E0E0E0",
   },
-
   card: {
     marginTop: hp("2.8%"),
     marginHorizontal: wp("4.1%"),
@@ -235,10 +231,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E7EB",
   },
-
   iconBox: {
-    width: 70,
-    height: 70,
+    width: 64,
+    height: 64,
     borderRadius: 35,
     backgroundColor: "#FFE7D7",
     alignSelf: "center",
@@ -246,25 +241,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 16,
   },
-
   subtitleSpacing: {
     marginBottom: 20,
   },
-
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
-
   input: {
     marginTop: 4,
   },
-
   sectionLabel: {
     marginTop: 16,
     marginBottom: 6,
   },
-
   option: {
     borderWidth: 1,
     borderColor: "#E1E1E1",
@@ -274,22 +264,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     marginTop: 8,
   },
-
   optionSubtitle: {
     marginTop: 2,
   },
-
   selected: {
     borderColor: Colors.primary,
     backgroundColor: "#FFF3EB",
   },
-
   btnRow: {
     flexDirection: "row",
     marginTop: 24,
     marginHorizontal: wp("4.1%"),
   },
-
   secondaryBtn: {
     flex: 1,
     height: 48,
@@ -299,9 +285,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
-    // backgroundColor: "#F8F8F8",
   },
-
   primaryBtn: {
     flex: 1,
     height: 48,
@@ -311,20 +295,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   backBtn: {
-  width: 44,
-  height: 44,
-  borderRadius: 22,
-  backgroundColor: "#FFFFFF",
-
-  justifyContent: "center",
-  alignItems: "center",
-
-  // soft floating shadow
-  shadowColor: "#000",
-  shadowOpacity: 0.08,
-  shadowOffset: { width: 0, height: 2 },
-  shadowRadius: 4,
-  elevation: 2,
-},
-
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
+  },
 });
