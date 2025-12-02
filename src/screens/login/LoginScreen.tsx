@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
@@ -31,17 +31,20 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const validatePhone = (num: string) => /^[6-9]\d{9}$/.test(num);
 
+
+  const isValidPhone = useMemo(() => validatePhone(phone), [phone]);
+
   const handleContinue = async () => {
     setError("");
 
-    if (!validatePhone(phone)) {
-      setError("Please enter a valid mobile number");
+    if (!isValidPhone) {
+      setError(translations.errors.invalidMobile);
       return;
     }
 
     setLoading(true);
 
-await new Promise<void>((resolve) => setTimeout(resolve, 1200));
+    await new Promise<void>((resolve) => setTimeout(resolve, 1200));
 
     navigation.navigate(NavigationRoutes.OTP, { phone });
     setLoading(false);
@@ -51,7 +54,7 @@ await new Promise<void>((resolve) => setTimeout(resolve, 1200));
     <View style={styles.container}>
       {/* Illustration */}
       <View style={styles.imageWrapper}>
-        <LoginIllustration width={wp("60%")} height={wp("60%")} />
+        <LoginIllustration width={wp("50%")} height={wp("50%")} />
       </View>
 
       {/* Title */}
@@ -73,10 +76,20 @@ await new Promise<void>((resolve) => setTimeout(resolve, 1200));
           setError("");
         }}
         keyboardType="phone-pad"
-        outlineColor="#FFE9E1"
+        outlineStyle={{ borderRadius: wp("3%"), borderColor: "#FFE9E1" }}
         activeOutlineColor="#FFE9E1"
         style={styles.input}
-        left={<TextInput.Affix text="+91" />}
+        left={
+          <TextInput.Affix
+            text="+91 -"
+            textStyle={{
+              fontSize: 16,
+              includeFontPadding: false,
+              color: "#000",
+            }}
+          />
+        }
+
         maxLength={10}
       />
 
@@ -87,13 +100,14 @@ await new Promise<void>((resolve) => setTimeout(resolve, 1200));
       <Button
         title={translations.common.continue}
         onPress={handleContinue}
-        disabled={!validatePhone(phone) || loading}
+        disabled={!isValidPhone || loading}
         variant="primary"
         style={styles.continueBtn}
+        textStyle={styles.continueText}
       />
 
       {/* OR */}
-      <AppText align="center" style={styles.orText}>
+      <AppText variant="smallCenterd" style={styles.orText}>
         {translations.login.orLoginWith}
       </AppText>
 
@@ -109,7 +123,7 @@ await new Promise<void>((resolve) => setTimeout(resolve, 1200));
 
         <TouchableOpacity
           style={styles.iconBox}
-          onPress={() => navigation.navigate(NavigationRoutes.EMAIL)}
+          onPress={() => navigation.navigate(NavigationRoutes.LoginWithEmail)}
         >
           <MailIcon width={24} height={20} />
         </TouchableOpacity>
@@ -134,6 +148,7 @@ const styles = StyleSheet.create({
 
   title: {
     marginTop: hp("7%"),
+    fontSize:22,
   },
 
   subtitle: {
@@ -143,38 +158,49 @@ const styles = StyleSheet.create({
 
   input: {
     backgroundColor: "#FFF",
-    marginTop: hp("1.7%"),
-    borderRadius: wp("3.9%"), // 14px responsive
+    marginTop: hp("0.5%"),
+    borderRadius: wp("3.9%"),
+    fontFamily: "Matter-Regular", 
+    fontSize: 22,
+    lineHeight: 22,  
+    includeFontPadding: false, 
+    
   },
-
   errorText: {
     color: "red",
     fontSize: wp("3.2%"),
     marginTop: hp("0.8%"),
+   
   },
 
   continueBtn: {
     marginTop: hp("3%"),
     width: "100%",
-    height: hp("5.9%"),       // 48px responsive
-    borderRadius: wp("2.2%"), // 8px responsive
+    height: hp("5.9%"),
+    borderRadius: wp("3%"),
   },
+  continueText: {
+  fontFamily: 'Matter-SemiBold',
+  color: '#fff'
+},
+  
 
   orText: {
-    marginTop: hp("4%"),
+    marginTop: hp("3.5%"),
     marginBottom: hp("1.5%"),
+     textAlign:"center",
   },
 
   socialRow: {
     flexDirection: "row",
     justifyContent: "center",
     gap: wp("7%"),
+      marginTop: hp("2.5%"),
   },
-
   iconBox: {
     width: wp("12%"),
     height: wp("12%"),
-    marginTop: hp("3%"),
+  
     backgroundColor: "#fff",
     elevation: 4,
     borderRadius: wp("2.8%"),

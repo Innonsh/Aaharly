@@ -4,7 +4,8 @@
     "cancel": "Cancel",
     "Ok": "Ok",
     "continue": "Continue",
-    "skip":"Skip"
+    "skip":"Skip",
+    "verify":"verify"
   },
   "login": {
     "title": "Login" ,
@@ -20,6 +21,14 @@
   "Verification":{
     "title":"Verification",
     "subtitle":"Please enter the 4-digit verification code sent to"
+  },
+  "errors":{
+      "invalidMobile":"Please enter a valid mobile number"
+  }, 
+  "EmailVerification": {
+    "title": "Verify Email",
+    "subtitle": "We have sent a verification code to",
+    "resend": "Resend OTP"
   }
     
   

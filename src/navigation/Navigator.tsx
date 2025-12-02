@@ -108,7 +108,7 @@ const Navigator = () => {
           options={{ headerShown: false, animation: "none" }}
         />
           <Stack.Screen
-          name={NavigationRoutes.EMAIL }
+          name={NavigationRoutes.LoginWithEmail }
           component={EmailLoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />

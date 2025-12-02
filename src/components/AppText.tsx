@@ -11,7 +11,8 @@ export type TextVariant =
   | "body"
   | "caption"
   | "button"
-  | "label";
+  | "label"
+  | "smallCenterd"
 
 interface AppTextProps {
   children: React.ReactNode;
@@ -103,4 +104,11 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
     lineHeight: 18,
     color: theme.colors.secondary,
   },
+  smallCenterd:{
+    fontFamily: fonts.semiRegular,
+    fontSize:12,
+    lineHeight:12,
+    textAlign:'center',
+    color:theme.colors.outline
+  }
 });
