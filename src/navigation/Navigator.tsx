@@ -13,27 +13,17 @@ import { fonts } from "../theme/Fonts";
 import LoginScreen from "../screens/login/LoginScreen";
 import { NavigationRoutes } from "./NavigationRoutes";
 import OnboardingScreen from "../screens/Onboarding/OnboardingScreens";
-import { RootStackParamList } from "./NavigationRoutes";
-
-// ⬇️ add your new profile screens
 import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
 import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
 import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
-// optional home
-// import HomeScreen from "../screens/home/HomeScreen";
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
-
-const Navigator = () => {
 import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen";
 import { RootStackParamList } from "./NavigationRoutes";
 import EmailLoginScreen from "../screens/login/EmailLoginScreen";
 import EmailVerification from "../screens/verification/EmailVerification";
 
-const Navigator = () => {
-  // const Stack = createNativeStackNavigator();
-  const Stack = createNativeStackNavigator<RootStackParamList>();
 
+const Navigator = () => {
+  const Stack = createNativeStackNavigator<RootStackParamList>();
   const themeMode = ThemeMode.Light;
 
   const navigationTheme = useMemo<Theme>(() => {
@@ -115,7 +105,6 @@ const Navigator = () => {
         />
 
         <Stack.Screen
-          name={NavigationRoutes.LOGIN}
           name={NavigationRoutes.LOGIN }
           component={LoginScreen}
           options={{ headerShown: false, animation: "none" }}

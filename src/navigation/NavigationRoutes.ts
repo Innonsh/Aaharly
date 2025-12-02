@@ -1,6 +1,6 @@
 export enum NavigationRoutes {
   SPLASH = "SPLASH",
-  // ONBOARDING = "ONBOARDING",
+  ONBOARDING = "ONBOARDING",
   LOGIN = "LOGIN",
 
   PROFILE_STEP1 = "PROFILE_STEP1",
@@ -14,6 +14,7 @@ export enum NavigationRoutes {
 }
 export type RootStackParamList = {
   [NavigationRoutes.SPLASH]:undefined;
+  [NavigationRoutes.ONBOARDING]:undefined;
   [NavigationRoutes.LOGIN]: undefined;
 
   [NavigationRoutes.PROFILE_STEP1]: undefined;

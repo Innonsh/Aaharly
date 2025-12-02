@@ -21,6 +21,15 @@
     "title": "Verification",
     "subtitle": "Please enter the 4-digit verification code sent to"
   },
+  "onboarding": {
+    "screen1Title": "Meals that match your goals",
+    "screen1Subtitle": "Personalized meals designed for\n your body and fitness goals.",
+    "screen2Title": "One Tap & You’re Set for\n the Meal Plan",
+    "screen2Subtitle": "Subscribe once, & meals arrive effortlessly",
+    "screen3Title": "Your Routine, Your Rules.",
+    "screen3Subtitle": "Home, office, or college!\n We deliver wherever you are.",
+    "getStarted": "Get Started"
+},
   "profile": {
     "setupTitle": "Set Up Profile",
     "step1Title": "Basic Information",
