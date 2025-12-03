@@ -1,13 +1,13 @@
 import React, { useEffect, ReactNode } from "react";
 import {
   TouchableOpacity,
-  Text,
   StyleSheet,
   ViewStyle,
   View,
 } from "react-native";
 import { useTheme } from "react-native-paper";
 import { Colors } from "../theme/Colors";
+import AppText from "./AppText"; 
 
 interface ButtonProps {
   title: string;
@@ -18,6 +18,7 @@ interface ButtonProps {
   style?: ViewStyle | ViewStyle[];
   disabled?: boolean;
   onChange?: (isDisabled: boolean) => void;
+  textStyle?: any; 
 }
 
 export default function Button({
@@ -29,6 +30,7 @@ export default function Button({
   style,
   disabled = false,
   onChange,
+  textStyle,
 }: ButtonProps) {
   const theme = useTheme();
 
@@ -41,7 +43,7 @@ export default function Button({
   // Decide text color based on variant + disabled
   const getTextColor = () => {
     if (disabled) {
-      return Colors.background; // light text on disabled bg
+      return Colors.background;
     }
 
     switch (variant) {
@@ -52,7 +54,6 @@ export default function Button({
         return Colors.secondary;
       case "primary":
       default:
-        // use paper theme onPrimary if available, else white
         return theme.colors?.onPrimary || "#ffffff";
     }
   };
@@ -77,12 +78,15 @@ export default function Button({
         {icon && iconPosition === "left" && (
           <View style={styles.icon}>{icon}</View>
         )}
-
-        {!!title && (
-          <Text style={[styles.text, { color: getTextColor() }]}>
-            {title}
-          </Text>
-        )}
+        <AppText
+          style={[
+            styles.text,
+            { color: getTextColor() },
+            textStyle, 
+          ]}
+        >
+          {title}
+        </AppText>
 
         {/* Right Icon */}
         {icon && iconPosition === "right" && (
@@ -131,13 +135,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryDisabled,
   },
   text: {
+    
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: 20,
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    // `gap` not supported on all RN versions; margins in icon instead
   },
   icon: {
     marginHorizontal: 4,

@@ -4,6 +4,7 @@ export const fonts = {
   Bold: 'Matter-Bold',
   SemiBold: 'Matter-SemiBold',
   Light: 'Matter-Light',
+  semiRegular:'Inter-Regular'
 };
 
 export const fontConfig = {
@@ -33,7 +34,7 @@ export const fontConfig = {
     letterSpacing: 0,
   },
   medium: {
-    fontFamily: fonts.SemiBold,
+    fontFamily: fonts.Medium,
     fontWeight: '500' as const,
     letterSpacing: 0,
   },
@@ -42,4 +43,14 @@ export const fontConfig = {
     fontWeight: 'bold' as const,
     letterSpacing: 0.2,
   },
+  Light:{
+    fontFamily: fonts.Light,
+    fontWeight: '300' as const,
+    letterSpacing: 0,
+  },
+  Semiregular:{
+    fontFamily: fonts.semiRegular,
+    fontWeight:'400' as const,
+    letterspacing:0
+  }
 };
