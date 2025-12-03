@@ -1,16 +1,25 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  Dimensions,
+  Animated,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import { Colors } from "../../theme/Colors";
-import { NavigationRoutes } from "../../navigation/NavigationRoutes";
-import { RootStackParamList } from "../../navigation/NavigationRoutes";
+import {
+  NavigationRoutes,
+  RootStackParamList,
+} from "../../navigation/NavigationRoutes";
 import AppText from "../../components/AppText";
 
 import Onboarding1 from "../../assets/Onboarding/Onboarding1.svg";
@@ -30,6 +39,8 @@ type Slide = {
   title: string;
   subtitle: string;
 };
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const SLIDES: Slide[] = [
   {
@@ -56,57 +67,115 @@ const OnboardingScreen: React.FC = () => {
   const navigation = useNavigation<OnboardingNavigationProp>();
   const [index, setIndex] = useState(0);
 
-  const isLast = index === SLIDES.length - 1;
-  const { Illustration, title, subtitle } = SLIDES[index];
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const scrollRef = useRef<ScrollView | null>(null);
 
-  const goToLogin = () => {
-    navigation.replace(NavigationRoutes.LOGIN);
+  const isLast = index === SLIDES.length - 1;
+
+  const goToProfile = () => {
+    navigation.replace(NavigationRoutes.PROFILE_SETUP1);
   };
 
   const handleNext = () => {
     if (isLast) {
-      goToLogin();
+      goToProfile();
     } else {
-      setIndex((prev) => prev + 1);
+      const nextIndex = index + 1;
+      scrollRef.current?.scrollTo({
+        x: nextIndex * SCREEN_WIDTH,
+        animated: true,
+      });
+      setIndex(nextIndex);
     }
+  };
+
+  const handleMomentumEnd = (event: any) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(offsetX / SCREEN_WIDTH);
+    setIndex(newIndex);
   };
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Skip */}
+     
       {!isLast && (
-        <TouchableOpacity onPress={goToLogin} style={styles.skipButton}>
-          <AppText variant="label">{strings.common.skip}</AppText>
+        <TouchableOpacity onPress={goToProfile} style={styles.skipButton}>
+          <AppText
+            variant="label"
+            style={styles.skipLabel}
+            allowFontScaling={false}
+          >
+            {strings.common.skip}
+          </AppText>
         </TouchableOpacity>
       )}
 
-      {/* Main Image */}
-      <View style={styles.illustrationWrapper}>
-        <Illustration width={245} height={280} />
-      </View>
-
-      {/* Three dots */}
-      <View style={styles.dotsWrapper}>
+     
+      <Animated.ScrollView
+        ref={scrollRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={16}
+        onMomentumScrollEnd={handleMomentumEnd}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false }
+        )}
+      >
         {SLIDES.map((slide, i) => (
-          <View
-            key={slide.key}
-            style={[styles.dot, i === index && styles.activeDot]}
-          />
+          <View key={slide.key} style={styles.slide}>
+        
+            <View style={styles.illustrationWrapper}>
+              <slide.Illustration width={wp("63%")} height={hp("32%")} />
+            </View>
+
+          
+            <View style={styles.dotsWrapper}>
+              {SLIDES.map((_, dotIdx) => {
+                const inputRange = [
+                  (dotIdx - 1) * SCREEN_WIDTH,
+                  dotIdx * SCREEN_WIDTH,
+                  (dotIdx + 1) * SCREEN_WIDTH,
+                ];
+
+                const animatedWidth = scrollX.interpolate({
+                  inputRange,
+                  outputRange: [8, 20, 8],
+                  extrapolate: "clamp",
+                });
+
+                return (
+                  <Animated.View
+                    key={dotIdx}
+                    style={[
+                      styles.dot,
+                      {
+                        width: animatedWidth,
+                        backgroundColor:
+                          dotIdx === index ? Colors.primary : "#D9D9D9",
+                      },
+                    ]}
+                  />
+                );
+              })}
+            </View>
+
+           
+            <View style={styles.textWrapper}>
+              <AppText variant="title" align="center">
+                {slide.title}
+              </AppText>
+
+              <AppText variant="subtitle" align="center">
+                {slide.subtitle}
+              </AppText>
+            </View>
+          </View>
         ))}
-      </View>
+      </Animated.ScrollView>
 
-      {/* Text */}
-      <View style={styles.textWrapper}>
-        <AppText variant="title" align="center">
-          {title}
-        </AppText>
-
-        <AppText variant="subtitle" align="center">
-          {subtitle}
-        </AppText>
-      </View>
-
-      {/* Bottom CTA: arrow (screens 1–2) or big "Get Started" (screen 3) */}
+     
       {isLast ? (
         <TouchableOpacity
           style={styles.getStartedButton}
@@ -138,62 +207,69 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
 
-  /* skip button absolute positioning */
-  skipButton: {
-    position: "absolute",
-    top: 46,
-    right: 34,
+  slide: {
+    width: SCREEN_WIDTH,
+    flex: 1,
   },
 
-  /* main illustration */
+  skipButton: {
+    position: "absolute",
+    top: hp("5.5%"),
+    right: wp("8.5%"),
+    width: wp("12%"),
+    height: hp("3%"),
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 2,
+  },
+
+  skipLabel: {
+    fontSize: 20,
+    fontWeight: "400",
+    letterSpacing: 0.8,
+    lineHeight: 20,
+    color: "#A9A9A9",
+    textAlign: "center",
+  },
+
   illustrationWrapper: {
     position: "absolute",
-    top: 91,
-    left: 74,
-    right: 74,
-    height: 280,
+    top: hp("12%"),
+    width: "100%",
     alignItems: "center",
   },
 
-  /* pagination dots */
+  
   dotsWrapper: {
     position: "absolute",
-    top: 450,
-    left: 174,
-    right: 175,
+    top: hp("54%"),
+    width: "100%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
 
   dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    height: 8,
+    borderRadius: 100,
     backgroundColor: "#D9D9D9",
-    marginHorizontal: 4,
-  },
-  activeDot: {
-    width: 18,
-    backgroundColor: Colors.primary,
+    marginHorizontal: 2,
   },
 
-  /* text box */
+  
   textWrapper: {
     position: "absolute",
-    top: 500,
-    left: 41,
-    right: 41,
+    top: hp("59%"),
+    left: wp("10.5%"),
+    right: wp("10.5%"),
     alignItems: "center",
     gap: 10,
   },
 
-  /* bottom arrow button (orange circle) */
   arrowButton: {
     position: "absolute",
-    bottom: 96,
+    bottom: hp("11.5%"),
     alignSelf: "center",
-    top: 692,
     width: 64,
     height: 64,
     borderRadius: 32,
@@ -201,7 +277,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
 
-    // optional shadow to match Figma
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
@@ -209,12 +284,12 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 
-  /* full-width Get Started button for last screen */
+ 
   getStartedButton: {
     position: "absolute",
-    bottom: 96,
-    left: 24,
-    right: 24,
+    bottom: hp("11.5%"),
+    left: wp("6.5%"),
+    right: wp("6.5%"),
     height: 56,
     borderRadius: 16,
     backgroundColor: Colors.primary,

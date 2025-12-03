@@ -1,4 +1,3 @@
-
 import React, { useMemo } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -13,15 +12,17 @@ import SplashScreen from "../screens/splash/SplashScreen";
 import { fonts } from "../theme/Fonts";
 import LoginScreen from "../screens/login/LoginScreen";
 import { NavigationRoutes } from "./NavigationRoutes";
+import OnboardingScreen from "../screens/Onboarding/OnboardingScreens";
+import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
+import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
+import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
 import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen";
 import { RootStackParamList } from "./NavigationRoutes";
 import EmailLoginScreen from "../screens/login/EmailLoginScreen";
 import EmailVerification from "../screens/verification/EmailVerification";
 
 const Navigator = () => {
-  // const Stack = createNativeStackNavigator();
   const Stack = createNativeStackNavigator<RootStackParamList>();
-
   const themeMode = ThemeMode.Light;
 
   const navigationTheme = useMemo<Theme>(() => {
@@ -95,31 +96,60 @@ const Navigator = () => {
           component={SplashScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-        
+
         <Stack.Screen
-          name={NavigationRoutes.LOGIN }
+          name={NavigationRoutes.ONBOARDING}
+          component={OnboardingScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+
+        <Stack.Screen
+          name={NavigationRoutes.LOGIN}
           component={LoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />
 
+        {/* Profile setup flow */}
         <Stack.Screen
-          name={NavigationRoutes.OTP }
+          name={NavigationRoutes.PROFILE_SETUP1}
+          component={ProfileStep1Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE_SETUP2}
+          component={ProfileStep2Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE_SETUP3}
+          component={ProfileStep3Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+
+        {/* Main app / home */}
+        {/* <Stack.Screen
+          name={NavigationRoutes.HOME}
+          component={HomeScreen}
+          options={{ headerShown: false, animation: "none" }}
+        /> */}
+        <Stack.Screen
+          name={NavigationRoutes.OTP}
           component={OTPVerificationScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-          <Stack.Screen
-          name={NavigationRoutes.LoginWithEmail }
+        <Stack.Screen
+          name={NavigationRoutes.LoginWithEmail}
           component={EmailLoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-         <Stack.Screen 
-         name={NavigationRoutes.EMAIL_VERIFICATION}
-        component={EmailVerification}
-         options={{headerShown: false, animation: "none"}}/>
-
+        <Stack.Screen
+          name={NavigationRoutes.EMAIL_VERIFICATION}
+          component={EmailVerification}
+          options={{ headerShown: false, animation: "none" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default Navigator;
+export default Navigator;
