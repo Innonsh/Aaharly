@@ -7,11 +7,13 @@ import { Colors } from "../theme/Colors";
 // Variants for text
 export type TextVariant =
   | "title"
+  | "title1"
   | "subtitle"
   | "body"
   | "caption"
   | "button"
-  | "label";
+  | "label"
+  | "labels";
 
 interface AppTextProps {
   children: React.ReactNode;
@@ -73,6 +75,12 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
     lineHeight: 24,
     color: theme.colors.onBackground,
   },
+  title1:{
+   fontFamily: fonts.Medium,
+    fontSize: 20,
+    lineHeight: 24,
+    color: theme.colors.onBackgroun
+  },
   subtitle: {
     fontFamily: fonts.Regular,
     fontSize: 14,
@@ -93,7 +101,7 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
   },
   button: {
     fontFamily: fonts.SemiBold,
-    fontSize: 16,
+    fontSize: 15,  //16
     lineHeight: 20,
     color: theme.colors.onPrimary,
   },
@@ -103,4 +111,11 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
     lineHeight: 18,
     color: theme.colors.secondary,
   },
+ labels: {
+  fontFamily: fonts.SemiBold,
+  fontSize: 15,
+  lineHeight: 19,
+  color: theme.colors.secondary,
+},
+
 });
