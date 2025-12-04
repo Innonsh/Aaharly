@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   DefaultTheme,
   MD3DarkTheme,
@@ -11,6 +11,9 @@ import { Colors, themeColors } from "./src/theme/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navigator from "./src/navigation/Navigator";
 import { LocalizationProvider } from "./src/contexts/LocalizationContext";
+import { initializeFirebase } from "./src/firebase/config";
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -65,6 +68,9 @@ const AppContent = () => {
 };
 
 const App = () => {
+  useEffect(() => {
+    initializeFirebase();   
+  }, []);
   return <AppContent />;
 };
 

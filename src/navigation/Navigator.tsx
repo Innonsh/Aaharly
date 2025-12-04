@@ -17,6 +17,7 @@ import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen
 import { RootStackParamList } from "./NavigationRoutes";
 import EmailLoginScreen from "../screens/login/EmailLoginScreen";
 import EmailVerification from "../screens/verification/EmailVerification";
+import HomeScreen from "../screens/home/HomeScreen";
 
 const Navigator = () => {
   // const Stack = createNativeStackNavigator();
@@ -95,31 +96,37 @@ const Navigator = () => {
           component={SplashScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-        
+
         <Stack.Screen
-          name={NavigationRoutes.LOGIN }
+          name={NavigationRoutes.LOGIN}
           component={LoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />
 
         <Stack.Screen
-          name={NavigationRoutes.OTP }
+          name={NavigationRoutes.OTP}
           component={OTPVerificationScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-          <Stack.Screen
-          name={NavigationRoutes.LoginWithEmail }
+        <Stack.Screen
+          name={NavigationRoutes.LoginWithEmail}
           component={EmailLoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-         <Stack.Screen 
-         name={NavigationRoutes.EMAIL_VERIFICATION}
-        component={EmailVerification}
-         options={{headerShown: false, animation: "none"}}/>
+        <Stack.Screen
+          name={NavigationRoutes.EMAIL_VERIFICATION}
+          component={EmailVerification}
+          options={{ headerShown: false, animation: "none" }} />
+
+        <Stack.Screen
+          name={NavigationRoutes.HOME}
+          component={HomeScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
 
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default Navigator;
+export default Navigator;

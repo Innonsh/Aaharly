@@ -12,6 +12,11 @@ import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { TextInput } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
+import { sendOtp } from "../../services/firebaseAuth";
+import { googleLogin } from "../../services/firebaseAuth";
+import { sendGoogleTokenToBackend } from "../../services/api";
+import auth from "@react-native-firebase/auth";
+
 
 import {
   widthPercentageToDP as wp,
@@ -34,6 +39,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const isValidPhone = useMemo(() => validatePhone(phone), [phone]);
 
+  // 
   const handleContinue = async () => {
     setError("");
 
@@ -43,12 +49,47 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     }
 
     setLoading(true);
+    try {
+      const confirmation = await sendOtp(phone);
 
-    await new Promise<void>((resolve) => setTimeout(resolve, 1200));
+      navigation.navigate(NavigationRoutes.OTP, {
+        phone,
+        confirmation, // send confirm object
+      });
+    } catch (e) {
+      console.log(e);
+      setError("Unable to send OTP. Try again.");
+    }
 
-    navigation.navigate(NavigationRoutes.OTP, { phone });
     setLoading(false);
   };
+
+
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+
+      // Firebase Google Authentication
+      const idToken = await googleLogin();
+
+      // TODO: Uncomment when backend is ready
+      // try {
+      //   const backendResponse = await sendGoogleTokenToBackend(idToken);
+      //   // Store session token if needed
+      //   // await AsyncStorage.setItem("sessionToken", backendResponse.sessionToken);
+      // } catch (backendError) {
+      //   // Backend call failed, but continue login anyway
+      // }
+
+      // Navigate to home screen
+      navigation.navigate(NavigationRoutes.HOME);
+    } catch (err) {
+      setError("Google login failed. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <View style={styles.container}>
@@ -113,9 +154,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Social Icons */}
       <View style={styles.socialRow}>
-        <View style={styles.iconBox}>
+        <TouchableOpacity style={styles.iconBox} onPress={handleGoogleLogin}>
           <GoogleIcon width={24} height={24} />
-        </View>
+        </TouchableOpacity>
+
 
         <View style={styles.iconBox}>
           <AppleIcon width={24} height={24} />
@@ -148,7 +190,7 @@ const styles = StyleSheet.create({
 
   title: {
     marginTop: hp("7%"),
-    fontSize:22,
+    fontSize: 22,
   },
 
   subtitle: {
@@ -160,17 +202,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     marginTop: hp("0.5%"),
     borderRadius: wp("3.9%"),
-    fontFamily: "Matter-Regular", 
+    fontFamily: "Matter-Regular",
     fontSize: 22,
-    lineHeight: 22,  
-    includeFontPadding: false, 
-    
+    lineHeight: 22,
+    includeFontPadding: false,
+
   },
   errorText: {
     color: "red",
     fontSize: wp("3.2%"),
     marginTop: hp("0.8%"),
-   
+
   },
 
   continueBtn: {
@@ -180,27 +222,27 @@ const styles = StyleSheet.create({
     borderRadius: wp("3%"),
   },
   continueText: {
-  fontFamily: 'Matter-SemiBold',
-  color: '#fff'
-},
-  
+    fontFamily: 'Matter-SemiBold',
+    color: '#fff'
+  },
+
 
   orText: {
     marginTop: hp("3.5%"),
     marginBottom: hp("1.5%"),
-     textAlign:"center",
+    textAlign: "center",
   },
 
   socialRow: {
     flexDirection: "row",
     justifyContent: "center",
     gap: wp("7%"),
-      marginTop: hp("2.5%"),
+    marginTop: hp("2.5%"),
   },
   iconBox: {
     width: wp("12%"),
     height: wp("12%"),
-  
+
     backgroundColor: "#fff",
     elevation: 4,
     borderRadius: wp("2.8%"),
