@@ -1,3 +1,4 @@
+// src/navigation/Navigator.tsx
 import React, { useMemo } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -19,8 +20,8 @@ import { RootStackParamList } from "./NavigationRoutes";
 import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
 import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
 import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
-// optional home
-// import HomeScreen from "../screens/home/HomeScreen";
+// Home screen (added)
+import HomeScreen from "../screens/home/homeScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -111,6 +112,13 @@ const Navigator = () => {
           options={{ headerShown: false, animation: "none" }}
         />
 
+         {/* Main app / home */}
+        <Stack.Screen
+          name={NavigationRoutes.HOME}
+          component={HomeScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+
         {/* Profile setup flow */}
         <Stack.Screen
           name={NavigationRoutes.PROFILE_SETUP1}
@@ -128,12 +136,7 @@ const Navigator = () => {
           options={{ headerShown: false, animation: "none" }}
         />
 
-        {/* Main app / home */}
-        {/* <Stack.Screen
-          name={NavigationRoutes.HOME}
-          component={HomeScreen}
-          options={{ headerShown: false, animation: "none" }}
-        /> */}
+       
       </Stack.Navigator>
     </NavigationContainer>
   );
