@@ -14,9 +14,6 @@ import { fonts } from "../theme/Fonts";
 import LoginScreen from "../screens/login/LoginScreen";
 import { NavigationRoutes } from "./NavigationRoutes";
 import OnboardingScreen from "../screens/Onboarding/OnboardingScreens";
-import { RootStackParamList } from "./NavigationRoutes";
-
-// ⬇️ add your new profile screens
 import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
 import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
 import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
@@ -24,8 +21,13 @@ import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
 import HomeScreen from "../screens/home/homeScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen";
+import { RootStackParamList } from "./NavigationRoutes";
+import EmailLoginScreen from "../screens/login/EmailLoginScreen";
+import EmailVerification from "../screens/verification/EmailVerification";
 
 const Navigator = () => {
+  const Stack = createNativeStackNavigator<RootStackParamList>();
   const themeMode = ThemeMode.Light;
 
   const navigationTheme = useMemo<Theme>(() => {
@@ -112,7 +114,7 @@ const Navigator = () => {
           options={{ headerShown: false, animation: "none" }}
         />
 
-         {/* Main app / home */}
+        {/* Main app / home */}
         <Stack.Screen
           name={NavigationRoutes.HOME}
           component={HomeScreen}
@@ -136,9 +138,30 @@ const Navigator = () => {
           options={{ headerShown: false, animation: "none" }}
         />
 
-       
-      </Stack.Navigator>
-    </NavigationContainer>
+
+        {/* Main app / home */}
+        {/* <Stack.Screen
+          name={NavigationRoutes.HOME}
+          component={HomeScreen}
+          options={{ headerShown: false, animation: "none" }}
+        /> */}
+        <Stack.Screen
+          name={NavigationRoutes.OTP}
+          component={OTPVerificationScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.LoginWithEmail}
+          component={EmailLoginScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.EMAIL_VERIFICATION}
+          component={EmailVerification}
+          options={{ headerShown: false, animation: "none" }}
+        />
+      </Stack.Navigator >
+    </NavigationContainer >
   );
 };
 
