@@ -78,7 +78,7 @@ const OnboardingScreen: React.FC = () => {
    * Home will decide whether to prompt/redirect to profile setup.
    */
   const goToHome = () => {
-    navigation.replace(NavigationRoutes.HOME);
+    navigation.replace(NavigationRoutes.LOGIN);
   };
 
   const handleNext = () => {

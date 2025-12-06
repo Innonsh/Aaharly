@@ -14,14 +14,15 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { BlurView } from "@react-native-community/blur";
 import Svg, { Defs, LinearGradient, Stop, Rect } from "react-native-svg";
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
 import Input from "../../components/TextInput";
 import { Colors } from "../../theme/Colors";
+import { fonts } from "../../theme/Fonts";
 import { NavigationRoutes, RootStackParamList } from "../../navigation/NavigationRoutes";
 
 import HomeBannerSVG from "../../assets/HomePage/home3.svg";
@@ -32,7 +33,7 @@ import ExploreIcon from "../../assets/HomePage/exploreicon.svg";
 import SearchIcon from "../../assets/HomePage/Searchicon.svg";
 import LocationIcon from "../../assets/HomePage/LocationIcon.svg";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
+
 
 type Meal = {
   id: string;
@@ -97,6 +98,7 @@ const DUMMY_MEALS: Meal[] = [
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, NavigationRoutes.HOME>;
 
 const MealCard = ({ item }: { item: Meal }) => {
+  const navigation = useNavigation<HomeNavProp>();
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -111,15 +113,15 @@ const MealCard = ({ item }: { item: Meal }) => {
       style={styles.largeMealCard}
     >
       <View style={styles.largeMealImage}>
-        <MealIllustration width={359} height={216} />
+        <MealIllustration width={wp("92%")} height={hp("37%")} />
       </View>
 
       <View style={[
         styles.largeMealDetails,
         {
-          height: expanded ? 210 : 135, // Increased height to fit content
-          top: expanded ? 97 : 182,     // Adjusted top to expand upwards (182 - (220-135))
-          gap: expanded ? 20 : 0
+          height: expanded ? hp("25%") : hp("16%"), 
+          top: expanded ? hp("11.5%") : hp("21.5%"),   
+          gap: expanded ? hp("2.5%") : 0
         }
       ]}>
         <View>
@@ -163,7 +165,7 @@ const MealCard = ({ item }: { item: Meal }) => {
             </AppText>
           </View>
 
-          <TouchableOpacity style={styles.buyBtn} activeOpacity={0.85} onPress={() => Alert.alert("Buy Plan", "Purchase flow")}>
+          <TouchableOpacity style={styles.buyBtn} activeOpacity={0.85} onPress={() => navigation.navigate(NavigationRoutes.PROFILE_SETUP1)}>
             <AppText variant="button" color="#fff">
               Buy Plan
             </AppText>
@@ -177,45 +179,27 @@ const MealCard = ({ item }: { item: Meal }) => {
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
 
-  const [profileExists, setProfileExists] = useState<boolean | null>(null);
+  const [profileExists, setProfileExists] = useState<boolean>(false);
   const [profileComplete, setProfileComplete] = useState<boolean>(false);
 
-  const checkProfile = useCallback(async () => {
-    try {
-      const json = await AsyncStorage.getItem("userProfile");
-      if (!json) {
-        setProfileExists(false);
-        setProfileComplete(false);
-        return;
-      }
-      const profile = JSON.parse(json);
-      setProfileExists(true);
-      setProfileComplete(Boolean(profile?.setupComplete));
-    } catch (err) {
-      console.warn("Error reading profile:", err);
-      setProfileExists(false);
-      setProfileComplete(false);
-    }
-  }, []);
 
   useEffect(() => {
-    checkProfile();
-  }, [checkProfile]);
+  
+    setProfileExists(false);
+    setProfileComplete(false);
+  }, []);
 
   const handleSetupProfile = () => navigation.navigate(NavigationRoutes.PROFILE_SETUP1);
-  const handleExplorePlans = () => Alert.alert("Explore Plans", "Wire to plans screen");
-
-  // Header component for FlatList (banner + CTA + prompt + section header)
+  const handleExplorePlans = () => navigation.navigate(NavigationRoutes.EXPLORE_PLANS);
   const ListHeader = useMemo(() => {
     return (
       <View>
-        {/* Banner wrapper - fixed height and position:relative */}
         <View style={styles.bannerWrapper}>
           <View style={styles.bannerInner}>
-            {/* put SVG to fill the wrapper area. Using explicit width/height so it measures properly */}
+            {}
             <HomeBannerSVG
-              width={SCREEN_WIDTH}
-              height={405}
+              width={wp("100%")}
+              height={hp("48%")}
             />
             <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
               <Defs>
@@ -228,9 +212,8 @@ export default function HomeScreen() {
             </Svg>
           </View>
 
-          {/* Center Screen Container - Absolute (Highlighted Box) */}
           <View style={styles.centerContainer}>
-            {/* Header Section */}
+          
             <View style={styles.topHeader}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <AppText variant="labels" style={{ color: "#fff", fontSize: 16, marginRight: 8 }}>
@@ -246,7 +229,6 @@ export default function HomeScreen() {
               </AppText>
             </View>
 
-            {/* Search Box */}
             <View style={styles.searchBox}>
               <BlurView
                 blurAmount={16}
@@ -259,7 +241,6 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            {/* Promo Box */}
             <View style={styles.promoBox}>
               <BlurView
                 blurAmount={6}
@@ -278,9 +259,9 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* CTA card */}
+    
         <View style={styles.ctaCard}>
-          {/* Background illustration fills the card */}
+    
           <View style={StyleSheet.absoluteFill}>
             <CtaIllustration
               width="100%"
@@ -295,7 +276,7 @@ export default function HomeScreen() {
             />
           </View>
 
-          {/* Foreground content on top of the blurred background */}
+
           <View style={styles.ctaContent}>
             <AppText variant="title" style={styles.ctaTitle}>
               Eat Clean, Transform Faster
@@ -308,6 +289,7 @@ export default function HomeScreen() {
                 variant="primary"
                 icon={<ProfileIcon width={20} height={20} color="#FFF" />}
                 style={styles.setupBtn}
+                textStyle={{ fontFamily: fonts.SemiBold, fontSize: wp("3.8%") }}
               />
               <Button
                 title="Explore Plans"
@@ -315,11 +297,12 @@ export default function HomeScreen() {
                 variant="secondary"
                 icon={<ExploreIcon width={20} height={20} color="#FF5722" />}
                 style={styles.exploreBtn}
+                textStyle={{ fontFamily: fonts.SemiBold, fontSize: wp("3.8%") }}
               />
             </View>
           </View>
         </View>
-        {/* Section header */}
+        
         <View style={styles.sectionHeader}>
           <AppText variant="title">Popular Meal Plans</AppText>
           <AppText variant="caption">Meals crafted for you</AppText>
@@ -328,7 +311,6 @@ export default function HomeScreen() {
     );
   }, [profileExists, profileComplete]);
 
-  // Enable LayoutAnimation for Android
   useEffect(() => {
     if (Platform.OS === 'android') {
       if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -360,35 +342,32 @@ export default function HomeScreen() {
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
         ListHeaderComponent={ListHeader}
         ListFooterComponent={ListFooter}
-      // remove nested scroll issues — FlatList handles the scrolling
       />
     </SafeAreaView>
   );
 }
 
-/* Styles */
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
 
   listContent: {
-    padding: 16,
-    paddingBottom: 32,
+    padding: wp("4%"),
+    paddingBottom: hp("4%"),
   },
 
-  /* Banner wrapper: fixed height + relative positioning */
   bannerWrapper: {
-    width: SCREEN_WIDTH,
-    height: 405,
-    marginLeft: -16,
-    marginTop: -16,
-    marginBottom: 12,
+    width: wp("100%"),
+    height: hp("48%"),
+    marginLeft: wp("-4%"),
+    marginTop: wp("-4%"),
+    marginBottom: hp("1.5%"),
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
   },
   bannerInner: {
-    width: SCREEN_WIDTH,
-    height: 405,
+    width: wp("100%"),
+    height: hp("48%"),
     borderBottomRightRadius: 18,
     borderBottomLeftRadius: 18,
     overflow: "hidden",
@@ -396,80 +375,76 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   topHeader: {
-    // Removed absolute positioning to let it flow in the container
     marginBottom: 0,
   },
   centerContainer: {
     position: "absolute",
-    top: 58,
-    left: 16,
-    width: 362,
-    // height: 202, // Hug height (auto)
-    gap: 8,
+    top: hp("7%"),
+    left: wp("4%"),
+    width: wp("92%"),
+    gap: hp("1%"),
     flexDirection: "column",
   },
   searchBox: {
-    width: 362,
-    height: 50,
+    width: wp("92%"),
+    height: hp("6%"),
     borderRadius: 14,
-    overflow: "hidden", // For BlurView
+    overflow: "hidden", 
     position: "relative",
-    marginTop: 0, // Reset margin
+    marginTop: 0, 
   },
   searchContent: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
+    padding: wp("3%"),
     height: "100%",
   },
   promoBox: {
-    width: 223,
-    height: 90,
+    width: wp("60%"), 
+    height: hp("11%"),
     borderRadius: 18,
-    overflow: "hidden", // For BlurView
+    overflow: "hidden", 
     alignSelf: "center",
     position: "relative",
-    marginTop: 0, // Reset margin
+    marginTop: 0, 
   },
   promoContent: {
-    paddingTop: 25,
-    paddingRight: 20,
-    paddingBottom: 16,
-    paddingLeft: 20,
-    gap: 10,
+    paddingTop: hp("3%"),
+    paddingRight: wp("5%"),
+    paddingBottom: hp("2%"),
+    paddingLeft: wp("5%"),
+    gap: hp("1.2%"),
     alignItems: "center",
     justifyContent: "center",
     height: "100%",
   },
 
-  /* CTA card */
   ctaCard: {
-    marginTop: 18,
+    marginTop: hp("2%"),
     borderRadius: 14,
     backgroundColor: "#ffffff",
     borderWidth: 1,
     borderColor: "#EEE",
     position: "relative",
     overflow: "hidden",
-    marginBottom: 14,
-    height: 180, // Fixed height for the card
+    marginBottom: hp("1.5%"),
+    height: hp("22%"), 
   },
-  // background SVG
   ctaBackground: {
-    width: 361,
-    height: 180,
+    width: wp("92%"),
+    height: hp("22%"),
   },
-  // foreground content
   ctaContent: {
     flex: 1,
-    padding: 25, // Reduced padding to fit the fixed-width buttons
-    justifyContent: "space-between", // Push text to top, buttons to bottom
-    alignItems: "center", // Center content horizontally
+    padding: wp("6%"), 
+    justifyContent: "space-between", 
+    alignItems: "center", 
   },
   ctaTitle: {
     color: "#FFFFFF",
     marginTop: 1,
-    fontSize: 23,
+    fontSize: wp("6%"),
+    fontFamily: fonts.SemiBold,
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 10,
@@ -477,52 +452,49 @@ const styles = StyleSheet.create({
   ctaButtonsRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12, // Gap between buttons
+    gap: wp("3%"), 
   },
   setupBtn: {
-    width: 164,
-    height: 48,
+    width: wp("40%"),
+    height: hp("6%"),
     borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 21,
+    paddingVertical: hp("1.5%"),
+    paddingHorizontal: wp("5%"),
     justifyContent: "center",
     alignItems: "center",
-    gap: 10, // Gap between icon and text
+    gap: wp("2.5%"), 
     marginTop: 0,
   },
   exploreBtn: {
-    width: 164,
-    height: 48,
+    width: wp("40%"),
+    height: hp("6%"),
     borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 21,
+    paddingVertical: hp("1.5%"),
+    paddingHorizontal: wp("5%"),
     justifyContent: "center",
     alignItems: "center",
-    gap: 10, // Gap between icon and text
+    gap: wp("2.5%"), 
     marginTop: 0,
   },
 
 
-  /* Profile prompt */
   profilePrompt: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#FFF7EE",
     borderRadius: 12,
-    padding: 12,
-    marginBottom: 14,
+    padding: wp("3%"),
+    marginBottom: hp("1.5%"),
     borderWidth: 1,
     borderColor: "#FFE6D1",
   },
 
-  /* Section header */
-  sectionHeader: { marginBottom: 10 },
+  sectionHeader: { marginBottom: hp("1.2%") },
 
-  /* Meal card */
   largeMealCard: {
-    backgroundColor: "transparent", // Image provides background
+    backgroundColor: "transparent", 
     borderRadius: 20,
-    padding: 0, // Remove padding to allow full-size image/overlay
+    padding: 0, 
     flexDirection: "column",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
@@ -530,14 +502,14 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
     alignItems: "center",
-    width: 350,
-    height: 315,
+    width: wp("92%"),
+    height: hp("37%"),
     alignSelf: "center",
-    position: "relative", // For absolute positioning of children
+    position: "relative",   
   },
   largeMealImage: {
-    width: 361,
-    height: 317, // Full height image
+    width: wp("92%"),
+    height: hp("37%"), 
     borderRadius: 20,
     overflow: "hidden",
     position: "absolute",
@@ -547,14 +519,14 @@ const styles = StyleSheet.create({
   },
   largeMealDetails: {
     position: "absolute",
-    top: 182,
-    width: 361,
-    height: 135,
+    top: hp("21.5%"),
+    width: wp("92%"),
+    height: hp("16%"),
     backgroundColor: "#FFF",
     borderRadius: 18,
     borderWidth: 1,
     borderColor: "#F0F0F0",
-    padding: 16,
+    padding: wp("4%"),
 
   },
   cardBottom: {
@@ -565,15 +537,14 @@ const styles = StyleSheet.create({
   },
   buyBtn: {
     backgroundColor: "#FF5722",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 25, // More rounded as per image
+    paddingHorizontal: wp("5%"),
+    paddingVertical: hp("1.2%"),
+    borderRadius: 25, 
   },
 
-  /* Footer CTA */
   footerCard: {
-    marginTop: 18,
-    padding: 18,
+    marginTop: hp("2%"),
+    padding: wp("4.5%"),
     borderRadius: 14,
     backgroundColor: Colors.primary,
     alignItems: "center",
@@ -581,17 +552,17 @@ const styles = StyleSheet.create({
   badgesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
-    marginTop: 12,
+    gap: wp("2%"),
+    marginTop: hp("1.5%"),
   },
   badge: {
     backgroundColor: "#F8F8F8",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: wp("3%"),
+    paddingVertical: hp("0.7%"),
     borderRadius: 100,
   },
   badgeText: {
-    fontSize: 12,
+    fontSize: wp("3%"),
     color: "#333",
     fontWeight: "500",
   },

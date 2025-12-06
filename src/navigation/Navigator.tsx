@@ -18,7 +18,14 @@ import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
 import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
 import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
 // Home screen (added)
-import HomeScreen from "../screens/home/homeScreen";
+import homeScreen from "../screens/home/homeScreen";
+import ExplorePlansScreen from "../screens/exploreplans/explorePlans";
+import NutritionalOverviewScreen from "../screens/nutritionaloverview/nutrition";
+import WeeklyPlanScreen from "../screens/weeklyplan/plan";
+import AddressScreen from "../screens/deladdress/address";
+import DeliverySettingsScreen from "../screens/deladdress/delsettings";
+import DeliverySettingsScreen2 from "../screens/deladdress/delsettings2";
+import PaymentScreen from "../screens/payment/pay";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen";
@@ -113,11 +120,31 @@ const Navigator = () => {
           component={LoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />
+        <Stack.Screen
+          name={NavigationRoutes.OTP}
+          component={OTPVerificationScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.LoginWithEmail}
+          component={EmailLoginScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.EMAIL_VERIFICATION}
+          component={EmailVerification}
+          options={{ headerShown: false, animation: "none" }}
+        />
 
         {/* Main app / home */}
         <Stack.Screen
           name={NavigationRoutes.HOME}
-          component={HomeScreen}
+          component={homeScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.EXPLORE_PLANS}
+          component={ExplorePlansScreen}
           options={{ headerShown: false, animation: "none" }}
         />
 
@@ -137,27 +164,34 @@ const Navigator = () => {
           component={ProfileStep3Screen}
           options={{ headerShown: false, animation: "none" }}
         />
-
-
-        {/* Main app / home */}
-        {/* <Stack.Screen
-          name={NavigationRoutes.HOME}
-          component={HomeScreen}
-          options={{ headerShown: false, animation: "none" }}
-        /> */}
         <Stack.Screen
-          name={NavigationRoutes.OTP}
-          component={OTPVerificationScreen}
+          name={NavigationRoutes.NUTRITIONAL_OVERVIEW}
+          component={NutritionalOverviewScreen}
           options={{ headerShown: false, animation: "none" }}
         />
         <Stack.Screen
-          name={NavigationRoutes.LoginWithEmail}
-          component={EmailLoginScreen}
+          name={NavigationRoutes.WEEKLY_PLAN}
+          component={WeeklyPlanScreen}
           options={{ headerShown: false, animation: "none" }}
         />
         <Stack.Screen
-          name={NavigationRoutes.EMAIL_VERIFICATION}
-          component={EmailVerification}
+          name={NavigationRoutes.DELIVERY_ADDRESS}
+          component={AddressScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.DELIVERY_SETTINGS}
+          component={DeliverySettingsScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.DELIVERY_SETTINGS_2}
+          component={DeliverySettingsScreen2}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PAYMENT}
+          component={PaymentScreen}
           options={{ headerShown: false, animation: "none" }}
         />
       </Stack.Navigator >

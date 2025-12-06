@@ -7,7 +7,8 @@ import {
 } from "react-native";
 import { useTheme } from "react-native-paper";
 import { Colors } from "../theme/Colors";
-import AppText from "./AppText"; 
+import { fonts } from "../theme/Fonts";
+import AppText from "./AppText";
 
 interface ButtonProps {
   title: string;
@@ -18,7 +19,7 @@ interface ButtonProps {
   style?: ViewStyle | ViewStyle[];
   disabled?: boolean;
   onChange?: (isDisabled: boolean) => void;
-  textStyle?: any; 
+  textStyle?: any;
 }
 
 export default function Button({
@@ -82,7 +83,7 @@ export default function Button({
           style={[
             styles.text,
             { color: getTextColor() },
-            textStyle, 
+            textStyle,
           ]}
         >
           {title}
@@ -135,8 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryDisabled,
   },
   text: {
-    
-    fontWeight: "600",
+    fontFamily: fonts.SemiBold,
     fontSize: 20,
   },
   row: {
