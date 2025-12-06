@@ -71,7 +71,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       <Input
         mode="outlined"
         value={phone}
-        onChangeText={(t) => {
+        onChangeText={(t: string) => {
           setPhone(t.replace(/[^0-9]/g, ""));
           setError("");
         }}
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
 
   title: {
     marginTop: hp("7%"),
-    fontSize:22,
+    fontSize: 22,
   },
 
   subtitle: {
@@ -160,17 +160,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     marginTop: hp("0.5%"),
     borderRadius: wp("3.9%"),
-    fontFamily: "Matter-Regular", 
+    fontFamily: "Matter-Regular",
     fontSize: 22,
-    lineHeight: 22,  
-    includeFontPadding: false, 
-    
+    lineHeight: 22,
+    includeFontPadding: false,
+
   },
   errorText: {
     color: "red",
     fontSize: wp("3.2%"),
     marginTop: hp("0.8%"),
-   
+
   },
 
   continueBtn: {
@@ -180,27 +180,27 @@ const styles = StyleSheet.create({
     borderRadius: wp("3%"),
   },
   continueText: {
-  fontFamily: 'Matter-SemiBold',
-  color: '#fff'
-},
-  
+    fontFamily: 'Matter-SemiBold',
+    color: '#fff'
+  },
+
 
   orText: {
     marginTop: hp("3.5%"),
     marginBottom: hp("1.5%"),
-     textAlign:"center",
+    textAlign: "center",
   },
 
   socialRow: {
     flexDirection: "row",
     justifyContent: "center",
     gap: wp("7%"),
-      marginTop: hp("2.5%"),
+    marginTop: hp("2.5%"),
   },
   iconBox: {
     width: wp("12%"),
     height: wp("12%"),
-  
+
     backgroundColor: "#fff",
     elevation: 4,
     borderRadius: wp("2.8%"),
