@@ -14,7 +14,6 @@ import { NavigationProp } from "@react-navigation/native";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
 import { sendOtp } from "../../services/firebaseAuth";
 import { googleLogin } from "../../services/firebaseAuth";
-import { sendGoogleTokenToBackend } from "../../services/api";
 import auth from "@react-native-firebase/auth";
 
 
@@ -22,6 +21,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { fonts } from "../../theme/Fonts";
 
 interface Props {
   navigation: NavigationProp<any>;
@@ -56,9 +56,17 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         phone,
         confirmation, // send confirm object
       });
-    } catch (e) {
-      console.log(e);
-      setError("Unable to send OTP. Try again.");
+    } catch (e: any) {
+      console.error("Phone Auth Error:", e);
+      // Show specific error for debugging
+      let errorCode = e.code || e.message || "Unknown Error";
+
+      if (errorCode.includes("auth/billing-not-enabled")) {
+        const formattedSent = `+91${phone.replace(/\D/g, '')}`;
+        errorCode = `Billing Error. Firebase tried to send SMS to: ${formattedSent}\n\nEnsure EXACTLY "${formattedSent}" is added as a Test Number in Firebase Console.`;
+      }
+
+      setError(`${errorCode}`);
     }
 
     setLoading(false);
@@ -69,19 +77,8 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     try {
       setLoading(true);
 
-      // Firebase Google Authentication
-      const idToken = await googleLogin();
+      await googleLogin();
 
-      // TODO: Uncomment when backend is ready
-      // try {
-      //   const backendResponse = await sendGoogleTokenToBackend(idToken);
-      //   // Store session token if needed
-      //   // await AsyncStorage.setItem("sessionToken", backendResponse.sessionToken);
-      // } catch (backendError) {
-      //   // Backend call failed, but continue login anyway
-      // }
-
-      // Navigate to home screen
       navigation.navigate(NavigationRoutes.HOME);
     } catch (err) {
       setError("Google login failed. Try again.");
@@ -93,22 +90,17 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Illustration */}
       <View style={styles.imageWrapper}>
         <LoginIllustration width={wp("50%")} height={wp("50%")} />
       </View>
-
-      {/* Title */}
       <AppText variant="title" style={styles.title}>
         {translations.login.title}
       </AppText>
 
-      {/* Subtitle */}
       <AppText variant="subtitle" style={styles.subtitle}>
         {translations.login.subtitle}
       </AppText>
 
-      {/* Phone Input */}
       <Input
         mode="outlined"
         value={phone}
@@ -134,10 +126,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         maxLength={10}
       />
 
-      {/* Error Message */}
       {error !== "" && <AppText style={styles.errorText}>{error}</AppText>}
-
-      {/* Continue Button */}
       <Button
         title={translations.common.continue}
         onPress={handleContinue}
@@ -147,17 +136,14 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         textStyle={styles.continueText}
       />
 
-      {/* OR */}
       <AppText variant="smallCenterd" style={styles.orText}>
         {translations.login.orLoginWith}
       </AppText>
 
-      {/* Social Icons */}
       <View style={styles.socialRow}>
         <TouchableOpacity style={styles.iconBox} onPress={handleGoogleLogin}>
           <GoogleIcon width={24} height={24} />
         </TouchableOpacity>
-
 
         <View style={styles.iconBox}>
           <AppleIcon width={24} height={24} />
@@ -175,7 +161,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 export default LoginScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -191,28 +176,30 @@ const styles = StyleSheet.create({
   title: {
     marginTop: hp("7%"),
     fontSize: 22,
+    fontFamily: fonts.Bold,
   },
 
   subtitle: {
     marginTop: hp("1%"),
     marginBottom: hp("1.7%"),
+    fontFamily: fonts.Regular,
   },
 
   input: {
     backgroundColor: "#FFF",
     marginTop: hp("0.5%"),
     borderRadius: wp("3.9%"),
-    fontFamily: "Matter-Regular",
+    fontFamily: fonts.Regular,
     fontSize: 22,
     lineHeight: 22,
     includeFontPadding: false,
-
   },
+
   errorText: {
     color: "red",
     fontSize: wp("3.2%"),
     marginTop: hp("0.8%"),
-
+    fontFamily: fonts.Regular,
   },
 
   continueBtn: {
@@ -221,16 +208,17 @@ const styles = StyleSheet.create({
     height: hp("5.9%"),
     borderRadius: wp("3%"),
   },
-  continueText: {
-    fontFamily: 'Matter-SemiBold',
-    color: '#fff'
-  },
 
+  continueText: {
+    fontFamily: fonts.SemiBold,
+    color: "#fff",
+  },
 
   orText: {
     marginTop: hp("3.5%"),
     marginBottom: hp("1.5%"),
     textAlign: "center",
+    fontFamily: fonts.Regular,
   },
 
   socialRow: {
@@ -239,16 +227,15 @@ const styles = StyleSheet.create({
     gap: wp("7%"),
     marginTop: hp("2.5%"),
   },
+
   iconBox: {
     width: wp("12%"),
     height: wp("12%"),
-
     backgroundColor: "#fff",
     elevation: 4,
     borderRadius: wp("2.8%"),
     alignItems: "center",
     justifyContent: "center",
-
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.12,

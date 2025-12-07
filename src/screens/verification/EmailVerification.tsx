@@ -5,7 +5,6 @@ import Button from "../../components/Button";
 import { Colors } from "../../theme/Colors";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
-
 import BackIcon from "../../assets/login/back arrow.svg";
 import EmailOtpImg from "../../assets/login/otp screen image (email).svg";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
@@ -96,7 +95,7 @@ const EmailVerification: React.FC<Props> = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
+    
       <View style={styles.headerRow}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <BackIcon width={wp("4%")} height={wp("4%")} />
@@ -111,13 +110,12 @@ const EmailVerification: React.FC<Props> = ({ route }) => {
         <EmailOtpImg width={wp("40%")} height={wp("40%")} />
       </View>
 
-      {/* DESCRIPTION */}
+      
       <AppText variant="caption" style={styles.desc}>
         {translations.EmailVerification.subtitle} {"\n"}
         {email}
       </AppText>
 
-      {/* OTP BOXES */}
       <View style={styles.otpRow}>
         {otp.map((digit, index) => (
           <RNTextInput
@@ -143,8 +141,6 @@ const EmailVerification: React.FC<Props> = ({ route }) => {
         </AppText>
       )}
 
-
-      {/* LOGIN */}
       <Button
         title={translations.login.title}
         variant="primary"
@@ -154,7 +150,6 @@ const EmailVerification: React.FC<Props> = ({ route }) => {
         textStyle={styles.continueText}
       />
 
-      {/* RESEND ROW */}
       <View style={styles.resendRow}>
         <AppText>{`00.${timer < 10 ? "0" : ""}${timer}`}</AppText>
 

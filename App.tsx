@@ -11,7 +11,7 @@ import { Colors, themeColors } from "./src/theme/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navigator from "./src/navigation/Navigator";
 import { LocalizationProvider } from "./src/contexts/LocalizationContext";
-import { initializeFirebase } from "./src/firebase/config";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 
 
@@ -69,7 +69,9 @@ const AppContent = () => {
 
 const App = () => {
   useEffect(() => {
-    initializeFirebase();   
+    GoogleSignin.configure({
+      webClientId: "720163295302-ambs6u0f0l7ml18gldvae28ais3okn9b.apps.googleusercontent.com", // From Firebase Console
+    });
   }, []);
   return <AppContent />;
 };
