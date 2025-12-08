@@ -11,6 +11,7 @@ import { Colors, themeColors } from "./src/theme/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navigator from "./src/navigation/Navigator";
 import { LocalizationProvider } from "./src/contexts/LocalizationContext";
+import { AuthProvider } from "./src/contexts/AuthContext";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 
@@ -57,13 +58,15 @@ const AppContent = () => {
   }, [themeMode]);
 
   return (
-    <PaperProvider theme={theme}>
-      <SafeAreaView style={styles.container}>
-        <LocalizationProvider>
-          <Navigator />
-        </LocalizationProvider>
-      </SafeAreaView>
-    </PaperProvider>
+    <AuthProvider>
+      <PaperProvider theme={theme}>
+        <SafeAreaView style={styles.container}>
+          <LocalizationProvider>
+            <Navigator />
+          </LocalizationProvider>
+        </SafeAreaView>
+      </PaperProvider>
+    </AuthProvider>
   );
 };
 
