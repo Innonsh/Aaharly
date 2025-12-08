@@ -7,6 +7,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import OTP from "../../assets/login/otp screen image.svg";
 import BackIcon from "../../assets/login/back arrow.svg";
 import { translations } from "../../contexts/LocalizationContext";
+import { verifyOtp } from "../../services/firebaseAuth";
+import auth from "@react-native-firebase/auth";
 
 import {
   widthPercentageToDP as wp,
@@ -16,13 +18,17 @@ import {
 type Props = NativeStackScreenProps<RootStackParamList, NavigationRoutes.OTP>;
 
 const OTPVerificationScreen = ({ route, navigation }: Props) => {
-  const { phone } = route.params;
+  const { phone, confirmation } = route.params;
 
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [timer, setTimer] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const [error, setError] = useState("");
+  const [isOtpInvalid, setIsOtpInvalid] = useState(false);
 
   const inputRefs = [
+    useRef<TextInput>(null),
+    useRef<TextInput>(null),
     useRef<TextInput>(null),
     useRef<TextInput>(null),
     useRef<TextInput>(null),
@@ -31,13 +37,11 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-
     if (timer > 0) {
       interval = setInterval(() => setTimer((t) => t - 1), 1000);
     } else {
       setIsResendDisabled(false);
     }
-
     return () => clearInterval(interval);
   }, [timer]);
 
@@ -46,8 +50,39 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
     newOtp[index] = text.slice(-1);
     setOtp(newOtp);
 
-    if (text && index < 3) inputRefs[index + 1].current?.focus();
+    setError("");
+    setIsOtpInvalid(false);
+
+    if (text && index < 5) inputRefs[index + 1].current?.focus();
     if (!text && index > 0) inputRefs[index - 1].current?.focus();
+
+    if (text && index === 5) {
+      const fullOtp = [...newOtp];
+      fullOtp[index] = text.slice(-1);
+      const enteredOtp = fullOtp.join("");
+      if (enteredOtp.length === 6) {
+        handleVerify(enteredOtp);
+      }
+    }
+  };
+
+  const handleVerify = async (otpString?: string) => {
+    const enteredOtp = otpString || otp.join("");
+
+    if (enteredOtp.length !== 6) {
+      setError("Please enter valid 6-digit OTP");
+      return;
+    }
+
+    try {
+      const idToken = await verifyOtp(confirmation, enteredOtp);
+      console.log("TOKEN:", idToken);
+
+      navigation.replace(NavigationRoutes.HOME);
+    } catch (e) {
+      setError("Invalid OTP, try again.");
+      setIsOtpInvalid(true);
+    }
   };
 
   return (
@@ -59,7 +94,7 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
       </View>
 
       <View style={styles.imageWrapper}>
-        <OTP width={wp("40%")} height={hp("20%")} /> {/* 🔄 */}
+        <OTP width={wp("40%")} height={hp("20%")} />
       </View>
 
       <AppText variant="title" style={styles.heading}>
@@ -68,7 +103,7 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
 
       <AppText variant="subtitle" style={styles.subtext}>
         {translations.Verification.subtitle}{"\n"}
-        +91{phone.slice(0, 2)}******{phone.slice(8)}
+        code sent to +91{phone.slice(0, 2)}******{phone.slice(8)}
       </AppText>
 
       <View style={styles.otpContainer}>
@@ -77,7 +112,10 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
             key={index}
             ref={inputRefs[index]}
             value={value}
-            style={styles.otpBox}
+            style={[
+              styles.otpBox,
+              isOtpInvalid && { borderColor: "#FF0000", color: "#FF0000" }
+            ]}
             keyboardType="number-pad"
             maxLength={1}
             onChangeText={(text) => handleOtpChange(text, index)}
@@ -85,24 +123,33 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
         ))}
       </View>
 
+      {error !== "" && (
+        <AppText style={{ color: "red", textAlign: "center", marginTop: hp("2%") }}>
+          {error}
+        </AppText>
+      )}
+
       <View style={styles.bottomRow}>
         <AppText style={styles.timer}>
           {timer < 10 ? `00.0${timer}` : `00.${timer}`}
         </AppText>
 
-        <AppText style={styles.didntReceive}>Didn’t receive code?</AppText>
-
-        <TouchableOpacity
-          disabled={isResendDisabled}
-          onPress={() => {
-            setTimer(30);
-            setIsResendDisabled(true);
-          }}
-        >
-          <AppText style={[styles.resend, isResendDisabled && { opacity: 0.4 }]}>
-            Resend
-          </AppText>
-        </TouchableOpacity>
+        <View style={styles.resendRow}>
+          <AppText style={styles.didntReceive}>Didn't receive code? </AppText>
+          <TouchableOpacity
+            disabled={isResendDisabled}
+            onPress={() => {
+              setTimer(30);
+              setIsResendDisabled(true);
+              setError("");
+              setIsOtpInvalid(false);
+            }}
+          >
+            <AppText style={[styles.resend, isResendDisabled && { opacity: 0.4 }]}>
+              Resend
+            </AppText>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Button
@@ -116,19 +163,16 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
 
 export default OTPVerificationScreen;
 
-// Styles with 🔄 responsive changes
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
     paddingHorizontal: wp("5%"),
   },
-
   imageWrapper: {
     alignItems: "center",
     marginTop: hp("12%"),
   },
-
   headerRow: {
     marginTop: hp("6%"),
     flexDirection: "row",
@@ -136,7 +180,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: wp("5%"),
   },
-
   backBtn: {
     width: wp("11%"),
     height: wp("11%"),
@@ -146,26 +189,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 2,
   },
-
-
   heading: {
     textAlign: "center",
     marginTop: hp("6%"),
     fontSize: wp("6%"),
   },
-
   subtext: {
     textAlign: "center",
     marginTop: hp("1%"),
     fontSize: wp("4%"),
   },
-
   otpContainer: {
     flexDirection: "row",
     justifyContent: "center",
     marginTop: hp("3%"),
   },
-
   otpBox: {
     width: wp("13%"),
     height: wp("13%"),
@@ -176,24 +214,25 @@ const styles = StyleSheet.create({
     marginHorizontal: wp("3%"),
     fontSize: wp("5%"),
   },
-
   bottomRow: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: hp("4%"),
+    paddingHorizontal: wp("5%"),
   },
-
   timer: {
-    fontSize: wp("4%"),
-    marginRight: wp("2%"),
+    fontSize: wp("3.8%"),
   },
-
+  resendRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   didntReceive: {
     fontSize: wp("4%"),
     color: "#666",
     marginRight: wp("1%"),
   },
-
   resend: {
     fontSize: wp("4%"),
     color: "#FF6A4D",

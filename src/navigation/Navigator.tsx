@@ -32,6 +32,7 @@ import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen
 import { RootStackParamList } from "./NavigationRoutes";
 import EmailLoginScreen from "../screens/login/EmailLoginScreen";
 import EmailVerification from "../screens/verification/EmailVerification";
+import HomeScreen from "../screens/home/HomeScreen";
 
 const Navigator = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -133,6 +134,11 @@ const Navigator = () => {
         <Stack.Screen
           name={NavigationRoutes.EMAIL_VERIFICATION}
           component={EmailVerification}
+          options={{ headerShown: false, animation: "none" }} />
+
+        <Stack.Screen
+          name={NavigationRoutes.HOME}
+          component={HomeScreen}
           options={{ headerShown: false, animation: "none" }}
         />
 

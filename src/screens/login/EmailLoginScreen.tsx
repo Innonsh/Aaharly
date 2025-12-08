@@ -21,12 +21,10 @@ const EmailLoginScreen = () => {
 
   const [email, setEmail] = useState("");
 
-  //  Regex email validation (reviewer required)
   const isValidEmail = useMemo(() => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email);
   }, [email]);
 
-  // useCallback added (reviewer required)
   const handleContinue = useCallback(() => {
     if (!isValidEmail) return;
 
@@ -37,8 +35,6 @@ const EmailLoginScreen = () => {
 
   return (
     <View style={styles.container}>
-
-      {/* Header */}
 
       <View style={styles.headerRow}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -52,18 +48,14 @@ const EmailLoginScreen = () => {
         <View style={{ width: wp("11%") }} />
       </View>
 
-
-      {/* Illustration */}
       <View style={styles.imageWrapper}>
         <LunchSvg width={wp("40%")} height={wp("40%")} />
       </View>
 
-      {/* Label */}
       <AppText variant="title" style={styles.label}>
         {translations.Email.subtitle}
       </AppText>
 
-      {/* Email Input */}
       <TextInput
         mode="outlined"
         placeholder="xyz@gmail.com"
@@ -75,7 +67,6 @@ const EmailLoginScreen = () => {
         contentStyle={{ height: hp("6%") }}
       />
 
-      {/* Button */}
       <Button
         title={translations.common.continue}
         variant="primary"
@@ -111,7 +102,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-
   backBtn: {
     width: wp("11%"),
     height: wp("11%"),
@@ -136,9 +126,9 @@ const styles = StyleSheet.create({
     fontSize: wp("4.5%"),
   },
   continueText: {
-  fontFamily: 'Matter-SemiBold',
-  color: '#fff'
-},
+    fontFamily: 'Matter-SemiBold',
+    color: '#fff'
+  },
 
   input: {
     width: wp("90%"),
