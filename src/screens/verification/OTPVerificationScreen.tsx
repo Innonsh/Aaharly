@@ -1,25 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, TextInput, TouchableOpacity } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
-import { NavigationRoutes, RootStackParamList } from "../../navigation/NavigationRoutes";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NavigationRoutes } from "../../navigation/NavigationRoutes";
 import OTP from "../../assets/login/otp screen image.svg";
 import BackIcon from "../../assets/login/back arrow.svg";
 import { translations } from "../../contexts/LocalizationContext";
 
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { styles } from "./otpVerificationStyle";
+import { OTPVerificationProps } from "../../types/verification/verification";
+import { RESEND_TIMER_DURATION } from "./verificationMock";
 
-type Props = NativeStackScreenProps<RootStackParamList, NavigationRoutes.OTP>;
-
-const OTPVerificationScreen = ({ route, navigation }: Props) => {
+const OTPVerificationScreen = ({ route, navigation }: OTPVerificationProps) => {
   const { phone } = route.params;
 
   const [otp, setOtp] = useState(["", "", "", ""]);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(RESEND_TIMER_DURATION);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
 
   const inputRefs = [
@@ -59,7 +57,7 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
       </View>
 
       <View style={styles.imageWrapper}>
-        <OTP width={wp("40%")} height={hp("20%")} /> {/* 🔄 */}
+        <OTP width={wp("40%")} height={hp("20%")} />
       </View>
 
       <AppText variant="title" style={styles.heading}>
@@ -115,88 +113,3 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
 };
 
 export default OTPVerificationScreen;
-
-// Styles with 🔄 responsive changes
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: wp("5%"),
-  },
-
-  imageWrapper: {
-    alignItems: "center",
-    marginTop: hp("12%"),
-  },
-
-  headerRow: {
-    marginTop: hp("6%"),
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: wp("5%"),
-  },
-
-  backBtn: {
-    width: wp("11%"),
-    height: wp("11%"),
-    borderRadius: wp("6%"),
-    backgroundColor: "#FFF",
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 2,
-  },
-
-
-  heading: {
-    textAlign: "center",
-    marginTop: hp("6%"),
-    fontSize: wp("6%"),
-  },
-
-  subtext: {
-    textAlign: "center",
-    marginTop: hp("1%"),
-    fontSize: wp("4%"),
-  },
-
-  otpContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: hp("3%"),
-  },
-
-  otpBox: {
-    width: wp("13%"),
-    height: wp("13%"),
-    borderWidth: 1,
-    borderColor: "#FFD3C8",
-    borderRadius: wp("3%"),
-    textAlign: "center",
-    marginHorizontal: wp("3%"),
-    fontSize: wp("5%"),
-  },
-
-  bottomRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: hp("4%"),
-  },
-
-  timer: {
-    fontSize: wp("4%"),
-    marginRight: wp("2%"),
-  },
-
-  didntReceive: {
-    fontSize: wp("4%"),
-    color: "#666",
-    marginRight: wp("1%"),
-  },
-
-  resend: {
-    fontSize: wp("4%"),
-    color: "#FF6A4D",
-    fontWeight: "600",
-  },
-});
