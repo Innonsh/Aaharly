@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import AppText from "../../components/AppText";
+import Button from "../../components/Button";
 import { NavigationRoutes, RootStackParamList } from "../../navigation/NavigationRoutes";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import OTP from "../../assets/login/otp screen image.svg";
@@ -103,6 +104,12 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
           </AppText>
         </TouchableOpacity>
       </View>
+
+      <Button
+        title="Verify"
+        onPress={() => navigation.replace(NavigationRoutes.HOME)}
+        style={{ marginTop: hp("5%") }}
+      />
     </View>
   );
 };
@@ -114,19 +121,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    paddingHorizontal: wp("5%"), 
+    paddingHorizontal: wp("5%"),
   },
 
   imageWrapper: {
     alignItems: "center",
-    marginTop: hp("12%"), 
+    marginTop: hp("12%"),
   },
 
   headerRow: {
     marginTop: hp("6%"),
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start", 
+    justifyContent: "flex-start",
     paddingHorizontal: wp("5%"),
   },
 
@@ -143,52 +150,52 @@ const styles = StyleSheet.create({
 
   heading: {
     textAlign: "center",
-    marginTop: hp("6%"), 
+    marginTop: hp("6%"),
     fontSize: wp("6%"),
   },
 
   subtext: {
     textAlign: "center",
-    marginTop: hp("1%"), 
-    fontSize: wp("4%"), 
+    marginTop: hp("1%"),
+    fontSize: wp("4%"),
   },
 
   otpContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: hp("3%"), 
+    marginTop: hp("3%"),
   },
 
   otpBox: {
-    width: wp("13%"), 
-    height: wp("13%"), 
+    width: wp("13%"),
+    height: wp("13%"),
     borderWidth: 1,
     borderColor: "#FFD3C8",
-    borderRadius: wp("3%"), 
+    borderRadius: wp("3%"),
     textAlign: "center",
-    marginHorizontal: wp("3%"), 
-    fontSize: wp("5%"), 
+    marginHorizontal: wp("3%"),
+    fontSize: wp("5%"),
   },
 
   bottomRow: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: hp("4%"), 
+    marginTop: hp("4%"),
   },
 
   timer: {
-    fontSize: wp("4%"), 
-    marginRight: wp("2%"), 
+    fontSize: wp("4%"),
+    marginRight: wp("2%"),
   },
 
   didntReceive: {
-    fontSize: wp("4%"), 
+    fontSize: wp("4%"),
     color: "#666",
-    marginRight: wp("1%"), 
+    marginRight: wp("1%"),
   },
 
   resend: {
-    fontSize: wp("4%"), 
+    fontSize: wp("4%"),
     color: "#FF6A4D",
     fontWeight: "600",
   },

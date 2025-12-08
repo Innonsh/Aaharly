@@ -195,7 +195,11 @@ const ProfileStep3Screen: React.FC = () => {
             </AppText>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.primaryBtn} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={styles.primaryBtn}
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate(NavigationRoutes.NUTRITIONAL_OVERVIEW)}
+          >
             <AppText variant="button" color="#FFFFFF">
               {strings.profile.generatePlan}
             </AppText>
@@ -249,7 +253,7 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     width: 64,
-    height:64,
+    height: 64,
     borderRadius: 35,
     backgroundColor: "#FFE7D7",
     alignSelf: "center",

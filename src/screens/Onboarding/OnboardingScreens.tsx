@@ -1,3 +1,4 @@
+// src/screens/Onboarding/OnboardingScreens.tsx
 import React, { useRef, useState } from "react";
 import {
   View,
@@ -72,13 +73,17 @@ const OnboardingScreen: React.FC = () => {
 
   const isLast = index === SLIDES.length - 1;
 
-  const goToProfile = () => {
-    navigation.replace(NavigationRoutes.PROFILE_SETUP1);
+  /**
+   * Navigate to Home after onboarding.
+   * Home will decide whether to prompt/redirect to profile setup.
+   */
+  const goToHome = () => {
+    navigation.replace(NavigationRoutes.LOGIN);
   };
 
   const handleNext = () => {
     if (isLast) {
-      goToProfile();
+      goToHome();
     } else {
       const nextIndex = index + 1;
       scrollRef.current?.scrollTo({
@@ -97,9 +102,8 @@ const OnboardingScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-     
       {!isLast && (
-        <TouchableOpacity onPress={goToProfile} style={styles.skipButton}>
+        <TouchableOpacity onPress={goToHome} style={styles.skipButton}>
           <AppText
             variant="label"
             style={styles.skipLabel}
@@ -110,7 +114,6 @@ const OnboardingScreen: React.FC = () => {
         </TouchableOpacity>
       )}
 
-     
       <Animated.ScrollView
         ref={scrollRef}
         horizontal
@@ -125,12 +128,10 @@ const OnboardingScreen: React.FC = () => {
       >
         {SLIDES.map((slide, i) => (
           <View key={slide.key} style={styles.slide}>
-        
             <View style={styles.illustrationWrapper}>
               <slide.Illustration width={wp("63%")} height={hp("32%")} />
             </View>
 
-          
             <View style={styles.dotsWrapper}>
               {SLIDES.map((_, dotIdx) => {
                 const inputRange = [
@@ -161,7 +162,6 @@ const OnboardingScreen: React.FC = () => {
               })}
             </View>
 
-           
             <View style={styles.textWrapper}>
               <AppText variant="title" align="center">
                 {slide.title}
@@ -175,7 +175,6 @@ const OnboardingScreen: React.FC = () => {
         ))}
       </Animated.ScrollView>
 
-     
       {isLast ? (
         <TouchableOpacity
           style={styles.getStartedButton}
@@ -239,7 +238,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  
   dotsWrapper: {
     position: "absolute",
     top: hp("54%"),
@@ -256,7 +254,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
   },
 
-  
   textWrapper: {
     position: "absolute",
     top: hp("59%"),
@@ -284,7 +281,6 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 
- 
   getStartedButton: {
     position: "absolute",
     bottom: hp("11.5%"),
