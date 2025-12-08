@@ -1,6 +1,7 @@
+import type { FirebaseAuthTypes } from "@react-native-firebase/auth";
+
 export enum NavigationRoutes {
   SPLASH = "SPLASH",
-  // ONBOARDING = "ONBOARDING",
   LOGIN = "LOGIN",
   OTP = "OTP",
   LoginWithEmail = "Email",
@@ -20,10 +21,23 @@ export enum NavigationRoutes {
 
   // HOME = "HOME", // optional – use whatever your main screen is
 }
+
 export type RootStackParamList = {
   [NavigationRoutes.SPLASH]: undefined;
   [NavigationRoutes.LOGIN]: undefined;
-  [NavigationRoutes.OTP]: { phone: string };
+  [NavigationRoutes.HOME]: undefined;
+
+  [NavigationRoutes.OTP]: {
+    phone: string;
+    confirmation: FirebaseAuthTypes.ConfirmationResult;
+  };
+
+  [NavigationRoutes.LoginWithEmail]: undefined;
+
+  [NavigationRoutes.EMAIL_VERIFICATION]: {
+    email: string;
+  };
+
   [NavigationRoutes.LoginWithEmail]: undefined;
   [NavigationRoutes.EMAIL_VERIFICATION]: { email: string };
   [NavigationRoutes.ONBOARDING]: undefined;
@@ -42,4 +56,6 @@ export type RootStackParamList = {
 
   // [NavigationRoutes.HOME]: undefined;
 };
+
+
 

@@ -22,6 +22,7 @@
     "screen3Subtitle": "Home, office, or college!\n We deliver wherever you are.",
     "getStarted": "Get Started"
   },
+
   "profile": {
     "setupTitle": "Set Up Profile",
     "step1Title": "Basic Information",
@@ -67,9 +68,9 @@
     "subtitle": "Email address",
     "verification": "To confirm your email addrees, please enter the OTP we sent to"
   },
-  "Verification": {
-    "title": "Verification",
-    "subtitle": "Please enter the 4-digit verification code sent to"
+   "Verification":{
+    "title":"Verification",
+    "subtitle":"Please enter the 6-digit verification"
   },
   "errors": {
     "invalidMobile": "Please enter a valid mobile number"

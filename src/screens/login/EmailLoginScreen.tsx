@@ -19,7 +19,8 @@ const EmailLoginScreen = () => {
   const { translations } = useContext(LocalizationContext);
 
   const [email, setEmail] = useState("");
-  
+
+
   const isValidEmail = useMemo(() => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email);
   }, [email]);
@@ -53,12 +54,10 @@ const EmailLoginScreen = () => {
         <LunchSvg width={wp("40%")} height={wp("40%")} />
       </View>
 
-      {/* Label */}
       <AppText variant="title" style={styles.label}>
         {translations.Email.subtitle}
       </AppText>
 
-      {/* Email Input */}
       <TextInput
         mode="outlined"
         placeholder="xyz@gmail.com"
@@ -70,7 +69,6 @@ const EmailLoginScreen = () => {
         contentStyle={{ height: hp("6%") }}
       />
 
-      {/* Button */}
       <Button
         title={translations.common.continue}
         variant="primary"
@@ -79,7 +77,7 @@ const EmailLoginScreen = () => {
         style={styles.button}
         textStyle={styles.continueText}
       />
-    </View>
+    </View >
   );
 };
 

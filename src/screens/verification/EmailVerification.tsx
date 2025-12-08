@@ -83,7 +83,7 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
+    
       <View style={styles.headerRow}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <BackIcon width={wp("4%")} height={wp("4%")} />
@@ -98,13 +98,12 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({ route }) => {
         <EmailOtpImg width={wp("40%")} height={wp("40%")} />
       </View>
 
-      {/* DESCRIPTION */}
+      
       <AppText variant="caption" style={styles.desc}>
         {translations.EmailVerification.subtitle} {"\n"}
         {email}
       </AppText>
 
-      {/* OTP BOXES */}
       <View style={styles.otpRow}>
         {otp.map((digit, index) => (
           <RNTextInput
@@ -130,8 +129,6 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({ route }) => {
         </AppText>
       )}
 
-
-      {/* LOGIN */}
       <Button
         title={translations.login.title}
         variant="primary"
@@ -141,7 +138,6 @@ const EmailVerification: React.FC<EmailVerificationProps> = ({ route }) => {
         textStyle={styles.continueText}
       />
 
-      {/* RESEND ROW */}
       <View style={styles.resendRow}>
         <AppText>{`00.${timer < 10 ? "0" : ""}${timer}`}</AppText>
 

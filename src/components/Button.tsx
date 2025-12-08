@@ -136,6 +136,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryDisabled,
   },
   text: {
+
+    fontWeight: "600",
     fontFamily: fonts.SemiBold,
     fontSize: 20,
   },

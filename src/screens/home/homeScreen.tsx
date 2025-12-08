@@ -37,7 +37,7 @@ import { HomeNavProp } from "../../types/home/home";
 import { MealCard } from "../../common/cards/mealCard";
 import { DUMMY_MEALS } from "./homeMock";
 
-export default function HomeScreen() {
+export default function homeScreen() {
   const navigation = useNavigation<HomeNavProp>();
 
   const [profileExists, setProfileExists] = useState<boolean>(false);
@@ -205,4 +205,3 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
-

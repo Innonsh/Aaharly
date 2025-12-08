@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "720163295302",
+    "project_id": "aaharly",
+    "storage_bucket": "aaharly.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720163295302:android:932b775bcd57d3cfbffa47",
+        "android_client_info": {
+          "package_name": "com.innonsh.aaharly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "720163295302-2nikgqdiu8pjik5qsbv3lgi2f29iq9du.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.innonsh.aaharly",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "720163295302-ambs6u0f0l7ml18gldvae28ais3okn9b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7XImFb7X-QAAHBzZvQDs28fev_31pidA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "720163295302-ambs6u0f0l7ml18gldvae28ais3okn9b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

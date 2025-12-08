@@ -28,6 +28,7 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
 
   const isValidPhone = useMemo(() => validatePhone(phone), [phone]);
 
+  // 
   const handleContinue = async () => {
     setError("");
 
@@ -37,31 +38,58 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
     }
 
     setLoading(true);
+    try {
+      const confirmation = await sendOtp(phone);
 
-    await new Promise<void>((resolve) => setTimeout(resolve, 1200));
+      navigation.navigate(NavigationRoutes.OTP, {
+        phone,
+        confirmation, // send confirm object
+      });
+    } catch (e: any) {
+      console.error("Phone Auth Error:", e);
+      // Show specific error for debugging
+      let errorCode = e.code || e.message || "Unknown Error";
 
-    navigation.navigate(NavigationRoutes.OTP, { phone });
+      if (errorCode.includes("auth/billing-not-enabled")) {
+        const formattedSent = `+91${phone.replace(/\D/g, '')}`;
+        errorCode = `Billing Error. Firebase tried to send SMS to: ${formattedSent}\n\nEnsure EXACTLY "${formattedSent}" is added as a Test Number in Firebase Console.`;
+      }
+
+      setError(`${errorCode}`);
+    }
+
     setLoading(false);
   };
 
+
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+
+      await googleLogin();
+
+      navigation.navigate(NavigationRoutes.HOME);
+    } catch (err) {
+      setError("Google login failed. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
     <View style={styles.container}>
-      {/* Illustration */}
       <View style={styles.imageWrapper}>
         <LoginIllustration width={wp("50%")} height={wp("50%")} />
       </View>
-
-      {/* Title */}
       <AppText variant="title" style={styles.title}>
         {translations.login.title}
       </AppText>
 
-      {/* Subtitle */}
       <AppText variant="subtitle" style={styles.subtitle}>
         {translations.login.subtitle}
       </AppText>
 
-      {/* Phone Input */}
       <Input
         mode="outlined"
         value={phone}
@@ -86,10 +114,7 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
         maxLength={10}
       />
 
-      {/* Error Message */}
       {error !== "" && <AppText style={styles.errorText}>{error}</AppText>}
-
-      {/* Continue Button */}
       <Button
         title={translations.common.continue}
         onPress={handleContinue}
@@ -99,16 +124,14 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
         textStyle={styles.continueText}
       />
 
-      {/* OR */}
       <AppText variant="smallCenterd" style={styles.orText}>
         {translations.login.orLoginWith}
       </AppText>
 
-      {/* Social Icons */}
       <View style={styles.socialRow}>
-        <View style={styles.iconBox}>
+        <TouchableOpacity style={styles.iconBox} onPress={handleGoogleLogin}>
           <GoogleIcon width={24} height={24} />
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.iconBox}>
           <AppleIcon width={24} height={24} />
