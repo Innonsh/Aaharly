@@ -1,4 +1,4 @@
-
+// src/navigation/Navigator.tsx
 import React, { useMemo } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -13,6 +13,21 @@ import SplashScreen from "../screens/splash/SplashScreen";
 import { fonts } from "../theme/Fonts";
 import LoginScreen from "../screens/login/LoginScreen";
 import { NavigationRoutes } from "./NavigationRoutes";
+import OnboardingScreen from "../screens/Onboarding/OnboardingScreens";
+import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
+import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
+import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
+// Home screen (added)
+import homeScreen from "../screens/home/homeScreen";
+import ExplorePlansScreen from "../screens/exploreplans/explorePlans";
+import NutritionalOverviewScreen from "../screens/nutritionaloverview/nutrition";
+import WeeklyPlanScreen from "../screens/weeklyplan/plan";
+import AddressScreen from "../screens/deladdress/address";
+import DeliverySettingsScreen from "../screens/deladdress/delsettings";
+import DeliverySettingsScreen2 from "../screens/deladdress/delsettings2";
+import PaymentScreen from "../screens/payment/pay";
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen";
 import { RootStackParamList } from "./NavigationRoutes";
 import EmailLoginScreen from "../screens/login/EmailLoginScreen";
@@ -20,9 +35,7 @@ import EmailVerification from "../screens/verification/EmailVerification";
 import HomeScreen from "../screens/home/HomeScreen";
 
 const Navigator = () => {
-  // const Stack = createNativeStackNavigator();
   const Stack = createNativeStackNavigator<RootStackParamList>();
-
   const themeMode = ThemeMode.Light;
 
   const navigationTheme = useMemo<Theme>(() => {
@@ -98,11 +111,16 @@ const Navigator = () => {
         />
 
         <Stack.Screen
+          name={NavigationRoutes.ONBOARDING}
+          component={OnboardingScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+
+        <Stack.Screen
           name={NavigationRoutes.LOGIN}
           component={LoginScreen}
           options={{ headerShown: false, animation: "none" }}
         />
-
         <Stack.Screen
           name={NavigationRoutes.OTP}
           component={OTPVerificationScreen}
@@ -124,8 +142,66 @@ const Navigator = () => {
           options={{ headerShown: false, animation: "none" }}
         />
 
-      </Stack.Navigator>
-    </NavigationContainer>
+        {/* Main app / home */}
+        <Stack.Screen
+          name={NavigationRoutes.HOME}
+          component={homeScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.EXPLORE_PLANS}
+          component={ExplorePlansScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+
+        {/* Profile setup flow */}
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE_SETUP1}
+          component={ProfileStep1Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE_SETUP2}
+          component={ProfileStep2Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE_SETUP3}
+          component={ProfileStep3Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.NUTRITIONAL_OVERVIEW}
+          component={NutritionalOverviewScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.WEEKLY_PLAN}
+          component={WeeklyPlanScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.DELIVERY_ADDRESS}
+          component={AddressScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.DELIVERY_SETTINGS}
+          component={DeliverySettingsScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.DELIVERY_SETTINGS_2}
+          component={DeliverySettingsScreen2}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PAYMENT}
+          component={PaymentScreen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+      </Stack.Navigator >
+    </NavigationContainer >
   );
 };
 

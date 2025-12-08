@@ -3,8 +3,8 @@
     "next": "Next",
     "cancel": "Cancel",
     "Ok": "Ok",
+    "skip": "Skip",
     "continue": "Continue",
-    "skip":"Skip",
     "verify":"verify"
   },
   "login": {
@@ -13,25 +13,71 @@
     "phonePlaceholder": "+91 -",
     "orLoginWith": "Or login with"
   },
-  "Email":{
-    "title":"Login With Email",
-    "subtitle":"Email address",
-    "verification":"To confirm your email addrees, please enter the OTP we sent to"
+  "onboarding": {
+    "screen1Title": "Meals that match your goals",
+    "screen1Subtitle": "Personalized meals designed for\n your body and fitness goals.",
+    "screen2Title": "One Tap & You’re Set for\n the Meal Plan",
+    "screen2Subtitle": "Subscribe once, & meals arrive effortlessly",
+    "screen3Title": "Your Routine, Your Rules.",
+    "screen3Subtitle": "Home, office, or college!\n We deliver wherever you are.",
+    "getStarted": "Get Started"
   },
-  "Verification":{
+
+  "profile": {
+    "setupTitle": "Set Up Profile",
+    "step1Title": "Basic Information",
+    "step1Subtitle": "Tell about yourself to get started",
+    "step2Title": "Physical Stats",
+    "step2Subtitle": "Help us calculate your nutritional needs",
+    "step3Title": "Goal & Preferences",
+    "step3Subtitle": "Customize your meal plan",
+    "fullName": "Full Name",
+    "age": "Age",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "heightLabel": "Height (cm)",
+    "weightLabel": "Weight (kg)",
+    "activityLevelLabel": "Activity Level",
+    "activitySedentaryTitle": "Sedentary",
+    "activitySedentarySubtitle": "Little to no exercise",
+    "activityModerateTitle": "Moderate",
+    "activityModerateSubtitle": "Moderate exercise 3–5 days/week",
+    "activityActiveTitle": "Active",
+    "activityActiveSubtitle": "Heavy exercise 6–7 days/week",
+    "fitnessGoalsLabel": "Fitness Goals",
+    "goalLoseTitle": "Loose Weight",
+    "goalLoseSubtitle": "Reduce body fat and weight",
+    "goalMaintainTitle": "Maintain Weight",
+    "goalMaintainSubtitle": "Stay at current weight",
+    "goalGainTitle": "Gain Muscle",
+    "goalGainSubtitle": "Build muscle mass",
+    "dietPreferenceLabel": "Dietary preference",
+    "dietVeg": "Vegetarian",
+    "dietNonVeg": "Non-Vegetarian",
+    "dietVegan": "Vegan",
+    "allergiesLabel": "Allergies (Optional)",
+    "allergiesPlaceholder": "e.g. Nuts, Dairy, Gluten",
+    "back": "Back",
+    "next": "Next",
+    "generatePlan": "Next",
+    "cancel": "Cancel"
+  },
+  "Email": {
+    "title": "Login With Email",
+    "subtitle": "Email address",
+    "verification": "To confirm your email addrees, please enter the OTP we sent to"
+  },
+   "Verification":{
     "title":"Verification",
     "subtitle":"Please enter the 6-digit verification"
   },
-  "errors":{
-      "invalidMobile":"Please enter a valid mobile number"
-  }, 
+  "errors": {
+    "invalidMobile": "Please enter a valid mobile number"
+  },
   "EmailVerification": {
     "title": "Verify Email",
     "subtitle": "We have sent a verification code to",
     "resend": "Resend OTP"
   }
-    
-  
-  
 }
-

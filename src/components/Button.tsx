@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { useTheme } from "react-native-paper";
 import { Colors } from "../theme/Colors";
+import { fonts } from "../theme/Fonts";
 import AppText from "./AppText";
 
 interface ButtonProps {
@@ -137,6 +138,7 @@ const styles = StyleSheet.create({
   text: {
 
     fontWeight: "600",
+    fontFamily: fonts.SemiBold,
     fontSize: 20,
   },
   row: {

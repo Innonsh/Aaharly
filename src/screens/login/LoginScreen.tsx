@@ -104,7 +104,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       <Input
         mode="outlined"
         value={phone}
-        onChangeText={(t) => {
+        onChangeText={(t: string) => {
           setPhone(t.replace(/[^0-9]/g, ""));
           setError("");
         }}
@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
   iconBox: {
     width: wp("12%"),
     height: wp("12%"),
+
     backgroundColor: "#fff",
     elevation: 4,
     borderRadius: wp("2.8%"),

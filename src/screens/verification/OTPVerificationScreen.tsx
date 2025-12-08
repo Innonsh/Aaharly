@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import AppText from "../../components/AppText";
+import Button from "../../components/Button";
 import { NavigationRoutes, RootStackParamList } from "../../navigation/NavigationRoutes";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import OTP from "../../assets/login/otp screen image.svg";
@@ -150,6 +151,12 @@ const OTPVerificationScreen = ({ route, navigation }: Props) => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <Button
+        title="Verify"
+        onPress={() => navigation.replace(NavigationRoutes.HOME)}
+        style={{ marginTop: hp("5%") }}
+      />
     </View>
   );
 };
@@ -164,7 +171,7 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     alignItems: "center",
-    marginTop: hp("3.5%"),
+    marginTop: hp("12%"),
   },
   headerRow: {
     marginTop: hp("6%"),
@@ -184,7 +191,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     textAlign: "center",
-    marginTop: hp("5.5%"),
+    marginTop: hp("6%"),
     fontSize: wp("6%"),
   },
   subtext: {
@@ -204,7 +211,7 @@ const styles = StyleSheet.create({
     borderColor: "#FFD3C8",
     borderRadius: wp("3%"),
     textAlign: "center",
-    marginHorizontal: wp("1.5%"),
+    marginHorizontal: wp("3%"),
     fontSize: wp("5%"),
   },
   bottomRow: {
@@ -222,11 +229,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   didntReceive: {
-    fontSize: wp("3.5%"),
+    fontSize: wp("4%"),
     color: "#666",
+    marginRight: wp("1%"),
   },
   resend: {
-    fontSize: wp("3.5%"),
+    fontSize: wp("4%"),
     color: "#FF6A4D",
     fontWeight: "600",
   },
