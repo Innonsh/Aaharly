@@ -19,7 +19,7 @@ export enum NavigationRoutes {
   DELIVERY_SETTINGS_2 = "DELIVERY_SETTINGS_2",
   PAYMENT = "PAYMENT",
 
-  // HOME = "HOME", // optional – use whatever your main screen is
+
 }
 
 export type RootStackParamList = {
