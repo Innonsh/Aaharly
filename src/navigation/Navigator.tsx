@@ -17,8 +17,8 @@ import OnboardingScreen from "../screens/Onboarding/OnboardingScreens";
 import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
 import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
 import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
-// Home screen (added)
-import homeScreen from "../screens/home/homeScreen";
+
+import homeScreeen from "../screens/home/homeScreen";
 import ExplorePlansScreen from "../screens/exploreplans/explorePlans";
 import NutritionalOverviewScreen from "../screens/nutritionaloverview/nutrition";
 import WeeklyPlanScreen from "../screens/weeklyplan/plan";
@@ -32,7 +32,7 @@ import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen
 import { RootStackParamList } from "./NavigationRoutes";
 import EmailLoginScreen from "../screens/login/EmailLoginScreen";
 import EmailVerification from "../screens/verification/EmailVerification";
-import HomeScreen from "../screens/home/HomeScreen";
+
 
 const Navigator = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -136,18 +136,13 @@ const Navigator = () => {
           component={EmailVerification}
           options={{ headerShown: false, animation: "none" }} />
 
-        <Stack.Screen
-          name={NavigationRoutes.HOME}
-          component={HomeScreen}
-          options={{ headerShown: false, animation: "none" }}
-        />
-
         {/* Main app / home */}
         <Stack.Screen
           name={NavigationRoutes.HOME}
-          component={homeScreen}
+          component={homeScreeen}
           options={{ headerShown: false, animation: "none" }}
         />
+
         <Stack.Screen
           name={NavigationRoutes.EXPLORE_PLANS}
           component={ExplorePlansScreen}
