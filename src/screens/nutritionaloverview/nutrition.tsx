@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { View, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { IconButton, Card } from 'react-native-paper';
 import AppText from '../../components/AppText';
-import Button from '../../components/Button';
 import { Colors } from '../../theme/Colors';
-import { fonts } from '../../theme/Fonts';
 import { NavigationRoutes } from '../../navigation/NavigationRoutes';
 import GymGirl from '../../assets/nutrition/gymgirl.svg';
 import MealIllustration from '../../assets/HomePage/home2.svg';
@@ -17,10 +15,11 @@ import GenderIcon from '../../assets/nutrition/mealgen4.svg';
 import ActivityIcon from '../../assets/nutrition/mealgen5.svg';
 import BackArrow from '../../assets/Icons/back_arrow.svg';
 
+import { styles } from './nutritionStyle';
+import { MEALS_DATA } from './nutritionMock';
+import { Meal } from '../../types/nutritionaloverview/nutrition';
 
-const { width } = Dimensions.get('window');
-
-const MealCard = ({ item }: { item: any }) => {
+const MealCard = ({ item }: { item: Meal }) => {
     const navigation = useNavigation<any>();
     const [expanded, setExpanded] = useState(false);
 
@@ -36,22 +35,21 @@ const MealCard = ({ item }: { item: any }) => {
             style={styles.largeMealCard}
         >
             <View style={styles.largeMealImage}>
-                <MealIllustration width={359} height={216} />
+                <MealIllustration width={wp('91.9%')} height={hp('37.2%')} />
             </View>
 
             <View style={[
                 styles.largeMealDetails,
                 {
-                    height: expanded ? 210 : 135,
-                    top: expanded ? 97 : 182,
-                    gap: expanded ? 20 : 0
+                    height: expanded ? undefined : hp('15.8%'),
+                    gap: expanded ? hp('2.3%') : hp('1.4%'),
                 }
             ]}>
                 <View>
-                    <AppText variant="title" numberOfLines={1} style={{ fontSize: 18 }}>
+                    <AppText variant="title" numberOfLines={1} style={{ fontSize: wp('4.6%') }}>
                         {item.title}
                     </AppText>
-                    <AppText variant="subtitle" style={{ marginTop: 4, color: "#666", fontSize: 14 }}>
+                    <AppText variant="subtitle" style={{ marginTop: hp('0.5%'), color: "#666", fontSize: wp('3.6%') }}>
                         {item.desc}
                     </AppText>
 
@@ -72,14 +70,14 @@ const MealCard = ({ item }: { item: any }) => {
 
                 <View style={styles.cardBottom}>
                     <View>
-                        <AppText variant="labels" style={{ textDecorationLine: "line-through", color: "#999", fontSize: 12 }}>
+                        <AppText variant="labels" style={{ textDecorationLine: "line-through", color: "#999", fontSize: wp('3%') }}>
                             {item.originalPrice}
                         </AppText>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <AppText variant="title" style={{ fontSize: 18 }}>
+                            <AppText variant="title" style={{ fontSize: wp('4.6%') }}>
                                 {item.currentPrice}
                             </AppText>
-                            <AppText variant="labels" style={{ color: "#FF5722", marginLeft: 8, fontWeight: "bold" }}>
+                            <AppText variant="labels" style={{ color: "#FF5722", marginLeft: wp('2%'), fontWeight: "bold" }}>
                                 20% OFF
                             </AppText>
                         </View>
@@ -115,31 +113,6 @@ export default function NutritionalOverviewScreen() {
             navigation.goBack();
         }
     };
-
-    const meals = [
-        {
-            id: 1,
-            title: "Weekly Fat Loss Plan",
-            desc: "High-protein, low-carb meal",
-            tag1: "High Proteins",
-            tag2: "Low Carbs",
-            tag3: "2 Meals/day",
-            originalPrice: "₹ 1799/Week",
-            currentPrice: "₹ 1439/Week",
-            subtitle: "Includes 2 Meals/Day"
-        },
-        {
-            id: 2,
-            title: "Weekly Balanced Plan",
-            desc: "Balanced macronutrients",
-            tag1: "Balanced",
-            tag2: "Medium Carbs",
-            tag3: "3 Meals/day",
-            originalPrice: "₹ 1899/Week",
-            currentPrice: "₹ 1519/Week",
-            subtitle: "Includes 3 Meals/Day"
-        }
-    ];
 
     return (
         <SafeAreaView style={styles.container}>
@@ -243,7 +216,7 @@ export default function NutritionalOverviewScreen() {
                     <AppText variant="title" style={styles.sectionTitle}>Sample meal plan for you</AppText>
                     <AppText variant="body" style={styles.sectionSubtitle}>Move toward our healthier balanced meal plans.</AppText>
 
-                    {meals.map((meal) => (
+                    {MEALS_DATA.map((meal) => (
                         <View key={meal.id} style={{ marginBottom: 16 }}>
                             <MealCard item={meal} />
                         </View>
@@ -259,211 +232,3 @@ export default function NutritionalOverviewScreen() {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F9F9F9',
-    },
-    scrollContent: {
-        paddingHorizontal: 20,
-        paddingBottom: 20,
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginVertical: 10,
-    },
-    backButton: {
-        padding: 8,
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-    },
-    headerTitle: {
-        fontSize: 18,
-        fontFamily: fonts.SemiBold,
-    },
-    titleSection: {
-        marginTop: 20,
-        marginBottom: 20,
-    },
-    mainTitle: {
-        fontSize: 22,
-        marginBottom: 5,
-        fontFamily: fonts.SemiBold,
-    },
-    subtitle: {
-        color: '#666',
-        fontSize: 14,
-    },
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        padding: 20,
-        marginBottom: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        elevation: 3,
-    },
-    bodyCompCard: {
-        backgroundColor: '#FFF5F0', 
-    },
-    cardTitle: {
-        fontSize: 16,
-        fontFamily: fonts.SemiBold,
-        marginBottom: 15,
-    },
-    profileGrid: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    profileItem: {
-        alignItems: 'center',
-        width: '30%',
-    },
-    profileValue: {
-        fontSize: 18,
-        fontFamily: fonts.Bold,
-    },
-    iconPlaceholder: {
-        marginVertical: 5,
-    },
-    profileLabel: {
-        color: '#888',
-        fontSize: 12,
-    },
-    bmiSection: {
-        flexDirection: 'row',
-        justifyContent: 'space-around', 
-        alignItems: 'center',
-        paddingVertical: 10,
-    },
-    bmiValueContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    bmiMessageContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    crushingItText: {
-        fontSize: 14,
-        fontFamily: fonts.Medium,
-        color: '#555',
-        marginTop: 5,
-    },
-    crushingItSubText: {
-        fontSize: 10,
-        color: '#888',
-        textAlign: 'center',
-    },
-    needsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    needItem: {
-        alignItems: 'center',
-        width: '30%',
-    },
-    needValue: {
-        fontSize: 16,
-        fontFamily: fonts.SemiBold,
-    },
-    needLabel: {
-        color: '#666',
-        marginTop: 4,
-    },
-    mealPlanSection: {
-        marginTop: 10,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontFamily: fonts.SemiBold,
-        marginBottom: 5,
-    },
-    sectionSubtitle: {
-        fontSize: 13,
-        color: '#666',
-        marginBottom: 15,
-    },
-    largeMealCard: {
-        backgroundColor: "transparent",
-        borderRadius: 20,
-        padding: 0,
-        flexDirection: "column",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
-        alignItems: "center",
-        width: 350,
-        height: 315,
-        alignSelf: "center",
-        position: "relative",
-    },
-    largeMealImage: {
-        width: 361,
-        height: 317,
-        borderRadius: 20,
-        overflow: "hidden",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        backgroundColor: "#fff",
-    },
-    largeMealDetails: {
-        position: "absolute",
-        top: 182,
-        width: 361,
-        height: 135,
-        backgroundColor: "#FFF",
-        borderRadius: 18,
-        borderWidth: 1,
-        borderColor: "#F0F0F0",
-        padding: 16,
-    },
-    cardBottom: {
-        marginTop: "auto",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-    },
-    buyBtn: {
-        backgroundColor: "#FF5722",
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 25,
-    },
-    badgesContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        gap: 8,
-        marginTop: 12,
-    },
-    badge: {
-        backgroundColor: "#F8F8F8",
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 100,
-    },
-    badgeText: {
-        fontSize: 12,
-        color: "#333",
-        fontWeight: "500",
-    },
-    viewAllButton: {
-        alignSelf: 'center',
-        marginTop: 16,
-        padding: 8,
-    },
-});
