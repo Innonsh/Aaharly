@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
 import {
     View,
-    StyleSheet,
     SafeAreaView,
     TouchableOpacity,
     ScrollView,
-    Dimensions,
-    Platform,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import AppText from '../../components/AppText';
 import Input from '../../components/TextInput';
 import { Colors } from '../../theme/Colors';
-import { fonts } from '../../theme/Fonts';
 import BackArrow from '../../assets/Icons/back_arrow.svg';
 import { NavigationRoutes } from '../../navigation/NavigationRoutes';
-import Button from '../../components/Button';
 
-const { width } = Dimensions.get('window');
+import { styles } from './addressStyle';
 
 const CustomToggle = ({ value, onValueChange }: { value: boolean, onValueChange: (val: boolean) => void }) => {
     return (
@@ -26,22 +24,22 @@ const CustomToggle = ({ value, onValueChange }: { value: boolean, onValueChange:
             activeOpacity={0.8}
             onPress={() => onValueChange(!value)}
             style={{
-                width: 67,
-                height: 30,
+                width: wp('18.61%'), // approx 67
+                height: hp('3.75%'), // approx 30
                 borderRadius: 100,
                 borderWidth: 2,
                 borderColor: value ? Colors.primary : '#E6E6E6',
                 backgroundColor: value ? Colors.primary : '#FFFFFF',
                 justifyContent: 'center',
-                paddingHorizontal: 2,
+                paddingHorizontal: wp('0.5%'),
                 alignItems: value ? 'flex-end' : 'flex-start',
             }}
         >
             <View
                 style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: 11,
+                    width: wp('6.11%'), // approx 22
+                    height: wp('6.11%'), // approx 22 (keep it round)
+                    borderRadius: wp('3.055%'),
                     backgroundColor: value ? '#FFFFFF' : '#E6E6E6',
                 }}
             />
@@ -72,7 +70,7 @@ export default function AddressScreen() {
                     {/* Header */}
                     <View style={styles.header}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                            <BackArrow width={16} height={16} color="#000" />
+                            <BackArrow width={wp('4%')} height={wp('4%')} color="#000" />
                         </TouchableOpacity>
                         <AppText style={styles.headerTitle}>Add Address</AppText>
                     </View>
@@ -107,7 +105,7 @@ export default function AddressScreen() {
                                     keyboardType="numeric"
                                 />
                             </View>
-                            <View style={{ width: 12 }} />
+                            <View style={{ width: wp('3%') }} />
                             <View style={{ flex: 1 }}>
                                 <AppText style={styles.label}>City</AppText>
                                 <Input
@@ -174,107 +172,3 @@ export default function AddressScreen() {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    scrollContent: {
-        paddingBottom: 40,
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 65, 
-        paddingHorizontal: 16,
-        gap: 130, 
-        width: 393,
-        height: 24,
-    },
-    backButton: {
-        padding: 4,
-        marginLeft: -4,
-    },
-    headerTitle: {
-        fontSize: 18,
-        fontFamily: fonts.SemiBold,
-        color: '#000',
-    },
-    formContainer: {
-        marginTop: 24, 
-        paddingHorizontal: 16,
-        width: 361, 
-        gap: 12, 
-        alignSelf: 'center', 
-    },
-    inputGroup: {
-        gap: 8,
-    },
-    label: {
-        fontSize: 14,
-        fontFamily: fonts.Medium,
-        color: '#000',
-        marginBottom: 4,
-    },
-    input: {
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    chipsContainer: {
-        flexDirection: 'row',
-        gap: 8,
-        marginVertical: 4,
-    },
-    chip: {
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 8, 
-        backgroundColor: '#F5F5F5',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    chipSelected: {
-        backgroundColor: Colors.primary,    
-    },
-    chipText: {
-        fontFamily: fonts.Medium,
-        fontSize: 14,
-        color: '#000',
-    },
-    chipTextSelected: {
-        color: '#fff',
-    },
-    defaultContainer: {
-        marginTop: 12,
-        width: 145,
-        height: 64,
-        gap: 8,
-        justifyContent: 'center',
-    },
-    defaultLabel: {
-        fontSize: 16,
-        fontFamily: fonts.Medium,
-        color: '#000',
-    },
-    saveButtonContainer: {
-        marginTop: 187, 
-        paddingHorizontal: 16,
-        alignItems: 'center',
-    },
-    saveButton: {
-        width: 361,
-        height: 56,
-        backgroundColor: '#FF6B35',
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    saveButtonText: {
-        fontFamily: fonts.SemiBold,
-        fontSize: 16,
-        color: '#fff',
-    },
-});
