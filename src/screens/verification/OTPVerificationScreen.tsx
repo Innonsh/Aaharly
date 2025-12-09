@@ -16,7 +16,7 @@ import { OTPVerificationProps } from "../../types/verification/verification";
 import { RESEND_TIMER_DURATION } from "./verificationMock";
 
 const OTPVerificationScreen = ({ route, navigation }: OTPVerificationProps) => {
-  const { phone } = route.params;
+  const { phone, confirmation } = route.params;
 
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(RESEND_TIMER_DURATION);

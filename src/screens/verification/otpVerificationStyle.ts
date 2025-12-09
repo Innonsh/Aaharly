@@ -69,6 +69,11 @@ export const styles = StyleSheet.create({
         marginTop: hp("4%"),
     },
 
+    resendRow: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+
     timer: {
         fontSize: wp("4%"),
         marginRight: wp("2%"),

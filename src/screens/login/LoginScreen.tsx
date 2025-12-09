@@ -8,6 +8,7 @@ import Button from "../../components/Button";
 import Input from "../../components/TextInput";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
+import { sendOtp, googleLogin } from "../../services/firebaseAuth";
 
 import GoogleIcon from "../../assets/login/Google Icon.svg";
 import AppleIcon from "../../assets/login/Apple Icon.svg";
