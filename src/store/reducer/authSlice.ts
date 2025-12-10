@@ -47,10 +47,14 @@ const authSlice = createSlice({
     setAuthLoading(state, action: PayloadAction<boolean>) {
       state.status = action.payload ? 'loading' : 'idle';
     },
+
+    setAccessToken(state, action: PayloadAction<string>) {
+      state.accessToken = action.payload;
+    },
   },
 });
 
-export const { signInSuccess, setUserProfile, signOut, setAuthLoading } =
+export const { signInSuccess, setUserProfile, signOut, setAuthLoading, setAccessToken } =
   authSlice.actions;
 
 export default authSlice.reducer;
