@@ -13,7 +13,11 @@ import Navigator from "./src/navigation/Navigator";
 import { LocalizationProvider } from "./src/contexts/LocalizationContext";
 import { AuthProvider } from "./src/contexts/AuthContext";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Toast from "react-native-toast-message";
+import { useAppDispatch } from "./src/store/hooks";
+import { listenForTokenRefresh } from "./src/services/tokenManager";
+import { setAccessToken } from "./src/store/reducer/authSlice";
 
 
 const styles = StyleSheet.create({
@@ -22,8 +26,22 @@ const styles = StyleSheet.create({
   },
 });
 
+const queryClient = new QueryClient();
+
 const AppContent = () => {
   const [themeMode, setThemeMode] = useState<ThemeMode>(ThemeMode.Light);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const unsubscribe = listenForTokenRefresh((token) => {
+      if (token) {
+        dispatch(setAccessToken(token));
+        console.log("Token refreshed");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [dispatch]);
 
   const theme = useMemo(() => {
     if (themeMode === ThemeMode.Dark) {
@@ -58,17 +76,24 @@ const AppContent = () => {
   }, [themeMode]);
 
   return (
-    <AuthProvider>
-      <PaperProvider theme={theme}>
-        <SafeAreaView style={styles.container}>
-          <LocalizationProvider>
-            <Navigator />
-          </LocalizationProvider>
-        </SafeAreaView>
-      </PaperProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <PaperProvider theme={theme}>
+          <SafeAreaView style={styles.container}>
+            <LocalizationProvider>
+              <Navigator />
+            </LocalizationProvider>
+          </SafeAreaView>
+        </PaperProvider>
+        <Toast />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
+
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./src/store";
 
 const App = () => {
   useEffect(() => {
@@ -76,7 +101,13 @@ const App = () => {
       webClientId: "720163295302-ambs6u0f0l7ml18gldvae28ais3okn9b.apps.googleusercontent.com", // From Firebase Console
     });
   }, []);
-  return <AppContent />;
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <AppContent />
+      </PersistGate>
+    </Provider>
+  );
 };
 
 export default App;
