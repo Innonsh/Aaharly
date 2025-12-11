@@ -1,22 +1,21 @@
 import React, { useState, useContext, useMemo } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
+import { ActivityIndicator, TextInput } from "react-native-paper";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
 import Input from "../../components/TextInput";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
-import { sendOtp, googleLogin } from "../../services/firebaseAuth";
-
+import { sendOtp } from "../../services/firebaseAuth";
 import GoogleIcon from "../../assets/login/Google Icon.svg";
 import AppleIcon from "../../assets/login/Apple Icon.svg";
 import MailIcon from "../../assets/login/Mail Icon.svg";
 import LoginIllustration from "../../assets/login/Login via phone SVG.svg";
-
 import { styles } from "./loginStyle";
 import { LoginProps } from "../../types/login/login";
+import { useGoogleLogin } from "../../hooks/useGoogleLogin";
+import { Colors } from "../../theme/Colors";
 
 const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
   const { translations } = useContext(LocalizationContext);
