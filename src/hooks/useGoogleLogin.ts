@@ -7,6 +7,7 @@ import { NavigationRoutes, RootStackParamList } from "../navigation/NavigationRo
 import { useAppDispatch } from "../store/hooks";
 import { signInSuccess } from "../store/reducer/authSlice";
 import Toast from "react-native-toast-message";
+import HttpClient from "../services/HttpClient";
 
 async function googleSignInFlow() {
     try {
@@ -37,6 +38,23 @@ async function googleSignInFlow() {
         const userCredential = await auth().signInWithCredential(googleCredential);
 
         const accessToken = await userCredential.user.getIdToken();
+
+        // Create account on backend
+        const payload = {
+            loginMethod: 'google',
+            email: userCredential.user.email,
+            name: userCredential.user.displayName,
+        };
+
+        try {
+            await HttpClient.post('/account/new', payload, { Authorization: `Bearer ${accessToken}` });
+        } catch (apiError: any) {
+            // Ignore 409 (Account already exists)
+            if (apiError.response?.status !== 409) {
+                console.error("API Error:", apiError);
+                throw new Error(apiError.response?.data?.message || "Failed to sync account with server");
+            }
+        }
 
         return {
             accessToken,

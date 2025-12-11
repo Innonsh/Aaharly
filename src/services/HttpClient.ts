@@ -24,25 +24,25 @@ class RestClient {
     }
 
     async get(path: string, headers?: object): Promise<AxiosResponse> {
-        return axios.get(path, {
+        return axios.get(`${config.BASE_URL}${path}`, {
             headers: { ...this.getCommonHeaders(), ...headers },
         });
     }
 
     async post(path: string, body: object, headers?: object): Promise<AxiosResponse> {
-        return axios.post(path, body, {
+        return axios.post(`${config.BASE_URL}${path}`, body, {
             headers: { ...this.getCommonHeaders(), ...headers },
         });
     }
 
     async put(path: string, body: object, headers?: object): Promise<AxiosResponse> {
-        return axios.put(path, body, {
+        return axios.put(`${config.BASE_URL}${path}`, body, {
             headers: { ...this.getCommonHeaders(), ...headers },
         });
     }
 
     async delete(path: string, body?: object, headers?: object): Promise<AxiosResponse> {
-        return axios.delete(path, {
+        return axios.delete(`${config.BASE_URL}${path}`, {
             data: body,
             headers: { ...this.getCommonHeaders(), ...headers },
         });
