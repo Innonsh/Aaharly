@@ -20,14 +20,17 @@ async function googleSignInFlow() {
         }
 
         const userInfo = await GoogleSignin.signIn();
-
+        console.log(userInfo)
         if (!userInfo) {
             throw new Error('Sign in cancelled');
         }
 
         // Cast to any to safely access properties that might differ across versions
         const userObj = userInfo as any;
+        console.log(userObj)
+
         const idToken = userObj.data?.idToken || userObj.idToken;
+        console.log(idToken)
 
         if (!idToken) {
             throw new Error('No ID token found');
