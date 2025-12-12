@@ -15,10 +15,10 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: wp('100%'), // 393px
-        height: hp('5.2%'), // 44px
-        marginTop: hp('1.6%'), // 56px
-        paddingHorizontal: wp('6.1%'), // 24px
+        width: wp('100%'),
+        height: hp('5.2%'),
+        marginTop: hp('1.6%'),
+        paddingHorizontal: wp('6.1%'),
     },
     backButton: {
         padding: 12,
@@ -31,22 +31,22 @@ export const styles = StyleSheet.create({
         shadowRadius: 2,
     },
     headerTitle: {
-        fontSize: wp('5.5%'), // 18px
+        fontSize: wp('5.5%'),
         fontFamily: fonts.SemiBold,
     },
     titleSection: {
-        marginTop: hp('2.9%'), // Top 125px approx (56+44+25 = 125)
-        marginLeft: wp('4.1%'), // Left 16px
-        width: wp('91.9%'), // 361px
+        marginTop: hp('2.9%'),
+        marginLeft: wp('4.1%'),
+        width: wp('91.9%'),
     },
     mainTitle: {
-        fontSize: wp('5.3%'), // 22px
+        fontSize: wp('5.3%'),
         marginBottom: hp('0.6%'),
         fontFamily: fonts.SemiBold,
     },
     subtitle: {
         color: '#666',
-        fontSize: wp('3.6%'), // 14px
+        fontSize: wp('3.6%'), //
     },
     card: {
         backgroundColor: '#F8FAFC', // Profile Summary Color
@@ -54,7 +54,6 @@ export const styles = StyleSheet.create({
         padding: wp('5.1%'), // 20px
         marginTop: hp('2.6%'), // Top 73px
         width: wp('91.9%'), // 361px
-        height: hp('36.4%'), // 302px
         alignSelf: 'center', // Center it since we use width
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -158,13 +157,14 @@ export const styles = StyleSheet.create({
         elevation: 2,
         alignItems: "center",
         width: wp('91.9%'), // 361px
-        height: hp('40.2%'), // 317px
+        height: wp('86%'), // Aspect ratio preserved
+
         alignSelf: "center",
         position: "relative",
     },
     largeMealImage: {
         width: wp('91.9%'),
-        height: hp('40.2%'),
+        height: wp('86%'),
         borderRadius: wp('5.1%'), // 20px
         overflow: "hidden",
         position: "absolute",

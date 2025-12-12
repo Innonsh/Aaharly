@@ -9,44 +9,45 @@ export const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     scrollContent: {
-        paddingBottom: hp('5%'),
+        paddingBottom: hp('2.8%'),
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: hp('8.125%'), // approx 65
-        paddingHorizontal: wp('4.44%'), // 16px
-        justifyContent: 'center', // Center title relative to screen usually better, or use space-between
-        width: wp('100%'),
-        height: hp('2.8%'),
-        position: 'relative',
+        paddingHorizontal: wp('4%'),
+        paddingTop: hp('2%'),
+        paddingBottom: hp('1.5%'),
+        gap: wp('4%'),
+        backgroundColor: '#fff',
     },
     backButton: {
-        padding: wp('1%'),
-        position: 'absolute',
-        left: wp('4.44%'),
-        zIndex: 1,
+        width: wp('10%'),
+        height: wp('10%'),
+        borderRadius: wp('5%'),
+        backgroundColor: '#F7F7F7',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 0,
     },
     headerTitle: {
-        fontSize: wp('5%'), // 18px
+        fontSize: wp('4.6%'),
         fontFamily: fonts.SemiBold,
         color: '#000',
-        alignSelf: 'center',
+        flex: 1,
+        textAlign: 'center',
+        marginRight: wp('10%'), // balancing the back button width
     },
     formContainer: {
-        marginTop: hp('3%'), // 24px
-        paddingHorizontal: wp('6%'),
-        width: wp('100%'), // 361px
-        gap: hp('1.5%'), // 12px
+        marginTop: hp('3%'),
+        paddingHorizontal: wp('4%'),
+        width: '100%',
+        gap: hp('2%'),
         alignSelf: 'center',
     },
     inputGroup: {
-        gap: hp('1%'), // 8px
+        gap: hp('1%'),
     },
     label: {
-        fontSize: wp('3.5%'), // 14px
-        fontFamily: fonts.Medium,
-        color: '#000',
         marginBottom: hp('0.5%'),
     },
     input: {
@@ -61,9 +62,9 @@ export const styles = StyleSheet.create({
         marginVertical: hp('0.5%'),
     },
     chip: {
-        paddingHorizontal: wp('4%'), // 16px
-        paddingVertical: hp('1%'), // 8px
-        borderRadius: wp('2%'), // 8px
+        paddingHorizontal: wp('4%'),
+        paddingVertical: hp('1%'),
+        borderRadius: wp('2%'),
         backgroundColor: '#F5F5F5',
         justifyContent: 'center',
         alignItems: 'center',
@@ -73,38 +74,38 @@ export const styles = StyleSheet.create({
     },
     chipText: {
         fontFamily: fonts.Medium,
-        fontSize: wp('3.6%'), // 14px
+        fontSize: wp('3.6%'),
         color: '#000',
     },
     chipTextSelected: {
         color: '#fff',
     },
     defaultContainer: {
-        marginTop: hp('1.4%'),
+        marginTop: hp('1.5%'),
         gap: hp('1%'),
         justifyContent: 'center',
+        alignItems: 'flex-start',
     },
     defaultLabel: {
-        fontSize: wp('4%'), // 16px
-        fontFamily: fonts.Medium,
-        color: '#000',
     },
     saveButtonContainer: {
-        marginTop: hp('11%'), // 187px
-        paddingHorizontal: wp('4%'),
-        alignItems: 'center',
+        padding: wp('5%'),
+        paddingBottom: wp('5%'), // Ensure bottom padding matches prompt request for "neat" stickiness
+        backgroundColor: '#fff',
+        borderTopWidth: 1,
+        borderTopColor: '#F0F0F0',
     },
     saveButton: {
-        width: wp('92%'), // 361px
-        height: hp('6.6%'), // 56px
+        width: '100%',
+        height: hp('6.6%'), // Matches plan.tsx button height
         backgroundColor: '#FF6B35',
-        borderRadius: wp('3%'), // 12px
+        borderRadius: wp('3%'),
         justifyContent: 'center',
         alignItems: 'center',
     },
     saveButtonText: {
         fontFamily: fonts.SemiBold,
-        fontSize: wp('4%'), // 16px
+        fontSize: wp('4%'),
         color: '#fff',
     },
 });

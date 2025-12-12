@@ -35,14 +35,13 @@ const MealCard = ({ item }: { item: Meal }) => {
             style={styles.largeMealCard}
         >
             <View style={styles.largeMealImage}>
-                <MealIllustration width={wp('91.9%')} height={hp('37.2%')} />
+                <MealIllustration width={wp('91.9%')} height={wp('86%')} />
             </View>
 
             <View style={[
                 styles.largeMealDetails,
                 {
-                    height: expanded ? undefined : hp('15.8%'),
-                    gap: expanded ? hp('2.3%') : hp('1.4%'),
+                    gap: expanded ? wp('4%') : wp('2.5%'),
                 }
             ]}>
                 <View>
@@ -93,7 +92,7 @@ const MealCard = ({ item }: { item: Meal }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity >
     );
 };
 
@@ -142,39 +141,40 @@ export default function NutritionalOverviewScreen() {
                             <View style={styles.iconPlaceholder}>
                                 <AgeIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>Age</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>Age</AppText>
                         </View>
                         <View style={styles.profileItem}>
                             <AppText variant="title1" style={styles.profileValue}>180</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <HeightIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>height</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>height</AppText>
                         </View>
                         <View style={styles.profileItem}>
                             <AppText variant="title1" style={styles.profileValue}>71.3</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <WeightIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>Weight</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>Weight</AppText>
                         </View>
                     </View>
 
-                    <View style={[styles.profileGrid, { marginTop: 20, justifyContent: 'flex-start', gap: 40 }]}>
+                    <View style={[styles.profileGrid, { marginTop: 20 }]}>
                         <View style={styles.profileItem}>
                             <AppText variant="title1" style={styles.profileValue}>Male</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <GenderIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>Gender</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>Gender</AppText>
                         </View>
                         <View style={styles.profileItem}>
                             <AppText variant="title1" style={styles.profileValue}>Sedentary</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <ActivityIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>Activity Level</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>Activity Level</AppText>
                         </View>
+                        <View style={styles.profileItem} />
                     </View>
                 </View>
 
@@ -198,15 +198,15 @@ export default function NutritionalOverviewScreen() {
                     <View style={styles.needsContainer}>
                         <View style={styles.needItem}>
                             <AppText variant="title" style={styles.needValue}>High</AppText>
-                            <AppText variant="caption" style={styles.needLabel}>Protein</AppText>
+                            <AppText variant="labels" style={styles.needLabel}>Protein</AppText>
                         </View>
                         <View style={styles.needItem}>
                             <AppText variant="title" style={styles.needValue}>Moderate</AppText>
-                            <AppText variant="caption" style={styles.needLabel}>Carb</AppText>
+                            <AppText variant="labels" style={styles.needLabel}>Carb</AppText>
                         </View>
                         <View style={styles.needItem}>
                             <AppText variant="title" style={styles.needValue}>Low</AppText>
-                            <AppText variant="caption" style={styles.needLabel}>Fat</AppText>
+                            <AppText variant="labels" style={styles.needLabel}>Fat</AppText>
                         </View>
                     </View>
                 </View>

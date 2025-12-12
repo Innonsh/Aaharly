@@ -62,7 +62,7 @@ const MealCard = ({ title, subtitle, badges, type }: MealCardProps) => {
                 <AppText variant="title" style={styles.mealTitle}>{title}</AppText>
                 <InfoIcon width={wp('4%')} height={wp('4%')} />
               </View>
-              <AppText variant="caption" style={styles.mealSubtitle}>{subtitle}</AppText>
+              <AppText variant="subtitle" style={styles.mealSubtitle}>{subtitle}</AppText>
             </View>
             <TouchableOpacity onPress={toggleExpand} style={styles.editIcon}>
               <PencilIcon width={wp('6%')} height={wp('6%')} fill="#FF5722" color="#FF5722" />
@@ -107,7 +107,7 @@ const Calendar = () => {
       <View style={styles.calendarHeader}>
         {WEEK_DAYS.map((day, index) => (
           <View key={index} style={styles.dayHeaderCell}>
-            <AppText variant="caption" style={styles.dayText}>{day}</AppText>
+            <AppText variant="labels" style={styles.dayText}>{day}</AppText>
           </View>
         ))}
       </View>
@@ -127,7 +127,7 @@ const Calendar = () => {
                       styles.dateCircle,
                       item.isSelected && styles.selectedDateCircle
                     ]}>
-                      <AppText variant="body" style={[
+                      <AppText variant="label" style={[
                         styles.dateText,
                         item.inRange && styles.inRangeText,
                         item.isSelected && styles.selectedDateText,
@@ -160,7 +160,6 @@ export default function WeeklyPlanScreen() {
           <BackArrow width={wp('4%')} height={wp('4%')} />
         </TouchableOpacity>
         <AppText variant="title" style={styles.headerTitle}>Plan Details</AppText>
-        <View style={{ width: wp('6%') }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -209,31 +208,21 @@ export default function WeeklyPlanScreen() {
 
         {/* Footer / CTA Card */}
         <View style={styles.footerCard}>
-          <View>
-            <AppText variant="title" style={{ fontSize: wp('4%') }}>Weekly fat loss plan</AppText>
-            <AppText variant="caption" style={{ color: '#666' }}>Includes 2 Meals/Day</AppText>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: hp('0.5%') }}>
+          <View style={styles.footerCardContent}>
+            <AppText variant="title" style={styles.footerTitle}>Weekly fat loss plan</AppText>
+            <AppText variant="caption" style={styles.footerSubtitle}>Includes 2 Meals/Day</AppText>
+            <View style={styles.footerPriceRow}>
               <AppText
                 variant="body"
-                style={{
-                  textDecorationLine: 'line-through',
-                  color: '#999',
-                  marginRight: wp('2%'),
-                  fontSize: wp('3.5%'),
-                }}
+                style={styles.footerOriginalPrice}
               >
                 ₹1799/Week
               </AppText>
 
-              <AppText variant="title" style={{ fontSize: wp('4.2%') }}>₹ 1439/Week</AppText>
+              <AppText variant="title" style={styles.footerDiscountedPrice}>₹ 1439/Week</AppText>
               <AppText
                 variant="labels"
-                style={{
-                  color: '#FF5722',
-                  marginLeft: wp('2%'),
-                  fontWeight: 'bold',
-                  fontSize: wp('3.2%'),
-                }}
+                style={styles.footerDiscountBadge}
               >
                 20% OFF
               </AppText>
