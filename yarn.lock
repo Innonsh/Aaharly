@@ -1864,11 +1864,6 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@react-native-community/blur@^4.4.1":
-  version "4.4.1"
-  resolved "https://registry.npmjs.org/@react-native-community/blur/-/blur-4.4.1.tgz"
-  integrity sha512-XBSsRiYxE/MOEln2ayunShfJtWztHwUxLFcSL20o+HNNRnuUDv+GXkF6FmM2zE8ZUfrnhQ/zeTqvnuDPGw6O8A==
-
 "@react-native-community/cli-clean@20.0.0":
   version "20.0.0"
   resolved "https://registry.npmjs.org/@react-native-community/cli-clean/-/cli-clean-20.0.0.tgz"
@@ -2315,6 +2310,11 @@
     redux "^5.0.1"
     redux-thunk "^3.1.0"
     reselect "^5.1.0"
+
+"@sbaiahmed1/react-native-blur@4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@sbaiahmed1/react-native-blur/-/react-native-blur-4.2.1.tgz#a87d9eaed6b66cb45c1c38ec40c172ed0df156fa"
+  integrity sha512-7zLnsdXakJDquHv886eHeNMbKr4Yq7fO8uo5fHKEiRT1gotm5rNOuA/nW8jwP8Kq7WCwsYrFm0qV7uJbVC8Kog==
 
 "@sideway/address@^4.1.5":
   version "4.1.5"
