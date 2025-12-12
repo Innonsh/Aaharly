@@ -1,5 +1,5 @@
 const config = {
-    BASE_URL: 'https://your-api-url.com', // <-- replace with your real API URL
+    BASE_URL: 'https://guadalupe-undedicated-jakobe.ngrok-free.dev/api/v1',
     ENV: 'development',
 };
 
