@@ -4,8 +4,6 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NavigationRoutes, RootStackParamList } from "../../navigation/NavigationRoutes";
 import { useAppSelector } from "../../store/hooks";
-import HttpClient from "../../services/HttpClient";
-import Toast from "react-native-toast-message";
 
 const styles = StyleSheet.create({});
 
@@ -14,29 +12,15 @@ const SplashScreen = () => {
   const { accessToken } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        await HttpClient.get('/');
-        console.log("Server Health Check: OK");
-      } catch (error) {
-        console.warn("Server Health Check: Failed", error);
-        Toast.show({
-          type: 'error',
-          text1: 'Server Unreachable',
-          text2: 'Please check your internet connection.',
-          visibilityTime: 4000,
-        });
-      } 
+    const timeout = setTimeout(() => {
+      if (accessToken) {
+        navigation.replace(NavigationRoutes.HOME);
+      } else {
+        navigation.replace(NavigationRoutes.ONBOARDING);
+      }
+    }, 1000);
 
-      setTimeout(() => {
-        if (accessToken) {
-          navigation.replace(NavigationRoutes.HOME);
-        } else {
-          navigation.replace(NavigationRoutes.ONBOARDING);
-        }
-      }, 1000);
-    };
-    checkLogin();
+    return () => clearTimeout(timeout);
   }, [accessToken, navigation]);
 
   return (

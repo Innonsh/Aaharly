@@ -7,7 +7,7 @@ import { NavigationRoutes, RootStackParamList } from "../navigation/NavigationRo
 import { useAppDispatch } from "../store/hooks";
 import { signInSuccess } from "../store/reducer/authSlice";
 import Toast from "react-native-toast-message";
-import HttpClient from "../services/HttpClient";
+import { AccountService } from "../services/AccountService";
 
 async function googleSignInFlow() {
     try {
@@ -36,8 +36,8 @@ async function googleSignInFlow() {
 
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
         const userCredential = await auth().signInWithCredential(googleCredential);
-
         const accessToken = await userCredential.user.getIdToken();
+
 
         // Create account on backend
         const payload = {
@@ -47,7 +47,7 @@ async function googleSignInFlow() {
         };
 
         try {
-            await HttpClient.post('/account/new', payload, { Authorization: `Bearer ${accessToken}` });
+            await AccountService.createAccount(payload);
         } catch (apiError: any) {
             // Ignore 409 (Account already exists)
             if (apiError.response?.status !== 409) {
