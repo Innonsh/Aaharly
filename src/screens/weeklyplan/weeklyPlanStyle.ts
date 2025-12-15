@@ -14,25 +14,32 @@ export const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: wp('6%'),
-        marginTop: hp('1.2%'),
-        height: hp('6%'),
+        paddingHorizontal: wp('4%'),
+        paddingTop: hp('2%'),
+        paddingBottom: hp('1.5%'),
+        gap: wp('4%'),
         backgroundColor: '#fff',
     },
     backButton: {
-        padding: hp('0.8%'),
+        width: wp('10%'),
+        height: wp('10%'),
+        borderRadius: wp('5%'),
         backgroundColor: '#F7F7F7',
-        borderRadius: wp('6%'),
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 0, // Reset padding from previous style
     },
     headerTitle: {
-        fontSize: wp('4.5%'),
+        fontSize: wp('4.6%'),
         fontFamily: fonts.SemiBold,
+        flex: 1,
+        textAlign: 'center',
+        marginRight: wp('10%'), // Balance back button width
     },
     titleSection: {
-        marginTop: hp('2.5%'),
+        marginTop: hp('3%'),
         paddingHorizontal: wp('4%'),
-        gap: hp('0.8%'),
+        gap: hp('1%'),
     },
     mainTitle: {
         fontSize: wp('5.5%'),
@@ -43,10 +50,10 @@ export const styles = StyleSheet.create({
         fontSize: wp('3.5%'),
     },
     calendarContainer: {
-        marginTop: hp('2%'),
-        marginHorizontal: wp('6%'),
-        paddingVertical: hp('3%'),
-        paddingHorizontal: wp('5%'),
+        marginTop: hp('2.5%'),
+        marginHorizontal: wp('4%'), // Unified margin
+        paddingVertical: hp('2%'),
+        paddingHorizontal: wp('4%'),
         borderRadius: wp('5%'),
         borderWidth: 1,
         borderColor: '#E0E0E0',
@@ -55,7 +62,7 @@ export const styles = StyleSheet.create({
     calendarHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: hp('2%'),
+        marginBottom: hp('1.5%'),
     },
     dayHeaderCell: {
         flex: 1,
@@ -64,10 +71,11 @@ export const styles = StyleSheet.create({
     dayText: {
         color: '#999',
         textAlign: 'center',
-        fontSize: wp('3%'),
+        fontSize: wp('3.5%'),
+        fontFamily: fonts.Regular,
     },
     calendarGrid: {
-        gap: hp('2%'),
+        gap: hp('1.5%'),
     },
     calendarRow: {
         flexDirection: 'row',
@@ -110,6 +118,7 @@ export const styles = StyleSheet.create({
     dateText: {
         color: '#333',
         fontSize: wp('3.8%'),
+        fontFamily: fonts.Medium,
     },
     inRangeText: {
         color: '#FF5722',
@@ -135,7 +144,6 @@ export const styles = StyleSheet.create({
         gap: wp('2.5%'),
     },
     arrowButton: {
-        padding: hp('0.8%'),
         backgroundColor: '#F7F7F7',
         borderRadius: wp('6%'),
         width: wp('8.5%'),
@@ -144,14 +152,12 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     mealsContainer: {
-        marginHorizontal: wp('1.7%'),
+        marginHorizontal: wp('4%'),
         padding: wp('4%'),
-        gap: hp('3%'),
+        gap: hp('2.5%'),
         borderRadius: wp('4%'),
         borderWidth: 1,
         borderColor: '#E0E0E0',
-        alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: '#fff',
     },
     mealCardContainer: {
@@ -254,7 +260,7 @@ export const styles = StyleSheet.create({
         flex: 1,
     },
     footerCard: {
-        marginHorizontal: wp('1.7%'),
+        marginHorizontal: wp('4%'),
         marginTop: hp('4%'),
         padding: wp('4%'),
         backgroundColor: '#fff',
@@ -265,6 +271,39 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
+    footerCardContent: {
+        flex: 1,
+    },
+    footerPriceRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: hp('0.5%'),
+    },
+    footerTitle: {
+        fontSize: wp('4%'),
+        fontFamily: fonts.SemiBold,
+    },
+    footerSubtitle: {
+        color: '#666',
+        fontSize: wp('3.5%'),
+    },
+    footerOriginalPrice: {
+        textDecorationLine: 'line-through',
+        color: '#999',
+        marginRight: wp('2%'),
+        fontSize: wp('3.5%'),
+        fontFamily: fonts.Regular,
+    },
+    footerDiscountedPrice: {
+        fontSize: wp('4.2%'),
+        fontFamily: fonts.SemiBold,
+    },
+    footerDiscountBadge: {
+        color: '#FF5722',
+        marginLeft: wp('2%'),
+        fontWeight: 'bold',
+        fontSize: wp('3.2%'),
+    },
     saveBadge: {
         backgroundColor: '#FFF0E6',
         paddingHorizontal: wp('3%'),
@@ -272,7 +311,8 @@ export const styles = StyleSheet.create({
         borderRadius: wp('2%'),
     },
     footer: {
-        padding: wp('0.5%'),
+        padding: wp('5%'),
+        paddingBottom: wp('5%'),
         backgroundColor: '#fff',
         borderTopWidth: 1,
         borderTopColor: '#F0F0F0',
@@ -280,7 +320,7 @@ export const styles = StyleSheet.create({
     paymentButton: {
         width: '100%',
         backgroundColor: Colors.primary,
-        borderRadius: wp('2%'),
-        height: hp('7%'),
+        borderRadius: wp('3%'),
+        height: hp('6.6%'), // approx 56px matching address.tsx
     },
 });

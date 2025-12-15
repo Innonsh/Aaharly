@@ -59,26 +59,26 @@ export default function AddressScreen() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            {/* Header - Sticky Top */}
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <BackArrow width={wp('4%')} height={wp('4%')} color="#000" />
+                </TouchableOpacity>
+                <AppText variant="title" style={styles.headerTitle}>Add Address</AppText>
+            </View>
+
             <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={{ flex: 1 }}
             >
                 <ScrollView
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Header */}
-                    <View style={styles.header}>
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                            <BackArrow width={wp('4%')} height={wp('4%')} color="#000" />
-                        </TouchableOpacity>
-                        <AppText style={styles.headerTitle}>Add Address</AppText>
-                    </View>
-
                     {/* Form */}
                     <View style={styles.formContainer}>
                         <View style={styles.inputGroup}>
-                            <AppText style={styles.label}>Full Address</AppText>
+                            <AppText variant="labels" style={styles.label}>Full Address</AppText>
                             <Input
                                 value={fullAddress}
                                 onChangeText={setFullAddress}
@@ -87,7 +87,7 @@ export default function AddressScreen() {
                         </View>
 
                         <View style={styles.inputGroup}>
-                            <AppText style={styles.label}>Landmark</AppText>
+                            <AppText variant="labels" style={styles.label}>Landmark</AppText>
                             <Input
                                 value={landmark}
                                 onChangeText={setLandmark}
@@ -97,7 +97,7 @@ export default function AddressScreen() {
 
                         <View style={styles.row}>
                             <View style={{ flex: 1 }}>
-                                <AppText style={styles.label}>Pincode</AppText>
+                                <AppText variant="labels" style={styles.label}>Pincode</AppText>
                                 <Input
                                     value={pincode}
                                     onChangeText={setPincode}
@@ -107,7 +107,7 @@ export default function AddressScreen() {
                             </View>
                             <View style={{ width: wp('3%') }} />
                             <View style={{ flex: 1 }}>
-                                <AppText style={styles.label}>City</AppText>
+                                <AppText variant="labels" style={styles.label}>City</AppText>
                                 <Input
                                     value={city}
                                     onChangeText={setCity}
@@ -128,6 +128,7 @@ export default function AddressScreen() {
                                     onPress={() => setAddressType(type)}
                                 >
                                     <AppText
+                                        variant="label"
                                         style={[
                                             styles.chipText,
                                             addressType === type && styles.chipTextSelected,
@@ -140,8 +141,8 @@ export default function AddressScreen() {
                         </View>
 
                         <View style={styles.inputGroup}>
-                            <AppText style={styles.label}>
-                                Delivery Note <AppText style={{ color: '#999' }}>(Optional)</AppText>
+                            <AppText variant="labels" style={styles.label}>
+                                Delivery Note <AppText variant="caption" style={{ color: '#999' }}>(Optional)</AppText>
                             </AppText>
                             <Input
                                 value={deliveryNote}
@@ -152,22 +153,21 @@ export default function AddressScreen() {
 
                         {/* Default Toggle */}
                         <View style={styles.defaultContainer}>
-                            <AppText style={styles.defaultLabel}>Set as Default Address</AppText>
+                            <AppText variant="labels" style={styles.defaultLabel}>Set as Default Address</AppText>
                             <CustomToggle value={isDefault} onValueChange={setIsDefault} />
                         </View>
                     </View>
-
-                    {/* Save Button */}
-                    <View style={styles.saveButtonContainer}>
-                        <TouchableOpacity
-                            style={styles.saveButton}
-                            onPress={() => navigation.navigate(NavigationRoutes.DELIVERY_SETTINGS as never)}
-                        >
-                            <AppText style={styles.saveButtonText}>Save Address</AppText>
-                        </TouchableOpacity>
-                    </View>
-
                 </ScrollView>
+
+                {/* Save Button - Sticky Bottom */}
+                <View style={styles.saveButtonContainer}>
+                    <TouchableOpacity
+                        style={styles.saveButton}
+                        onPress={() => navigation.navigate(NavigationRoutes.DELIVERY_SETTINGS as never)}
+                    >
+                        <AppText variant="button" style={styles.saveButtonText}>Save Address</AppText>
+                    </TouchableOpacity>
+                </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );

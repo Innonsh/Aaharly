@@ -34,7 +34,7 @@ const Calendar = () => {
             <View style={styles.calendarHeader}>
                 {days.map((day, index) => (
                     <View key={index} style={styles.dayHeaderCell}>
-                        <AppText style={styles.dayText}>{day}</AppText>
+                        <AppText variant="labels" style={styles.dayText}>{day}</AppText>
                     </View>
                 ))}
             </View>
@@ -46,7 +46,7 @@ const Calendar = () => {
                                 styles.dateCircle,
                                 item.isSelected && styles.selectedDateCircle
                             ]}>
-                                <AppText style={[
+                                <AppText variant="label" style={[
                                     styles.dateText,
                                     item.isSelected && styles.selectedDateText
                                 ]}>
@@ -67,21 +67,21 @@ const MealCard = ({ type, image: SvgImage }: MealCardProps) => {
     return (
         <View style={styles.mealCard}>
             <View style={styles.mealHeader}>
-                <AppText style={styles.mealType}>{type}</AppText>
+                <AppText variant="title" style={styles.mealType}>{type}</AppText>
                 <InfoIcon width={14} height={14} style={{ marginTop: 2 }} />
             </View>
 
             <View style={styles.mealContentRow}>
                 <View style={styles.mealInfo}>
-                    <AppText style={styles.mealName}>Chole Chawal</AppText>
-                    <AppText style={styles.deliveryTime}>Will be delivered around 11AM today</AppText>
+                    <AppText variant="title" style={styles.mealName}>Chole Chawal</AppText>
+                    <AppText variant="subtitle" style={styles.deliveryTime}>Will be delivered around 11AM today</AppText>
 
                     <View style={styles.mealActions}>
                         <TouchableOpacity style={styles.skipButton}>
-                            <AppText style={styles.skipButtonText}>Skip {type}</AppText>
+                            <AppText variant="label" style={styles.skipButtonText}>Skip {type}</AppText>
                         </TouchableOpacity>
                         <TouchableOpacity>
-                            <AppText style={styles.changeAddressText}>Change Address</AppText>
+                            <AppText variant="label" style={styles.changeAddressText}>Change Address</AppText>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -97,10 +97,10 @@ const MealCard = ({ type, image: SvgImage }: MealCardProps) => {
 const AddressCard = ({ type, address }: AddressCardProps) => {
     return (
         <View style={styles.addressCard}>
-            <AppText style={styles.addressType}>{type}</AppText>
-            <AppText style={styles.addressText}>{address}</AppText>
+            <AppText variant="labels" style={styles.addressType}>{type}</AppText>
+            <AppText variant="body" style={styles.addressText}>{address}</AppText>
             <TouchableOpacity style={styles.deliverHereButton}>
-                <AppText style={styles.deliverHereText}>Deliver Here</AppText>
+                <AppText variant="label" style={styles.deliverHereText}>Deliver Here</AppText>
             </TouchableOpacity>
         </View>
     );
@@ -115,7 +115,7 @@ export default function DeliverySettingsScreen2() {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <BackArrow width={16} height={16} color="#000" />
                 </TouchableOpacity>
-                <AppText style={styles.headerTitle}>Delivery Settings</AppText>
+                <AppText variant="title" style={styles.headerTitle}>Delivery Settings</AppText>
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -123,10 +123,10 @@ export default function DeliverySettingsScreen2() {
                 {/* Calendar Section */}
                 <View style={styles.sectionContainer}>
                     <View style={styles.sectionHeader}>
-                        <AppText style={styles.sectionTitle}>Your Delivery Calendar</AppText>
+                        <AppText variant="title" style={styles.sectionTitle}>Your Delivery Calendar</AppText>
                         <InfoIcon width={14} height={14} />
                     </View>
-                    <AppText style={styles.sectionSubtitle}>Select a day to manage delivery.</AppText>
+                    <AppText variant="subtitle" style={styles.sectionSubtitle}>Select a day to manage delivery.</AppText>
                     <Calendar />
                 </View>
 
@@ -139,7 +139,7 @@ export default function DeliverySettingsScreen2() {
                 {/* Saved Addresses Section */}
                 <View style={styles.savedAddressesContainer}>
                     <View style={styles.sectionHeader}>
-                        <AppText style={styles.sectionTitle}>Your Saved Addresses</AppText>
+                        <AppText variant="title" style={styles.sectionTitle}>Your Saved Addresses</AppText>
                         <InfoIcon width={14} height={14} />
                     </View>
 
@@ -162,7 +162,7 @@ export default function DeliverySettingsScreen2() {
                         style={styles.addNewAddressButton}
                         onPress={() => navigation.navigate(NavigationRoutes.DELIVERY_ADDRESS as never)}
                     >
-                        <AppText style={styles.addNewAddressText}>+ Add New Address</AppText>
+                        <AppText variant="labels" style={styles.addNewAddressText}>+ Add New Address</AppText>
                     </TouchableOpacity>
                 </View>
 

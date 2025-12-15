@@ -27,44 +27,44 @@ export default function PaymentScreen() {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <BackArrow width={16} height={16} color="#000" />
                 </TouchableOpacity>
-                <AppText style={styles.headerTitle}>Complete Payment</AppText>
+                <AppText variant="title" style={styles.headerTitle}>Complete Payment</AppText>
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
                 <View style={styles.secureHeader}>
                     <LockIcon width={16} height={16} color="#27AE60" />
-                    <AppText style={styles.secureHeaderText}>Securely pay for your weekly meal plan</AppText>
+                    <AppText variant="label" style={styles.secureHeaderText}>Securely pay for your weekly meal plan</AppText>
                 </View>
 
                 {/* Weekly Plan Card */}
                 <View style={styles.planCard}>
-                    <AppText style={styles.planTitle}>{WEEKLY_PLAN_DETAILS.title}</AppText>
+                    <AppText variant="title" style={styles.planTitle}>{WEEKLY_PLAN_DETAILS.title}</AppText>
                     <View style={{ gap: 4 }}>
-                        <AppText style={styles.planSubtitle}>{WEEKLY_PLAN_DETAILS.subtitle}</AppText>
-                        <AppText style={styles.planDetail}>Start Date: {WEEKLY_PLAN_DETAILS.startDate}</AppText>
-                        <AppText style={styles.planDetail}>Delivery Address: {WEEKLY_PLAN_DETAILS.deliveryAddress}</AppText>
+                        <AppText variant="body" style={styles.planSubtitle}>{WEEKLY_PLAN_DETAILS.subtitle}</AppText>
+                        <AppText variant="label" style={styles.planDetail}>Start Date: {WEEKLY_PLAN_DETAILS.startDate}</AppText>
+                        <AppText variant="label" style={styles.planDetail}>Delivery Address: {WEEKLY_PLAN_DETAILS.deliveryAddress}</AppText>
                     </View>
 
                     <View style={styles.divider} />
 
                     <View style={styles.priceRow}>
-                        <AppText style={styles.priceLabel}>Plan Price:</AppText>
-                        <AppText style={styles.priceValue}>{WEEKLY_PLAN_DETAILS.price}</AppText>
+                        <AppText variant="labels" style={styles.priceLabel}>Plan Price:</AppText>
+                        <AppText variant="body" style={styles.priceValue}>{WEEKLY_PLAN_DETAILS.price}</AppText>
                     </View>
                     <View style={styles.priceRow}>
-                        <AppText style={styles.priceLabel}>Discount:</AppText>
-                        <AppText style={styles.discountValue}>{WEEKLY_PLAN_DETAILS.discount}</AppText>
+                        <AppText variant="labels" style={styles.priceLabel}>Discount:</AppText>
+                        <AppText variant="body" style={styles.discountValue}>{WEEKLY_PLAN_DETAILS.discount}</AppText>
                     </View>
                     <View style={styles.priceRow}>
-                        <AppText style={styles.totalLabel}>Total Payable:</AppText>
-                        <AppText style={styles.totalValue}>{WEEKLY_PLAN_DETAILS.total}</AppText>
+                        <AppText variant="labels" style={styles.totalLabel}>Total Payable:</AppText>
+                        <AppText variant="labels" style={styles.totalValue}>{WEEKLY_PLAN_DETAILS.total}</AppText>
                     </View>
                 </View>
 
                 {/* Payment Methods */}
                 <View style={styles.methodSection}>
-                    <AppText style={styles.sectionTitle}>Select Payment Method</AppText>
+                    <AppText variant="title" style={styles.sectionTitle}>Select Payment Method</AppText>
 
                     {PAYMENT_METHODS.map((method) => (
                         <TouchableOpacity
@@ -73,15 +73,15 @@ export default function PaymentScreen() {
                             onPress={() => setSelectedMethod(method.id)}
                             activeOpacity={0.7}
                         >
-                            <AppText style={styles.methodTitle}>{method.title}</AppText>
-                            <AppText style={styles.methodSubtitle}>{method.subtitle}</AppText>
+                            <AppText variant="labels" style={styles.methodTitle}>{method.title}</AppText>
+                            <AppText variant="caption" style={styles.methodSubtitle}>{method.subtitle}</AppText>
                         </TouchableOpacity>
                     ))}
                 </View>
 
                 {/* Promo Code */}
                 <View style={styles.promoSection}>
-                    <AppText style={styles.promoTitle}>Have a promo code?</AppText>
+                    <AppText variant="labels" style={styles.promoTitle}>Have a promo code?</AppText>
                     <View style={styles.promoInputContainer}>
                         <TextInput
                             style={styles.promoInput}
@@ -91,7 +91,7 @@ export default function PaymentScreen() {
                             onChangeText={setPromoCode}
                         />
                         <TouchableOpacity style={styles.applyButton}>
-                            <AppText style={styles.applyButtonText}>Apply</AppText>
+                            <AppText variant="label" style={styles.applyButtonText}>Apply</AppText>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -102,8 +102,8 @@ export default function PaymentScreen() {
                 <View style={styles.secureFooter}>
                     <LockIcon width={12} height={12} color="#27AE60" />
                     <View>
-                        <AppText style={styles.secureFooterText}>100% secure payments</AppText>
-                        <AppText style={styles.secureFooterSubText}>We don't store your card details.</AppText>
+                        <AppText variant="label" style={styles.secureFooterText}>100% secure payments</AppText>
+                        <AppText variant="caption" style={styles.secureFooterSubText}>We don't store your card details.</AppText>
                     </View>
                 </View>
                 <Button

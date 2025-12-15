@@ -20,9 +20,9 @@ const DeliveryCard = ({ title, selectedAddress, onSelect, isOpen, toggleOpen, zI
 
     return (
         <View style={[styles.cardContainer, { zIndex }]}>
-            <AppText style={styles.cardTitle}>{title}</AppText>
+            <AppText variant="title" style={styles.cardTitle}>{title}</AppText>
             <TouchableOpacity style={styles.selectButton} onPress={toggleOpen} activeOpacity={0.7}>
-                <AppText style={styles.selectButtonText}>
+                <AppText variant="label" style={styles.selectButtonText}>
                     {selectedAddress || 'Select Address'}
                 </AppText>
                 <View style={[styles.chevronContainer, isOpen && styles.chevronRotated]}>
@@ -45,7 +45,7 @@ const DeliveryCard = ({ title, selectedAddress, onSelect, isOpen, toggleOpen, zI
                                 toggleOpen();
                             }}
                         >
-                            <AppText style={styles.optionText}>{addr}</AppText>
+                            <AppText variant="label" style={styles.optionText}>{addr}</AppText>
                         </TouchableOpacity>
                     ))}
                 </View>
@@ -76,13 +76,13 @@ export default function DeliverySettingsScreen() {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <BackArrow width={16} height={16} color="#000" />
                 </TouchableOpacity>
-                <AppText style={styles.headerTitle}>Delivery Settings</AppText>
+                <AppText variant="title" style={styles.headerTitle}>Delivery Settings</AppText>
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 <View style={styles.introSection}>
-                    <AppText style={styles.introTitle}>Set Your Weekly Delivery Routine</AppText>
-                    <AppText style={styles.introSubtitle}>
+                    <AppText variant="title" style={styles.introTitle}>Set Your Weekly Delivery Routine</AppText>
+                    <AppText variant="subtitle" style={styles.introSubtitle}>
                         Choose where we should deliver your meals each day. You can edit it anytime later.
                     </AppText>
                 </View>
