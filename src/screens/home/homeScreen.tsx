@@ -1,33 +1,23 @@
 // src/screens/home/HomeScreen.tsx
-import React, { useEffect, useCallback, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   View,
   StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
   FlatList,
-  Dimensions,
-  Alert,
   Platform,
   UIManager,
-  LayoutAnimation,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { BlurView } from "@react-native-community/blur";
+import { BlurView } from '@sbaiahmed1/react-native-blur';
 import Svg, { Defs, LinearGradient, Stop, Rect } from "react-native-svg";
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
-import Input from "../../components/TextInput";
-import { Colors } from "../../theme/Colors";
 import { fonts } from "../../theme/Fonts";
-import { NavigationRoutes, RootStackParamList } from "../../navigation/NavigationRoutes";
-
+import { NavigationRoutes } from "../../navigation/NavigationRoutes";
+import { SafeAreaView } from "react-native-safe-area-context";
 import HomeBannerSVG from "../../assets/HomePage/home3.svg";
 import CtaIllustration from "../../assets/HomePage/home1.svg";
-import MealIllustration from "../../assets/HomePage/home2.svg";
 import ProfileIcon from "../../assets/HomePage/profileicon.svg";
 import ExploreIcon from "../../assets/HomePage/exploreicon.svg";
 import SearchIcon from "../../assets/HomePage/Searchicon.svg";

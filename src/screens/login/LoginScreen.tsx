@@ -1,22 +1,21 @@
 import React, { useState, useContext, useMemo } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
+import { ActivityIndicator, TextInput } from "react-native-paper";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
 import Input from "../../components/TextInput";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
-import { sendOtp, googleLogin } from "../../services/firebaseAuth";
-
+import { sendOtp } from "../../services/firebaseAuth";
 import GoogleIcon from "../../assets/login/Google Icon.svg";
 import AppleIcon from "../../assets/login/Apple Icon.svg";
 import MailIcon from "../../assets/login/Mail Icon.svg";
 import LoginIllustration from "../../assets/login/Login via phone SVG.svg";
-
 import { styles } from "./loginStyle";
 import { LoginProps } from "../../types/login/login";
+import { useGoogleLogin } from "../../hooks/useGoogleLogin";
+import { Colors } from "../../theme/Colors";
 
 const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
   const { translations } = useContext(LocalizationContext);
@@ -24,6 +23,8 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { mutate: loginWithGoogle, isPending: isGoogleLoginPending } = useGoogleLogin();
 
   const validatePhone = (num: string) => /^[6-9]\d{9}$/.test(num);
 
@@ -60,21 +61,6 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
     }
 
     setLoading(false);
-  };
-
-
-  const handleGoogleLogin = async () => {
-    try {
-      setLoading(true);
-
-      await googleLogin();
-
-      navigation.navigate(NavigationRoutes.HOME);
-    } catch (err) {
-      setError("Google login failed. Try again.");
-    } finally {
-      setLoading(false);
-    }
   };
 
 
@@ -119,7 +105,7 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
       <Button
         title={translations.common.continue}
         onPress={handleContinue}
-        disabled={!isValidPhone || loading}
+        disabled={!isValidPhone || loading || isGoogleLoginPending}
         variant="primary"
         style={styles.continueBtn}
         textStyle={styles.continueText}
@@ -130,8 +116,16 @@ const LoginScreen: React.FC<LoginProps> = ({ navigation }) => {
       </AppText>
 
       <View style={styles.socialRow}>
-        <TouchableOpacity style={styles.iconBox} onPress={handleGoogleLogin}>
-          <GoogleIcon width={24} height={24} />
+        <TouchableOpacity
+          style={styles.iconBox}
+          onPress={() => loginWithGoogle()}
+          disabled={isGoogleLoginPending}
+        >
+          {isGoogleLoginPending ? (
+            <ActivityIndicator size="small" color={Colors.primary} />
+          ) : (
+            <GoogleIcon width={24} height={24} />
+          )}
         </TouchableOpacity>
 
         <View style={styles.iconBox}>
