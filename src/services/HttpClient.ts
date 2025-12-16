@@ -22,17 +22,17 @@ class RestClient {
 
         // Add logging interceptors
         this.client.interceptors.request.use(request => {
-            console.log('API Request:', request.method?.toUpperCase(), request.url, request.data);
+            console.log(`[HTTP] Request: ${request.method?.toUpperCase()} ${request.url}`, request.data ? JSON.stringify(request.data) : '');
             return request;
         });
 
         this.client.interceptors.response.use(
             response => {
-                console.log('API Response:', response.status, response.config.url, response.data);
+                console.log(`[HTTP] Response: ${response.status} ${response.config.url}`, response.data ? JSON.stringify(response.data) : '');
                 return response;
             },
             error => {
-                console.error('API Error:', error.response?.status, error.config?.url, error.response?.data || error.message);
+                console.error(`[HTTP] Error: ${error.response?.status} ${error.config?.url}`, error.response?.data ? JSON.stringify(error.response.data) : error.message);
                 return Promise.reject(error);
             }
         );
