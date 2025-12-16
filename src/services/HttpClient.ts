@@ -19,6 +19,23 @@ class RestClient {
             baseURL: config.BASE_URL,
             headers: RestClient.headers
         });
+
+        // Add logging interceptors
+        this.client.interceptors.request.use(request => {
+            console.log('API Request:', request.method?.toUpperCase(), request.url, request.data);
+            return request;
+        });
+
+        this.client.interceptors.response.use(
+            response => {
+                console.log('API Response:', response.status, response.config.url, response.data);
+                return response;
+            },
+            error => {
+                console.error('API Error:', error.response?.status, error.config?.url, error.response?.data || error.message);
+                return Promise.reject(error);
+            }
+        );
     }
 
     getCommonHeaders() {

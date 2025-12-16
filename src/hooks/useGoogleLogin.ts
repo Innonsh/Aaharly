@@ -7,7 +7,7 @@ import { NavigationRoutes, RootStackParamList } from "../navigation/NavigationRo
 import { useAppDispatch } from "../store/hooks";
 import { signInSuccess } from "../store/reducer/authSlice";
 import Toast from "react-native-toast-message";
-import { AccountService } from "../services/AccountService";
+import { AccountService, CreateAccountPayload } from "../services/AccountService";
 
 async function googleSignInFlow() {
     try {
@@ -40,17 +40,31 @@ async function googleSignInFlow() {
 
 
         // Create account on backend
-        const payload = {
+        // Create account on backend
+        // Only include phone if it exists to avoid validation errors
+        const payload: CreateAccountPayload = {
             loginMethod: 'google',
             email: userCredential.user.email,
             name: userCredential.user.displayName,
         };
 
+        if (userCredential.user.phoneNumber) {
+            payload.phone = userCredential.user.phoneNumber;
+        }
+
         try {
             await AccountService.createAccount(payload);
         } catch (apiError: any) {
-            // Ignore 409 (Account already exists)
-            if (apiError.response?.status !== 409) {
+            // Check if account already exists (409)
+            if (apiError.response?.status === 409) {
+                try {
+                    // Verify account actually exists
+                    await AccountService.getAccount();
+                } catch (getError) {
+                    console.error("Account verification failed:", getError);
+                    throw new Error("Account reported as existing but could not be verified");
+                }
+            } else {
                 console.error("API Error:", apiError);
                 throw new Error(apiError.response?.data?.message || "Failed to sync account with server");
             }
