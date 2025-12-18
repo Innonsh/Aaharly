@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import HttpClient from "./HttpClient";
+import { WeightGoal } from "../types/profile/profile";
 
 export interface CreateAccountPayload {
     name?: string | null;
@@ -20,7 +21,7 @@ export interface PhysicalStatsPayload {
 }
 
 export interface GoalPreferencesPayload {
-    weightGoal: 'lose_weight' | 'maintain_weight' | 'gain_weight';
+    weightGoal: WeightGoal;
     dietType: 'veg' | 'nonveg' | 'vegan';
     allergies?: string;
     targetWeight?: number;

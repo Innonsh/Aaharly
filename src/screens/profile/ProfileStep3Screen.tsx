@@ -38,7 +38,7 @@ const ProfileStep3Screen: React.FC = () => {
   const goalMutation = useUpdateGoalPreferences();
 
   const [goal, setGoal] = useState<"lose" | "maintain" | "gain" | null>(null);
-  const [diet, setDiet] = useState<"veg" | "non_veg" | "vegan" | null>(null);
+  const [diet, setDiet] = useState<"veg" | "nonveg" | "vegan" | null>(null);
   const [allergies, setAllergies] = useState("");
 
   const goalOptions = getGoalOptions(strings);
@@ -134,9 +134,9 @@ const ProfileStep3Screen: React.FC = () => {
               style={[
                 styles.dietBtn,
                 styles.lastDietBtnInRow,
-                diet === "non_veg" && styles.dietSelected,
+                diet === "nonveg" && styles.dietSelected,
               ]}
-              onPress={() => setDiet("non_veg")}
+              onPress={() => setDiet("nonveg")}
               activeOpacity={0.8}
             >
               <NonVegIcon width={20} height={20} />
