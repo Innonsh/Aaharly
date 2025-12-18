@@ -20,7 +20,9 @@ export interface PhysicalStatsPayload {
 }
 
 export interface GoalPreferencesPayload {
-    goal: string;
+    weightGoal: 'lose_weight' | 'maintain_weight' | 'gain_weight';
+    dietType: 'veg' | 'nonveg' | 'vegan';
+    allergies?: string;
     targetWeight?: number;
     weeklyGoal?: string;
 }

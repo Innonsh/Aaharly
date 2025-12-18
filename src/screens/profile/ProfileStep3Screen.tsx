@@ -13,12 +13,13 @@ import VeganIcon from "../../assets/Icons/vegan.svg";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { updateUserProfile } from "../../store/reducer/userSlice";
+import { setUserProfile, updateUserProfile } from "../../store/reducer/userSlice";
 import {
   useUpdateBasicProfile,
   useUpdatePhysicalStats,
-  useUpdateGoalPreferences
+  useUpdateGoalPreferences,
 } from "../../hooks/useAccount";
+import { AccountService } from "../../services/AccountService";
 
 import { styles } from "./profileStep3Style";
 import { ProfileNavProp } from "../../types/profile/profile";
@@ -37,7 +38,7 @@ const ProfileStep3Screen: React.FC = () => {
   const goalMutation = useUpdateGoalPreferences();
 
   const [goal, setGoal] = useState<"lose" | "maintain" | "gain" | null>(null);
-  const [diet, setDiet] = useState<"veg" | "nonveg" | "vegan" | null>(null);
+  const [diet, setDiet] = useState<"veg" | "non_veg" | "vegan" | null>(null);
   const [allergies, setAllergies] = useState("");
 
   const goalOptions = getGoalOptions(strings);
@@ -133,9 +134,9 @@ const ProfileStep3Screen: React.FC = () => {
               style={[
                 styles.dietBtn,
                 styles.lastDietBtnInRow,
-                diet === "nonveg" && styles.dietSelected,
+                diet === "non_veg" && styles.dietSelected,
               ]}
-              onPress={() => setDiet("nonveg")}
+              onPress={() => setDiet("non_veg")}
               activeOpacity={0.8}
             >
               <NonVegIcon width={20} height={20} />
@@ -196,36 +197,45 @@ const ProfileStep3Screen: React.FC = () => {
               }
 
               // 1. Prepare Payload
-              // Data from Redux (Steps 1 & 2)
+              // Data from Redux (Steps 1 & 2 are now nested)
               const basicData = {
-                name: user?.name || "User",
-                age: Number(user?.age) || 25,
-                gender: user?.gender || 'male'
+                name: user?.basic?.name || "User",
+                age: Number(user?.basic?.age) || 25,
+                gender: user?.basic?.gender || 'male'
               };
 
               const statsData = {
-                height: Number(user?.height) || 170,
-                weight: Number(user?.weight) || 70,
-                activityLevel: (user?.activityLevel || 'moderate') as any
+                height: Number(user?.physicalStats?.height) || 170,
+                weight: Number(user?.physicalStats?.weight) || 70,
+                activityLevel: (user?.physicalStats?.activityLevel || 'moderate') as any
+              };
+
+              // Map goal key to weightGoal backend format
+              const weightGoalMap: Record<string, 'lose_weight' | 'maintain_weight' | 'gain_weight'> = {
+                lose: 'lose_weight',
+                maintain: 'maintain_weight',
+                gain: 'gain_weight'
               };
 
               const goalData = {
-                goal: goal,
+                weightGoal: weightGoalMap[goal] || 'maintain_weight',
                 dietType: diet,
                 allergies: allergies
               };
 
               try {
-                // 2. Call APIs sequentially or parallel
-                // We use the mutations from useAccount.ts
+                // 2. Call APIs sequentially
                 await basicMutation.mutateAsync(basicData as any);
                 await statsMutation.mutateAsync(statsData as any);
                 await goalMutation.mutateAsync(goalData as any);
 
-                // 3. Update Redux with final pieces (optional but good for syncing)
-                dispatch(updateUserProfile({ goal: goal }));
+                // 3. FETCH FULL PROFILE (Unified Source of Truth)
+                const profileRes = await AccountService.getProfile();
 
-                // 4. Navigate
+                // 4. Update Redux with the full unified object
+                dispatch(setUserProfile(profileRes.data));
+
+                // 5. Navigate
                 navigation.navigate(NavigationRoutes.NUTRITIONAL_OVERVIEW);
               } catch (err) {
                 console.error("Failed to save profile", err);
