@@ -22,8 +22,13 @@ export interface ActivityOption {
     subtitle: string;
 }
 
+export type WeightGoal =
+    | "lose_weight"
+    | "maintain_weight"
+    | "gain_weight";
+
 export interface GoalOption {
-    key: "lose" | "maintain" | "gain";
+    key: WeightGoal;
     title: string;
     subtitle: string;
 }

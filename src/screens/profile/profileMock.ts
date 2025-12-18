@@ -20,17 +20,17 @@ export const getActivityOptions = (strings: any): ActivityOption[] => [
 
 export const getGoalOptions = (strings: any): GoalOption[] => [
     {
-        key: "lose",
+        key: "lose_weight",
         title: strings.profile.goalLoseTitle,
         subtitle: strings.profile.goalLoseSubtitle,
     },
     {
-        key: "maintain",
+        key: "maintain_weight",
         title: strings.profile.goalMaintainTitle,
         subtitle: strings.profile.goalMaintainSubtitle,
     },
     {
-        key: "gain",
+        key: "gain_weight",
         title: strings.profile.goalGainTitle,
         subtitle: strings.profile.goalGainSubtitle,
     },
