@@ -65,9 +65,6 @@ export function useGoogleLogin() {
     const dispatch = useAppDispatch();
 
     const googleSignInFlow = async () => {
-        // =========================
-        // 1️⃣ Google + Firebase sign-in
-        // =========================
         await GoogleSignin.hasPlayServices();
         await GoogleSignin.signOut().catch(() => { });
 
@@ -80,15 +77,8 @@ export function useGoogleLogin() {
 
         const credential = GoogleAuthProvider.credential(rawIdToken);
         const userCredential = await signInWithCredential(auth(), credential);
-
-        // =========================
-        // 2️⃣ Get Firebase token (single source of truth)
-        // =========================
         const firebaseToken = await getIdToken(userCredential.user);
 
-        // =========================
-        // 3️⃣ Save token to Redux FIRST (🔥 critical)
-        // =========================
         dispatch(
             signInSuccess({
                 accessToken: firebaseToken,
@@ -96,9 +86,7 @@ export function useGoogleLogin() {
             })
         );
 
-        // =========================
-        // 4️⃣ Prepare account payload
-        // =========================
+
         const payload: CreateAccountPayload = {
             loginMethod: "google",
             email: userCredential.user.email ?? undefined,
@@ -106,9 +94,6 @@ export function useGoogleLogin() {
             phone: userCredential.user.phoneNumber ?? undefined,
         };
 
-        // =========================
-        // 5️⃣ Create / confirm account
-        // =========================
         try {
             await AccountService.createAccount(payload);
         } catch (error: any) {
@@ -122,10 +107,6 @@ export function useGoogleLogin() {
                 );
             }
         }
-
-        // =========================
-        // 6️⃣ Fetch profile (MANDATORY)
-        // =========================
         let profileData = null;
 
         try {
@@ -136,13 +117,10 @@ export function useGoogleLogin() {
                 dispatch(setUserProfile(profileResponse.data));
             }
         } catch (error: any) {
-            // ✅ 404 = profile not created yet → NORMAL
             if (error.response?.status !== 404) {
                 throw error;
             }
         }
-
-        // ✅ login succeeds regardless of profile
         return true;
 
     };
@@ -171,7 +149,7 @@ export function useGoogleLogin() {
             Toast.show({
                 type: "error",
                 text1: "Login Failed",
-                text2: String(message), // ✅ ALWAYS STRING
+                text2: String(message),
             });
         },
 
