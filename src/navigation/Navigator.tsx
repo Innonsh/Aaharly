@@ -17,8 +17,6 @@ import OnboardingScreen from "../screens/Onboarding/OnboardingScreens";
 import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
 import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
 import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
-
-import homeScreeen from "../screens/home/homeScreen";
 import ExplorePlansScreen from "../screens/exploreplans/explorePlans";
 import NutritionalOverviewScreen from "../screens/nutritionaloverview/nutrition";
 import WeeklyPlanScreen from "../screens/weeklyplan/plan";
@@ -26,13 +24,11 @@ import AddressScreen from "../screens/deladdress/address";
 import DeliverySettingsScreen from "../screens/deladdress/delsettings";
 import DeliverySettingsScreen2 from "../screens/deladdress/delsettings2";
 import PaymentScreen from "../screens/payment/pay";
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
 import OTPVerificationScreen from "../screens/verification/OTPVerificationScreen";
 import { RootStackParamList } from "./NavigationRoutes";
 import EmailLoginScreen from "../screens/login/EmailLoginScreen";
 import EmailVerification from "../screens/verification/EmailVerification";
-
+import HomeScreen from "../screens/home/homeScreen";
 
 const Navigator = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -136,10 +132,9 @@ const Navigator = () => {
           component={EmailVerification}
           options={{ headerShown: false, animation: "none" }} />
 
-        {/* Main app / home */}
         <Stack.Screen
           name={NavigationRoutes.HOME}
-          component={homeScreeen}
+          component={HomeScreen}
           options={{ headerShown: false, animation: "none" }}
         />
 

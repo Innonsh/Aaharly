@@ -2,7 +2,6 @@
 import React, { useRef, useState } from "react";
 import {
   View,
-  StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   Dimensions,
@@ -10,59 +9,23 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
 import { Colors } from "../../theme/Colors";
-import {
-  NavigationRoutes,
-  RootStackParamList,
-} from "../../navigation/NavigationRoutes";
+import { NavigationRoutes } from "../../navigation/NavigationRoutes";
 import AppText from "../../components/AppText";
 
-import Onboarding1 from "../../assets/Onboarding/Onboarding1.svg";
-import Onboarding2 from "../../assets/Onboarding/Onboarding2.svg";
-import Onboarding3 from "../../assets/Onboarding/Onboarding3.svg";
 import NextArrowButton from "../../assets/Onboarding/Arrow.svg";
 import strings from "../../localisation/content/en.json";
 
-type OnboardingNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  NavigationRoutes.ONBOARDING
->;
-
-type Slide = {
-  key: string;
-  Illustration: React.ComponentType<any>;
-  title: string;
-  subtitle: string;
-};
+import { styles } from "./onboardingStyle";
+import { SLIDES } from "./onboardingMock";
+import { OnboardingNavigationProp } from "../../types/onboarding/onboarding";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
-const SLIDES: Slide[] = [
-  {
-    key: "meals",
-    Illustration: Onboarding1,
-    title: strings.onboarding.screen1Title,
-    subtitle: strings.onboarding.screen1Subtitle,
-  },
-  {
-    key: "screen1",
-    Illustration: Onboarding2,
-    title: strings.onboarding.screen2Title,
-    subtitle: strings.onboarding.screen2Subtitle,
-  },
-  {
-    key: "screen2",
-    Illustration: Onboarding3,
-    title: strings.onboarding.screen3Title,
-    subtitle: strings.onboarding.screen3Subtitle,
-  },
-];
 
 const OnboardingScreen: React.FC = () => {
   const navigation = useNavigation<OnboardingNavigationProp>();
@@ -199,103 +162,3 @@ const OnboardingScreen: React.FC = () => {
 };
 
 export default OnboardingScreen;
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-
-  slide: {
-    width: SCREEN_WIDTH,
-    flex: 1,
-  },
-
-  skipButton: {
-    position: "absolute",
-    top: hp("5.5%"),
-    right: wp("8.5%"),
-    width: wp("12%"),
-    height: hp("3%"),
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 2,
-  },
-
-  skipLabel: {
-    fontSize: 20,
-    fontWeight: "400",
-    letterSpacing: 0.8,
-    lineHeight: 20,
-    color: "#A9A9A9",
-    textAlign: "center",
-  },
-
-  illustrationWrapper: {
-    position: "absolute",
-    top: hp("12%"),
-    width: "100%",
-    alignItems: "center",
-  },
-
-  dotsWrapper: {
-    position: "absolute",
-    top: hp("54%"),
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  dot: {
-    height: 8,
-    borderRadius: 100,
-    backgroundColor: "#D9D9D9",
-    marginHorizontal: 2,
-  },
-
-  textWrapper: {
-    position: "absolute",
-    top: hp("59%"),
-    left: wp("10.5%"),
-    right: wp("10.5%"),
-    alignItems: "center",
-    gap: 10,
-  },
-
-  arrowButton: {
-    position: "absolute",
-    bottom: hp("11.5%"),
-    alignSelf: "center",
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: Colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
-
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-
-  getStartedButton: {
-    position: "absolute",
-    bottom: hp("11.5%"),
-    left: wp("6.5%"),
-    right: wp("6.5%"),
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: Colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
-
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-});

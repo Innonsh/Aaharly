@@ -1,119 +1,3 @@
-// import { useMutation } from "@tanstack/react-query";
-// import { GoogleSignin } from "@react-native-google-signin/google-signin";
-// import auth from "@react-native-firebase/auth";
-// import { useNavigation } from "@react-navigation/native";
-// import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-// import { NavigationRoutes, RootStackParamList } from "../navigation/NavigationRoutes";
-// import { useAppDispatch } from "../store/hooks";
-// import { signInSuccess } from "../store/reducer/authSlice";
-// import { setUserProfile } from "../store/reducer/userSlice";
-// import Toast from "react-native-toast-message";
-// import { AccountService, CreateAccountPayload } from "../services/AccountService";
-
-// export function useGoogleLogin() {
-//     const navigation =
-//         useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-//     const dispatch = useAppDispatch();
-
-//     const googleSignInFlow = async () => {
-//         await GoogleSignin.hasPlayServices();
-//         await GoogleSignin.signOut().catch(() => { });
-
-//         const userInfo = await GoogleSignin.signIn();
-//         if (!userInfo) throw new Error("Sign in cancelled");
-
-//         const userObj = userInfo as any;
-//         const idToken = userObj.data?.idToken || userObj.idToken;
-//         if (!idToken) throw new Error("No ID token found");
-
-//         const credential = auth.GoogleAuthProvider.credential(idToken);
-//         const userCredential = await auth().signInWithCredential(credential);
-
-//         // const accessToken = await userCredential.user.getIdToken();
-//         const firebaseToken = await userCredential.user.getIdToken();
-//         const payload: CreateAccountPayload = {
-//             loginMethod: "google",
-//             email: userCredential.user.email,
-//             name: userCredential.user.displayName,
-//             phone: userCredential.user.phoneNumber ?? undefined,
-//         };
-
-//         // dispatch(signInSuccess({ accessToken, idToken }));
-//         dispatch(signInSuccess({
-//             accessToken: firebaseToken,
-//             idToken: firebaseToken,
-//         }));
-//         try {
-//             const response = await AccountService.createAccount(payload);
-
-//             // ✅ Explicit success confirmation
-//             if (response?.success) {
-//                 // Save user profile to Redux
-//                 dispatch(setUserProfile(response.data));
-
-//                 return true;
-//             } else {
-//                 // Even if create fails (e.g. some backend error), we are logged in.
-//                 // But if the backend says "success: false", we might want to warn.
-//                 // For now, if we have a token, we consider login mostly successful.
-//                 console.warn("Account creation response not success:", response);
-//                 return true;
-//             }
-
-//         } catch (error: any) {
-//             // ✅ Explicit confirmation for existing account
-//             if (error.response?.status === 409) {
-//                 console.log("User already exists, proceeding.");
-//                 return true;
-
-//             } else {
-//                 throw new Error(
-//                     error.response?.data?.message ||
-//                     "Account sync failed"
-//                 );
-//             }
-//         }
-
-//         // 🚨 FINAL SAFETY CHECK
-//         // if (!accountConfirmed) {
-//         //     throw new Error("Account could not be confirmed");
-//         // }
-
-//         return {
-//             accessToken: firebaseToken,
-//             idToken: firebaseToken,
-//             user: userCredential.user,
-//         };
-//     };
-
-//     return useMutation({
-//         mutationFn: googleSignInFlow,
-
-//         onSuccess: (data) => {
-//             navigation.navigate(NavigationRoutes.HOME);
-//             Toast.show({
-//                 type: "success",
-//                 text1: "Login Successful",
-//                 // text2: `Welcome ${data.user.displayName || "User"}!`,
-//             });
-//         },
-
-//         onError: (error: any) => {
-//             const message =
-//                 error.code === "12501"
-//                     ? "Sign in cancelled"
-//                     : error.message || "Google Login Failed";
-
-//             Toast.show({
-//                 type: "error",
-//                 text1: "Login Failed",
-//                 text2: message,
-//             });
-
-//             console.error("Google Login Error:", error);
-//         },
-//     });
-// }
 import { useMutation } from "@tanstack/react-query";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import auth, { getIdToken, signInWithCredential, GoogleAuthProvider } from "@react-native-firebase/auth";
@@ -138,9 +22,6 @@ export function useGoogleLogin() {
     const dispatch = useAppDispatch();
 
     const googleSignInFlow = async () => {
-        // =========================
-        // 1️⃣ Google + Firebase sign-in
-        // =========================
         await GoogleSignin.hasPlayServices();
         await GoogleSignin.signOut().catch(() => { });
 
@@ -153,15 +34,8 @@ export function useGoogleLogin() {
 
         const credential = GoogleAuthProvider.credential(rawIdToken);
         const userCredential = await signInWithCredential(auth(), credential);
-
-        // =========================
-        // 2️⃣ Get Firebase token (single source of truth)
-        // =========================
         const firebaseToken = await getIdToken(userCredential.user);
 
-        // =========================
-        // 3️⃣ Save token to Redux FIRST (🔥 critical)
-        // =========================
         dispatch(
             signInSuccess({
                 accessToken: firebaseToken,
@@ -169,9 +43,7 @@ export function useGoogleLogin() {
             })
         );
 
-        // =========================
-        // 4️⃣ Prepare account payload
-        // =========================
+   
         const payload: CreateAccountPayload = {
             loginMethod: "google",
             email: userCredential.user.email ?? undefined,
@@ -179,9 +51,6 @@ export function useGoogleLogin() {
             phone: userCredential.user.phoneNumber ?? undefined,
         };
 
-        // =========================
-        // 5️⃣ Create / confirm account
-        // =========================
         try {
             await AccountService.createAccount(payload);
         } catch (error: any) {
@@ -195,10 +64,6 @@ export function useGoogleLogin() {
                 );
             }
         }
-
-        // =========================
-        // 6️⃣ Fetch profile (MANDATORY)
-        // =========================
         let profileData = null;
 
         try {
@@ -209,13 +74,10 @@ export function useGoogleLogin() {
                 dispatch(setUserProfile(profileResponse.data));
             }
         } catch (error: any) {
-            // ✅ 404 = profile not created yet → NORMAL
             if (error.response?.status !== 404) {
                 throw error;
             }
         }
-
-        // ✅ login succeeds regardless of profile
         return true;
 
     };
@@ -244,7 +106,7 @@ export function useGoogleLogin() {
             Toast.show({
                 type: "error",
                 text1: "Login Failed",
-                text2: String(message), // ✅ ALWAYS STRING
+                text2: String(message),
             });
         },
 
