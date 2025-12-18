@@ -12,16 +12,15 @@ const SplashScreen = () => {
   const { accessToken } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    const checkLogin = async () => {
-      setTimeout(() => {
-        if (accessToken) {
-          navigation.replace(NavigationRoutes.HOME);
-        } else {
-          navigation.replace(NavigationRoutes.ONBOARDING);
-        }
-      }, 1000);
-    };
-    checkLogin();
+    const timeout = setTimeout(() => {
+      if (accessToken) {
+        navigation.replace(NavigationRoutes.HOME);
+      } else {
+        navigation.replace(NavigationRoutes.ONBOARDING);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeout);
   }, [accessToken, navigation]);
 
   return (

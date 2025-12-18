@@ -1,8 +1,14 @@
-import auth from "@react-native-firebase/auth";
+import auth, {
+  getIdToken,
+  onIdTokenChanged,
+  signInWithCredential,
+  signInWithEmailAndPassword,
+  signInWithPhoneNumber,
+  GoogleAuthProvider
+} from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Alert } from "react-native";
 
-// -------- PHONE OTP LOGIN --------
 export const sendOtp = async (phone: string) => {
 
   const cleaned = phone.replace(/\D/g, '');
@@ -15,21 +21,19 @@ export const sendOtp = async (phone: string) => {
   }
 
   console.log(`📱 Sending OTP to: ${formattedPhone}`);
-  return await auth().signInWithPhoneNumber(formattedPhone);
+  return await signInWithPhoneNumber(auth(), formattedPhone);
 };
 
 export const verifyOtp = async (confirmObj: any, code: string) => {
   const result = await confirmObj.confirm(code);
-  return await result.user.getIdToken();
-};
+  return await getIdToken(result.user);
+}
 
-// -------- EMAIL-PASSWORD LOGIN --------
 export const signInWithEmail = async (email: string, password: string) => {
-  const res = await auth().signInWithEmailAndPassword(email, password);
-  return await res.user.getIdToken();
+  const res = await signInWithEmailAndPassword(auth(), email, password);
+  return await getIdToken(res.user);
 };
 
-// // -------- GOOGLE LOGIN --------
 export const googleLogin = async () => {
   try {
     console.log('Starting Google Login...');
@@ -45,7 +49,6 @@ export const googleLogin = async () => {
       console.log('No previous Google session to sign out from');
     }
 
-    // Sign in with Google
     const googleUser: any = await GoogleSignin.signIn();
     console.log('Google Sign-In Response Type:', typeof googleUser);
     console.log('Google Sign-In Response Keys:', Object.keys(googleUser));
@@ -66,17 +69,16 @@ export const googleLogin = async () => {
       throw new Error("Failed to get Google ID Token from response");
     }
 
-    // Create Firebase credential
-    console.log('🔐 Creating Firebase credential...');
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-    // Sign in to Firebase
-    const result = await auth().signInWithCredential(googleCredential);
+    console.log('🔐 Creating Firebase credential...');
+    const googleCredential = GoogleAuthProvider.credential(idToken);
+
+
+    const result = await signInWithCredential(auth(), googleCredential);
     console.log('✅ Firebase sign-in successful, User:', result.user.email);
 
-    // Return Firebase JWT token (this is what you send to backend)
-    const firebaseToken = await result.user.getIdToken();
-    // console.log('🎫 Firebase JWT Token:', firebaseToken ? `✅ Generated (${firebaseToken.substring(0, 20)}...)` : '❌ Failed');
+    const firebaseToken = await getIdToken(result.user);
+    // console.log('🎫 Firebase JWT Token:', firebaseToken ? ` Generated (${firebaseToken.substring(0, 20)}...)` : '❌ Failed');
     console.log("FULL TOKEN:", firebaseToken);
 
     Alert.alert("Firebase Token", firebaseToken);

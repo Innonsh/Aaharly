@@ -31,7 +31,6 @@ import EmailVerification from "../screens/verification/EmailVerification";
 import HomeScreen from "../screens/home/homeScreen";
 
 const Navigator = () => {
-  const Stack = createNativeStackNavigator<RootStackParamList>();
   const themeMode = ThemeMode.Light;
 
   const navigationTheme = useMemo<Theme>(() => {
