@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from "react";
+import React, { useState, useContext, useMemo, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
@@ -31,7 +31,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { mutate: loginWithGoogle, isPending: isGoogleLoginPending } = useGoogleLogin();
+  const { mutate: loginWithGoogle, isPending: isGoogleLoginPending, isSuccess, isError, error: googleLoginError } = useGoogleLogin();
 
   const validatePhone = (num: string) => /^[6-9]\d{9}$/.test(num);
 
@@ -39,6 +39,16 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const isValidPhone = useMemo(() => validatePhone(phone), [phone]);
 
   // 
+  useEffect(() => {
+    if (isSuccess) {
+      navigation.navigate(NavigationRoutes.HOME);
+    }
+    if (isError) {
+      const message = googleLoginError?.response?.data?.message || googleLoginError?.message || "Google Login Failed";
+      setError(String(message));
+    }
+  }, [isError, isSuccess])
+
   const handleContinue = async () => {
     setError("");
 

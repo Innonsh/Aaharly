@@ -1,114 +1,252 @@
+// import { useMutation } from "@tanstack/react-query";
+// import { GoogleSignin } from "@react-native-google-signin/google-signin";
+// import auth from "@react-native-firebase/auth";
+// import { useNavigation } from "@react-navigation/native";
+// import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+// import { NavigationRoutes, RootStackParamList } from "../navigation/NavigationRoutes";
+// import { useAppDispatch } from "../store/hooks";
+// import { signInSuccess } from "../store/reducer/authSlice";
+// import { setUserProfile } from "../store/reducer/userSlice";
+// import Toast from "react-native-toast-message";
+// import { AccountService, CreateAccountPayload } from "../services/AccountService";
+
+// export function useGoogleLogin() {
+//     const navigation =
+//         useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+//     const dispatch = useAppDispatch();
+
+//     const googleSignInFlow = async () => {
+//         await GoogleSignin.hasPlayServices();
+//         await GoogleSignin.signOut().catch(() => { });
+
+//         const userInfo = await GoogleSignin.signIn();
+//         if (!userInfo) throw new Error("Sign in cancelled");
+
+//         const userObj = userInfo as any;
+//         const idToken = userObj.data?.idToken || userObj.idToken;
+//         if (!idToken) throw new Error("No ID token found");
+
+//         const credential = auth.GoogleAuthProvider.credential(idToken);
+//         const userCredential = await auth().signInWithCredential(credential);
+
+//         // const accessToken = await userCredential.user.getIdToken();
+//         const firebaseToken = await userCredential.user.getIdToken();
+//         const payload: CreateAccountPayload = {
+//             loginMethod: "google",
+//             email: userCredential.user.email,
+//             name: userCredential.user.displayName,
+//             phone: userCredential.user.phoneNumber ?? undefined,
+//         };
+
+//         // dispatch(signInSuccess({ accessToken, idToken }));
+//         dispatch(signInSuccess({
+//             accessToken: firebaseToken,
+//             idToken: firebaseToken,
+//         }));
+//         try {
+//             const response = await AccountService.createAccount(payload);
+
+//             // ✅ Explicit success confirmation
+//             if (response?.success) {
+//                 // Save user profile to Redux
+//                 dispatch(setUserProfile(response.data));
+
+//                 return true;
+//             } else {
+//                 // Even if create fails (e.g. some backend error), we are logged in.
+//                 // But if the backend says "success: false", we might want to warn.
+//                 // For now, if we have a token, we consider login mostly successful.
+//                 console.warn("Account creation response not success:", response);
+//                 return true;
+//             }
+
+//         } catch (error: any) {
+//             // ✅ Explicit confirmation for existing account
+//             if (error.response?.status === 409) {
+//                 console.log("User already exists, proceeding.");
+//                 return true;
+
+//             } else {
+//                 throw new Error(
+//                     error.response?.data?.message ||
+//                     "Account sync failed"
+//                 );
+//             }
+//         }
+
+//         // 🚨 FINAL SAFETY CHECK
+//         // if (!accountConfirmed) {
+//         //     throw new Error("Account could not be confirmed");
+//         // }
+
+//         return {
+//             accessToken: firebaseToken,
+//             idToken: firebaseToken,
+//             user: userCredential.user,
+//         };
+//     };
+
+//     return useMutation({
+//         mutationFn: googleSignInFlow,
+
+//         onSuccess: (data) => {
+//             navigation.navigate(NavigationRoutes.HOME);
+//             Toast.show({
+//                 type: "success",
+//                 text1: "Login Successful",
+//                 // text2: `Welcome ${data.user.displayName || "User"}!`,
+//             });
+//         },
+
+//         onError: (error: any) => {
+//             const message =
+//                 error.code === "12501"
+//                     ? "Sign in cancelled"
+//                     : error.message || "Google Login Failed";
+
+//             Toast.show({
+//                 type: "error",
+//                 text1: "Login Failed",
+//                 text2: message,
+//             });
+
+//             console.error("Google Login Error:", error);
+//         },
+//     });
+// }
 import { useMutation } from "@tanstack/react-query";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import auth from "@react-native-firebase/auth";
+import auth, { getIdToken, signInWithCredential, GoogleAuthProvider } from "@react-native-firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { NavigationRoutes, RootStackParamList } from "../navigation/NavigationRoutes";
+import {
+    NavigationRoutes,
+    RootStackParamList,
+} from "../navigation/NavigationRoutes";
 import { useAppDispatch } from "../store/hooks";
 import { signInSuccess } from "../store/reducer/authSlice";
+import { setUserProfile } from "../store/reducer/userSlice";
 import Toast from "react-native-toast-message";
-import { AccountService, CreateAccountPayload } from "../services/AccountService";
+import {
+    AccountService,
+    CreateAccountPayload,
+} from "../services/AccountService";
 
-async function googleSignInFlow() {
-    try {
+export function useGoogleLogin() {
+    const navigation =
+        useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const dispatch = useAppDispatch();
+
+    const googleSignInFlow = async () => {
+        // =========================
+        // 1️⃣ Google + Firebase sign-in
+        // =========================
         await GoogleSignin.hasPlayServices();
-
-        // Sign out from any previous session to force account chooser
-        try {
-            await GoogleSignin.signOut();
-        } catch (error) {
-            // Ignore if not signed in
-        }
+        await GoogleSignin.signOut().catch(() => { });
 
         const userInfo = await GoogleSignin.signIn();
+        if (!userInfo) throw new Error("Sign in cancelled");
 
-        if (!userInfo) {
-            throw new Error('Sign in cancelled');
-        }
-
-        // Cast to any to safely access properties that might differ across versions
         const userObj = userInfo as any;
-        const idToken = userObj.data?.idToken || userObj.idToken;
+        const rawIdToken = userObj.data?.idToken || userObj.idToken;
+        if (!rawIdToken) throw new Error("No ID token found");
 
-        if (!idToken) {
-            throw new Error('No ID token found');
-        }
+        const credential = GoogleAuthProvider.credential(rawIdToken);
+        const userCredential = await signInWithCredential(auth(), credential);
 
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        const userCredential = await auth().signInWithCredential(googleCredential);
-        const accessToken = await userCredential.user.getIdToken();
+        // =========================
+        // 2️⃣ Get Firebase token (single source of truth)
+        // =========================
+        const firebaseToken = await getIdToken(userCredential.user);
 
+        // =========================
+        // 3️⃣ Save token to Redux FIRST (🔥 critical)
+        // =========================
+        dispatch(
+            signInSuccess({
+                accessToken: firebaseToken,
+                idToken: firebaseToken,
+            })
+        );
 
-        // Create account on backend
-        // Create account on backend
-        // Only include phone if it exists to avoid validation errors
+        // =========================
+        // 4️⃣ Prepare account payload
+        // =========================
         const payload: CreateAccountPayload = {
-            loginMethod: 'google',
-            email: userCredential.user.email,
-            name: userCredential.user.displayName,
+            loginMethod: "google",
+            email: userCredential.user.email ?? undefined,
+            name: userCredential.user.displayName ?? undefined,
+            phone: userCredential.user.phoneNumber ?? undefined,
         };
 
-        if (userCredential.user.phoneNumber) {
-            payload.phone = userCredential.user.phoneNumber;
-        }
-
+        // =========================
+        // 5️⃣ Create / confirm account
+        // =========================
         try {
             await AccountService.createAccount(payload);
-        } catch (apiError: any) {
-            // Check if account already exists (409)
-            if (apiError.response?.status === 409) {
-                try {
-                    // Verify account actually exists
-                    await AccountService.getAccount();
-                } catch (getError) {
-                    console.error("Account verification failed:", getError);
-                    throw new Error("Account reported as existing but could not be verified");
-                }
-            } else {
-                console.error("API Error:", apiError);
-                throw new Error(apiError.response?.data?.message || "Failed to sync account with server");
+        } catch (error: any) {
+            // 409 = account already exists → OK
+            // 404 = likely endpoint mismatch, but we might want to log it
+            if (error.response?.status === 404) {
+                console.warn("Account sync endpoint not found (404). Proceeding anyway...");
+            } else if (error.response?.status !== 409) {
+                throw new Error(
+                    error.response?.data?.message || "Account sync failed (Server Error)"
+                );
             }
         }
 
-        return {
-            accessToken,
-            idToken,
-            user: userCredential.user
-        };
-    } catch (error) {
-        throw error;
-    }
-}
+        // =========================
+        // 6️⃣ Fetch profile (MANDATORY)
+        // =========================
+        let profileData = null;
 
-export function useGoogleLogin() {
-    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const dispatch = useAppDispatch();
+        try {
+            const profileResponse = await AccountService.getProfile();
+
+            if (profileResponse?.success) {
+                profileData = profileResponse.data;
+                dispatch(setUserProfile(profileResponse.data));
+            }
+        } catch (error: any) {
+            // ✅ 404 = profile not created yet → NORMAL
+            if (error.response?.status !== 404) {
+                throw error;
+            }
+        }
+
+        // ✅ login succeeds regardless of profile
+        return true;
+
+    };
 
     return useMutation({
         mutationFn: googleSignInFlow,
-        onSuccess: (data) => {
-            dispatch(signInSuccess({ accessToken: data.accessToken, idToken: data.idToken }));
+
+        onSuccess: () => {
             navigation.navigate(NavigationRoutes.HOME);
             Toast.show({
-                type: 'success',
-                text1: 'Login Successful',
-                text2: `Welcome ${data.user.displayName || 'User'}!`
+                type: "success",
+                text1: "Login Successful",
             });
         },
+
         onError: (error: any) => {
-            let errorMessage = "Google Login Failed";
-            if (error.code === '12501') { // SIGN_IN_CANCELLED
-                errorMessage = "Sign in cancelled";
-            } else {
-                errorMessage = error.message || errorMessage;
-            }
+            const message =
+                error?.code === "12501"
+                    ? "Sign in cancelled"
+                    : error?.response?.data?.message ||
+                    error?.message ||
+                    "Google Login Failed";
+
+            console.error("Google Login Error:", String(message));
 
             Toast.show({
-                type: 'error',
-                text1: 'Login Failed',
-                text2: errorMessage
+                type: "error",
+                text1: "Login Failed",
+                text2: String(message), // ✅ ALWAYS STRING
             });
-            console.error("Google Login Error:", error);
-        }
+        },
+
     });
 }

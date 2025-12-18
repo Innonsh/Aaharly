@@ -21,6 +21,13 @@ import {
   RootStackParamList,
 } from "../../navigation/NavigationRoutes";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { updateUserProfile } from "../../store/reducer/userSlice";
+import {
+  useUpdateBasicProfile,
+  useUpdatePhysicalStats,
+  useUpdateGoalPreferences
+} from "../../hooks/useAccount";
 
 type ProfileNavProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -31,6 +38,13 @@ const ProfileStep3Screen: React.FC = () => {
   const navigation = useNavigation<ProfileNavProp>();
   const { translations } = useContext(LocalizationContext);
   const strings = translations as any;
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.user.data);
+
+  // API Hooks
+  const basicMutation = useUpdateBasicProfile();
+  const statsMutation = useUpdatePhysicalStats();
+  const goalMutation = useUpdateGoalPreferences();
 
   const [goal, setGoal] = useState<"lose" | "maintain" | "gain" | null>(null);
   const [diet, setDiet] = useState<"veg" | "nonveg" | "vegan" | null>(null);
@@ -198,10 +212,53 @@ const ProfileStep3Screen: React.FC = () => {
           <TouchableOpacity
             style={styles.primaryBtn}
             activeOpacity={0.8}
-            onPress={() => navigation.navigate(NavigationRoutes.NUTRITIONAL_OVERVIEW)}
+            onPress={async () => {
+              if (!goal || !diet) {
+                // Simple validation
+                console.warn("Please select goal and diet");
+                return;
+              }
+
+              // 1. Prepare Payload
+              // Data from Redux (Steps 1 & 2)
+              const basicData = {
+                name: user?.name || "User",
+                age: Number(user?.age) || 25,
+                gender: user?.gender || 'male'
+              };
+
+              const statsData = {
+                height: Number(user?.height) || 170,
+                weight: Number(user?.weight) || 70,
+                activityLevel: (user?.activityLevel || 'moderate') as any
+              };
+
+              const goalData = {
+                goal: goal,
+                dietType: diet,
+                allergies: allergies
+              };
+
+              try {
+                // 2. Call APIs sequentially or parallel
+                // We use the mutations from useAccount.ts
+                await basicMutation.mutateAsync(basicData as any);
+                await statsMutation.mutateAsync(statsData as any);
+                await goalMutation.mutateAsync(goalData as any);
+
+                // 3. Update Redux with final pieces (optional but good for syncing)
+                dispatch(updateUserProfile({ goal: goal }));
+
+                // 4. Navigate
+                navigation.navigate(NavigationRoutes.NUTRITIONAL_OVERVIEW);
+              } catch (err) {
+                console.error("Failed to save profile", err);
+                // You might want to show an alert here
+              }
+            }}
           >
             <AppText variant="button" color="#FFFFFF">
-              {strings.profile.generatePlan}
+              {basicMutation.isPending || statsMutation.isPending ? "Saving..." : strings.profile.generatePlan}
             </AppText>
           </TouchableOpacity>
         </View>

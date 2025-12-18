@@ -20,6 +20,8 @@ import {
   RootStackParamList,
 } from "../../navigation/NavigationRoutes";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
+import { useAppDispatch } from "../../store/hooks";
+import { updateUserProfile } from "../../store/reducer/userSlice";
 
 type Step1NavProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -28,6 +30,7 @@ type Step1NavProp = NativeStackNavigationProp<
 
 const ProfileStep1Screen: React.FC = () => {
   const navigation = useNavigation<Step1NavProp>();
+  const dispatch = useAppDispatch();
   const { translations } = useContext(LocalizationContext);
   const strings = translations as any;
 
@@ -150,7 +153,7 @@ const ProfileStep1Screen: React.FC = () => {
         </View>
 
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.secondaryBtn} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.secondaryBtn} activeOpacity={0.8} onPress={() => navigation.goBack()}>
             <AppText variant="button" color="#6B7280">
               {strings.profile.cancel}
             </AppText>
@@ -159,7 +162,14 @@ const ProfileStep1Screen: React.FC = () => {
           <TouchableOpacity
             style={styles.primaryBtn}
             activeOpacity={0.8}
-            onPress={() => navigation.navigate(NavigationRoutes.PROFILE_SETUP2)}
+            onPress={() => {
+              dispatch(updateUserProfile({
+                name,
+                age: Number(age),
+                gender: gender || 'male', // Default or validate
+              }));
+              navigation.navigate(NavigationRoutes.PROFILE_SETUP2);
+            }}
           >
             <AppText variant="button" color="#FFFFFF">
               {strings.profile.next}

@@ -18,6 +18,8 @@ import {
   RootStackParamList,
 } from "../../navigation/NavigationRoutes";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
+import { useAppDispatch } from "../../store/hooks";
+import { updateUserProfile } from "../../store/reducer/userSlice";
 
 type Step2NavProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -26,6 +28,7 @@ type Step2NavProp = NativeStackNavigationProp<
 
 const ProfileStep2Screen: React.FC = () => {
   const navigation = useNavigation<Step2NavProp>();
+  const dispatch = useAppDispatch();
   const { translations } = useContext(LocalizationContext);
   const strings = translations as any;
 
@@ -174,7 +177,14 @@ const ProfileStep2Screen: React.FC = () => {
 
           <TouchableOpacity
             style={styles.primaryBtn}
-            onPress={() => navigation.navigate(NavigationRoutes.PROFILE_SETUP3)}
+            onPress={() => {
+              dispatch(updateUserProfile({
+                height: Number(height),
+                weight: Number(weight),
+                activityLevel: activity || 'moderate'
+              }));
+              navigation.navigate(NavigationRoutes.PROFILE_SETUP3);
+            }}
             activeOpacity={0.8}
           >
             <AppText variant="button" color="#FFFFFF">

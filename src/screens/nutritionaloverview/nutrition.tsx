@@ -16,6 +16,7 @@ import WeightIcon from '../../assets/nutrition/mealgen3.svg';
 import GenderIcon from '../../assets/nutrition/mealgen4.svg';
 import ActivityIcon from '../../assets/nutrition/mealgen5.svg';
 import BackArrow from '../../assets/Icons/back_arrow.svg';
+import { useProfile } from '../../hooks/useAccount';
 
 
 const { width } = Dimensions.get('window');
@@ -101,6 +102,21 @@ const MealCard = ({ item }: { item: any }) => {
 
 export default function NutritionalOverviewScreen() {
     const navigation = useNavigation<any>();
+    const { data: profile } = useProfile();
+    const user = profile?.data?.basic || {};
+    const stats = profile?.data?.physicalStats || {};
+    // const goals = profile?.data?.goalPref || {};
+
+    const displayAge = user.age || "--";
+    const displayHeight = stats.height || "--";
+    const displayWeight = stats.weight || "--";
+    const displayGender = user.gender ? (user.gender.charAt(0).toUpperCase() + user.gender.slice(1)) : "--";
+    const displayActivity = stats.activityLevel ? (stats.activityLevel.charAt(0).toUpperCase() + stats.activityLevel.slice(1)) : "--";
+
+    // Calculate BMI if height and weight exist
+    const bmi = (stats.height && stats.weight)
+        ? (stats.weight / ((stats.height / 100) * (stats.height / 100))).toFixed(1)
+        : "--";
 
     useEffect(() => {
         if (Platform.OS === 'android') {
@@ -165,21 +181,21 @@ export default function NutritionalOverviewScreen() {
 
                     <View style={styles.profileGrid}>
                         <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>24</AppText>
+                            <AppText variant="title1" style={styles.profileValue}>{displayAge}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <AgeIcon width={40} height={40} />
                             </View>
                             <AppText variant="caption" style={styles.profileLabel}>Age</AppText>
                         </View>
                         <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>180</AppText>
+                            <AppText variant="title1" style={styles.profileValue}>{displayHeight}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <HeightIcon width={40} height={40} />
                             </View>
                             <AppText variant="caption" style={styles.profileLabel}>height</AppText>
                         </View>
                         <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>71.3</AppText>
+                            <AppText variant="title1" style={styles.profileValue}>{displayWeight}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <WeightIcon width={40} height={40} />
                             </View>
@@ -189,14 +205,14 @@ export default function NutritionalOverviewScreen() {
 
                     <View style={[styles.profileGrid, { marginTop: 20, justifyContent: 'flex-start', gap: 40 }]}>
                         <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>Male</AppText>
+                            <AppText variant="title1" style={styles.profileValue}>{displayGender}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <GenderIcon width={40} height={40} />
                             </View>
                             <AppText variant="caption" style={styles.profileLabel}>Gender</AppText>
                         </View>
                         <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>Sedentary</AppText>
+                            <AppText variant="title1" style={styles.profileValue}>{displayActivity}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <ActivityIcon width={40} height={40} />
                             </View>
@@ -211,7 +227,7 @@ export default function NutritionalOverviewScreen() {
 
                     <View style={styles.bmiSection}>
                         <View style={styles.bmiValueContainer}>
-                            <AppText variant="title1" style={{ fontSize: 32 }}>22</AppText>
+                            <AppText variant="title1" style={{ fontSize: 32 }}>{bmi}</AppText>
                             <AppText variant="body" style={{ color: Colors.secondary }}>BMI</AppText>
                         </View>
                         <View style={styles.bmiMessageContainer}>
@@ -314,7 +330,7 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     bodyCompCard: {
-        backgroundColor: '#FFF5F0', 
+        backgroundColor: '#FFF5F0',
     },
     cardTitle: {
         fontSize: 16,
@@ -342,7 +358,7 @@ const styles = StyleSheet.create({
     },
     bmiSection: {
         flexDirection: 'row',
-        justifyContent: 'space-around', 
+        justifyContent: 'space-around',
         alignItems: 'center',
         paddingVertical: 10,
     },
