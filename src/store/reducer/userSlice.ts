@@ -1,23 +1,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface User {
+export interface UserProfile {
     userId: string;
-    authUid?: string;
-    name: string;
-    email: string;
-    phone?: string;
-    photo?: string;
-    loginMethod?: string;
-    age?: number;
-    gender?: 'male' | 'female' | 'other';
-    height?: number;
-    weight?: number;
-    activityLevel?: string;
-    goal?: string;
+    basic?: {
+        name: string;
+        age: number;
+        gender: 'male' | 'female' | 'other';
+    };
+    physicalStats?: {
+        height: number;
+        weight: number;
+        activityLevel: string;
+    };
+    goalPref?: {
+        weightGoal: string;
+        dietType: string;
+        allergies: string;
+    };
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 interface UserState {
-    data: User | null;
+    data: UserProfile | null;
     loading: boolean;
     error: string | null;
 }
@@ -32,13 +37,17 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUserProfile: (state, action: PayloadAction<User | null>) => {
+        setUserProfile: (state, action: PayloadAction<UserProfile | null>) => {
             state.data = action.payload;
             state.error = null;
         },
-        updateUserProfile: (state, action: PayloadAction<Partial<User>>) => {
+        updateUserProfile: (state, action: PayloadAction<Partial<UserProfile>>) => {
             if (state.data) {
                 state.data = { ...state.data, ...action.payload };
+            } else {
+                // If data is null, initialize it with the payload
+                // Note: userId might be missing here, we should ensure it exists or allowed to be missing
+                state.data = action.payload as any;
             }
         },
         clearUserProfile: (state) => {

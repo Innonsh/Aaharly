@@ -155,9 +155,11 @@ const ProfileStep2Screen: React.FC = () => {
             style={styles.primaryBtn}
             onPress={() => {
               dispatch(updateUserProfile({
-                height: Number(height),
-                weight: Number(weight),
-                activityLevel: activity || 'moderate'
+                physicalStats: {
+                  height: Number(height),
+                  weight: Number(weight),
+                  activityLevel: activity || 'moderate'
+                }
               }));
               navigation.navigate(NavigationRoutes.PROFILE_SETUP3);
             }}

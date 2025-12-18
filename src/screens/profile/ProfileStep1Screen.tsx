@@ -153,9 +153,11 @@ const ProfileStep1Screen: React.FC = () => {
             activeOpacity={0.8}
             onPress={() => {
               dispatch(updateUserProfile({
-                name,
-                age: Number(age),
-                gender: gender || 'male', // Default or validate
+                basic: {
+                  name,
+                  age: Number(age),
+                  gender: gender || 'male',
+                }
               }));
               navigation.navigate(NavigationRoutes.PROFILE_SETUP2);
             }}
