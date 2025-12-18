@@ -35,7 +35,6 @@ import EmailVerification from "../screens/verification/EmailVerification";
 
 
 const Navigator = () => {
-  const Stack = createNativeStackNavigator<RootStackParamList>();
   const themeMode = ThemeMode.Light;
 
   const navigationTheme = useMemo<Theme>(() => {
