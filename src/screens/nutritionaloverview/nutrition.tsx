@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { View, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, StyleSheet } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { IconButton, Card } from 'react-native-paper';
 import AppText from '../../components/AppText';
-import Button from '../../components/Button';
 import { Colors } from '../../theme/Colors';
-import { fonts } from '../../theme/Fonts';
 import { NavigationRoutes } from '../../navigation/NavigationRoutes';
 import GymGirl from '../../assets/nutrition/gymgirl.svg';
 import MealIllustration from '../../assets/HomePage/home2.svg';
@@ -18,10 +16,11 @@ import ActivityIcon from '../../assets/nutrition/mealgen5.svg';
 import BackArrow from '../../assets/Icons/back_arrow.svg';
 import { useProfile } from '../../hooks/useAccount';
 
+import { styles } from './nutritionStyle';
+import { MEALS_DATA } from './nutritionMock';
+import { Meal } from '../../types/nutritionaloverview/nutrition';
 
-const { width } = Dimensions.get('window');
-
-const MealCard = ({ item }: { item: any }) => {
+const MealCard = ({ item }: { item: Meal }) => {
     const navigation = useNavigation<any>();
     const [expanded, setExpanded] = useState(false);
 
@@ -37,22 +36,20 @@ const MealCard = ({ item }: { item: any }) => {
             style={styles.largeMealCard}
         >
             <View style={styles.largeMealImage}>
-                <MealIllustration width={359} height={216} />
+                <MealIllustration width={wp('91.9%')} height={wp('86%')} />
             </View>
 
             <View style={[
                 styles.largeMealDetails,
                 {
-                    height: expanded ? 210 : 135,
-                    top: expanded ? 97 : 182,
-                    gap: expanded ? 20 : 0
+                    gap: expanded ? wp('4%') : wp('2.5%'),
                 }
             ]}>
                 <View>
-                    <AppText variant="title" numberOfLines={1} style={{ fontSize: 18 }}>
+                    <AppText variant="title" numberOfLines={1} style={{ fontSize: wp('4.6%') }}>
                         {item.title}
                     </AppText>
-                    <AppText variant="subtitle" style={{ marginTop: 4, color: "#666", fontSize: 14 }}>
+                    <AppText variant="subtitle" style={{ marginTop: hp('0.5%'), color: "#666", fontSize: wp('3.6%') }}>
                         {item.desc}
                     </AppText>
 
@@ -73,14 +70,14 @@ const MealCard = ({ item }: { item: any }) => {
 
                 <View style={styles.cardBottom}>
                     <View>
-                        <AppText variant="labels" style={{ textDecorationLine: "line-through", color: "#999", fontSize: 12 }}>
+                        <AppText variant="labels" style={{ textDecorationLine: "line-through", color: "#999", fontSize: wp('3%') }}>
                             {item.originalPrice}
                         </AppText>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <AppText variant="title" style={{ fontSize: 18 }}>
+                            <AppText variant="title" style={{ fontSize: wp('4.6%') }}>
                                 {item.currentPrice}
                             </AppText>
-                            <AppText variant="labels" style={{ color: "#FF5722", marginLeft: 8, fontWeight: "bold" }}>
+                            <AppText variant="labels" style={{ color: "#FF5722", marginLeft: wp('2%'), fontWeight: "bold" }}>
                                 20% OFF
                             </AppText>
                         </View>
@@ -96,7 +93,7 @@ const MealCard = ({ item }: { item: any }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity >
     );
 };
 
@@ -132,31 +129,6 @@ export default function NutritionalOverviewScreen() {
         }
     };
 
-    const meals = [
-        {
-            id: 1,
-            title: "Weekly Fat Loss Plan",
-            desc: "High-protein, low-carb meal",
-            tag1: "High Proteins",
-            tag2: "Low Carbs",
-            tag3: "2 Meals/day",
-            originalPrice: "₹ 1799/Week",
-            currentPrice: "₹ 1439/Week",
-            subtitle: "Includes 2 Meals/Day"
-        },
-        {
-            id: 2,
-            title: "Weekly Balanced Plan",
-            desc: "Balanced macronutrients",
-            tag1: "Balanced",
-            tag2: "Medium Carbs",
-            tag3: "3 Meals/day",
-            originalPrice: "₹ 1899/Week",
-            currentPrice: "₹ 1519/Week",
-            subtitle: "Includes 3 Meals/Day"
-        }
-    ];
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -185,39 +157,40 @@ export default function NutritionalOverviewScreen() {
                             <View style={styles.iconPlaceholder}>
                                 <AgeIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>Age</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>Age</AppText>
                         </View>
                         <View style={styles.profileItem}>
                             <AppText variant="title1" style={styles.profileValue}>{displayHeight}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <HeightIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>height</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>height</AppText>
                         </View>
                         <View style={styles.profileItem}>
                             <AppText variant="title1" style={styles.profileValue}>{displayWeight}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <WeightIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>Weight</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>Weight</AppText>
                         </View>
                     </View>
 
-                    <View style={[styles.profileGrid, { marginTop: 20, justifyContent: 'flex-start', gap: 40 }]}>
+                    <View style={[styles.profileGrid, { marginTop: 20 }]}>
                         <View style={styles.profileItem}>
                             <AppText variant="title1" style={styles.profileValue}>{displayGender}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <GenderIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>Gender</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>Gender</AppText>
                         </View>
                         <View style={styles.profileItem}>
                             <AppText variant="title1" style={styles.profileValue}>{displayActivity}</AppText>
                             <View style={styles.iconPlaceholder}>
                                 <ActivityIcon width={40} height={40} />
                             </View>
-                            <AppText variant="caption" style={styles.profileLabel}>Activity Level</AppText>
+                            <AppText variant="labels" style={styles.profileLabel}>Activity Level</AppText>
                         </View>
+                        <View style={styles.profileItem} />
                     </View>
                 </View>
 
@@ -241,15 +214,15 @@ export default function NutritionalOverviewScreen() {
                     <View style={styles.needsContainer}>
                         <View style={styles.needItem}>
                             <AppText variant="title" style={styles.needValue}>High</AppText>
-                            <AppText variant="caption" style={styles.needLabel}>Protein</AppText>
+                            <AppText variant="labels" style={styles.needLabel}>Protein</AppText>
                         </View>
                         <View style={styles.needItem}>
                             <AppText variant="title" style={styles.needValue}>Moderate</AppText>
-                            <AppText variant="caption" style={styles.needLabel}>Carb</AppText>
+                            <AppText variant="labels" style={styles.needLabel}>Carb</AppText>
                         </View>
                         <View style={styles.needItem}>
                             <AppText variant="title" style={styles.needValue}>Low</AppText>
-                            <AppText variant="caption" style={styles.needLabel}>Fat</AppText>
+                            <AppText variant="labels" style={styles.needLabel}>Fat</AppText>
                         </View>
                     </View>
                 </View>
@@ -259,7 +232,7 @@ export default function NutritionalOverviewScreen() {
                     <AppText variant="title" style={styles.sectionTitle}>Sample meal plan for you</AppText>
                     <AppText variant="body" style={styles.sectionSubtitle}>Move toward our healthier balanced meal plans.</AppText>
 
-                    {meals.map((meal) => (
+                    {MEALS_DATA.map((meal) => (
                         <View key={meal.id} style={{ marginBottom: 16 }}>
                             <MealCard item={meal} />
                         </View>

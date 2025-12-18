@@ -16,6 +16,49 @@ import {
     CreateAccountPayload,
 } from "../services/AccountService";
 
+async function googleSignInFlow() {
+    try {
+        await GoogleSignin.hasPlayServices();
+
+        // Sign out from any previous session to force account chooser
+        try {
+            await GoogleSignin.signOut();
+        } catch (error) {
+            // Ignore if not signed in
+        }
+
+        const userInfo = await GoogleSignin.signIn();
+        console.log(userInfo)
+        if (!userInfo) {
+            throw new Error('Sign in cancelled');
+        }
+
+        // Cast to any to safely access properties that might differ across versions
+        const userObj = userInfo as any;
+        console.log(userObj)
+
+        const idToken = userObj.data?.idToken || userObj.idToken;
+        console.log(idToken)
+
+        if (!idToken) {
+            throw new Error('No ID token found');
+        }
+
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        const userCredential = await auth().signInWithCredential(googleCredential);
+
+        const accessToken = await userCredential.user.getIdToken();
+
+        return {
+            accessToken,
+            idToken,
+            user: userCredential.user
+        };
+    } catch (error) {
+        throw error;
+    }
+}
+
 export function useGoogleLogin() {
     const navigation =
         useNavigation<NativeStackNavigationProp<RootStackParamList>>();
