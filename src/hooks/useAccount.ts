@@ -33,6 +33,13 @@ export const useProfile = () =>
         staleTime: 1000 * 60 * 5,
     });
 
+export const useProfileAnalysis = () =>
+    useQuery({
+        queryKey: ["profileAnalysis"],
+        queryFn: AccountService.getProfileAnalysis,
+        staleTime: 1000 * 60 * 5,
+    });
+
 export const useUpdateBasicProfile = () => {
     const queryClient = useQueryClient();
 

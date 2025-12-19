@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef } from "react";
 import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Toast from "react-native-toast-message";
 
 import BackIcon from "../../assets/Icons/back_arrow.svg";
 import AppText from "../../components/AppText";
@@ -26,6 +27,10 @@ const ProfileStep1Screen: React.FC = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState<"male" | "female" | null>(null);
+  const [nameError, setNameError] = useState(false);
+  const [ageError, setAgeError] = useState(false);
+
+  const isNextDisabled = !name.trim() || !age || !gender;
 
   const ageRef = useRef<any>(null);
 
@@ -83,8 +88,11 @@ const ProfileStep1Screen: React.FC = () => {
           <AppText variant="labels">{strings.profile.fullName}</AppText>
           <Input
             value={name}
-            onChangeText={setName}
-            style={styles.input}
+            onChangeText={(text: string) => {
+              setName(text.replace(/[^a-zA-Z\s]/g, ""));
+              setNameError(false);
+            }}
+            style={[styles.input, nameError && { borderColor: '#EF4444', borderWidth: 1.5 }]}
             returnKeyType="next"
             blurOnSubmit={false}
             onSubmitEditing={() => ageRef.current?.focus()}
@@ -99,9 +107,10 @@ const ProfileStep1Screen: React.FC = () => {
             onChangeText={(text: string) => {
               const cleaned = text.replace(/[^0-9]/g, "");
               setAge(cleaned);
+              setAgeError(false);
             }}
             keyboardType="numeric"
-            style={styles.input}
+            style={[styles.input, ageError && { borderColor: '#EF4444', borderWidth: 1.5 }]}
             returnKeyType="done"
           />
 
@@ -149,18 +158,43 @@ const ProfileStep1Screen: React.FC = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.primaryBtn}
+            style={[styles.primaryBtn, isNextDisabled && { opacity: 0.5 }]}
             activeOpacity={0.8}
             onPress={() => {
+              const numAge = Number(age);
+              const isNameEmpty = !name.trim();
+              const isAgeInvalid = numAge < 15 || numAge > 80;
+
+              if (isNameEmpty || isAgeInvalid) {
+                if (isNameEmpty) {
+                  setNameError(true);
+                  Toast.show({
+                    type: 'error',
+                    text1: 'Please enter your full name',
+                    position: 'bottom'
+                  });
+                }
+                if (isAgeInvalid) {
+                  setAgeError(true);
+                  Toast.show({
+                    type: 'error',
+                    text1: 'Age must be between 15 and 80',
+                    position: 'bottom'
+                  });
+                }
+                return;
+              }
+
               dispatch(updateUserProfile({
                 basic: {
                   name,
-                  age: Number(age),
+                  age: numAge,
                   gender: gender || 'male',
                 }
               }));
               navigation.navigate(NavigationRoutes.PROFILE_SETUP2);
             }}
+            disabled={isNextDisabled}
           >
             <AppText variant="button" color="#FFFFFF">
               {strings.profile.next}

@@ -5,12 +5,12 @@
     "Ok": "Ok",
     "skip": "Skip",
     "continue": "Continue",
-    "verify":"verify",
-     "currencySymbol": "₹",
+    "verify": "verify",
+    "currencySymbol": "₹",
     "percentOff": "% OFF"
   },
   "login": {
-    "title": "Login" ,
+    "title": "Login",
     "subtitle": "Enter your phone number to continue!",
     "phonePlaceholder": "+91 -",
     "orLoginWith": "Or login with"
@@ -24,7 +24,6 @@
     "screen3Subtitle": "Home, office, or college!\n We deliver wherever you are.",
     "getStarted": "Get Started"
   },
-
   "profile": {
     "setupTitle": "Set Up Profile",
     "step1Title": "Basic Information",
@@ -70,9 +69,9 @@
     "subtitle": "Email address",
     "verification": "To confirm your email addrees, please enter the OTP we sent to"
   },
-   "Verification":{
-    "title":"Verification",
-    "subtitle":"Please enter the 6-digit verification"
+  "Verification": {
+    "title": "Verification",
+    "subtitle": "Please enter the 6-digit verification"
   },
   "errors": {
     "invalidMobile": "Please enter a valid mobile number"
@@ -82,34 +81,23 @@
     "subtitle": "We have sent a verification code to",
     "resend": "Resend OTP"
   },
-  
   "home": {
     "locationName": "Baner",
     "locationAddress": "Nandan Spectra, Pune, 411045",
-
     "searchPlaceholder": "Search for Meal",
-
     "promoTitle": "Flat 20% OFF",
     "promoSubtitle": "on your first plan!",
-
     "ctaTitle": "Eat Clean, Transform Faster",
     "setupProfile": "Set Up Profile",
     "explorePlans": "Explore Plans",
-
     "popularTitle": "Popular Meal Plans",
     "popularSubtitle": "Meals crafted for you",
-
     "footerTitle": "Ready to Transform Your Diet?",
     "footerSubtitle": "Join thousands who've improved their fitness with personalized nutrition.",
     "footerButton": "Get Started Now",
-
     "buyPlan": "Buy Plan",
     "healthy": "Healthy",
     "includes": "Includes",
     "mealsPerDay": "Meals/Day"
   }
-  
-
-
-
 }

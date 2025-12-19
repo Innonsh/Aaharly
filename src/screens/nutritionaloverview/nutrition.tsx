@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, StyleSheet } from 'react-native';
+import { View, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, StyleSheet, Image } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -15,105 +15,102 @@ import GenderIcon from '../../assets/nutrition/mealgen4.svg';
 import ActivityIcon from '../../assets/nutrition/mealgen5.svg';
 import BackArrow from '../../assets/Icons/back_arrow.svg';
 import { useProfile } from '../../hooks/useAccount';
+import { useProfileAnalysis } from '../../hooks/useProfileAnalysis';
 
+import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import { styles } from './nutritionStyle';
 import { MEALS_DATA } from './nutritionMock';
 import { Meal } from '../../types/nutritionaloverview/nutrition';
 
+
+
 const MealCard = ({ item }: { item: Meal }) => {
     const navigation = useNavigation<any>();
-    const [expanded, setExpanded] = useState(false);
-
-    const toggleExpand = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        setExpanded(!expanded);
-    };
 
     return (
-        <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={toggleExpand}
-            style={styles.largeMealCard}
-        >
-            <View style={styles.largeMealImage}>
-                <MealIllustration width={wp('91.9%')} height={wp('86%')} />
+        <View style={styles.largeMealCard}>
+            <View style={styles.mealImageContainer}>
+                <MealIllustration
+                    width="100%"
+                    height="100%"
+                    preserveAspectRatio="xMidYMid slice"
+                />
             </View>
 
-            <View style={[
-                styles.largeMealDetails,
-                {
-                    gap: expanded ? wp('4%') : wp('2.5%'),
-                }
-            ]}>
-                <View>
-                    <AppText variant="title" numberOfLines={1} style={{ fontSize: wp('4.6%') }}>
-                        {item.title}
-                    </AppText>
-                    <AppText variant="subtitle" style={{ marginTop: hp('0.5%'), color: "#666", fontSize: wp('3.6%') }}>
-                        {item.desc}
-                    </AppText>
-
-                    {expanded && (
-                        <View style={styles.badgesContainer}>
-                            <View style={styles.badge}>
-                                <AppText variant="labels" style={styles.badgeText}>{item.tag1}</AppText>
-                            </View>
-                            <View style={styles.badge}>
-                                <AppText variant="labels" style={styles.badgeText}>{item.tag2}</AppText>
-                            </View>
-                            <View style={styles.badge}>
-                                <AppText variant="labels" style={styles.badgeText}>{item.tag3}</AppText>
-                            </View>
-                        </View>
-                    )}
+            <View style={styles.largeMealDetails}>
+                <AppText variant="labels" style={styles.mealTitle}>
+                    {item.title}
+                </AppText>
+                <AppText variant="subtitle" style={styles.mealDesc}>
+                    {item.desc}
+                </AppText>
+                <View style={styles.badgesContainer}>
+                    <View style={styles.badge}><AppText style={styles.badgeText}>{item.tag1}</AppText></View>
+                    <View style={styles.badge}><AppText style={styles.badgeText}>{item.tag2}</AppText></View>
+                    <View style={styles.badge}><AppText style={styles.badgeText}>{item.tag3}</AppText></View>
                 </View>
 
                 <View style={styles.cardBottom}>
-                    <View>
-                        <AppText variant="labels" style={{ textDecorationLine: "line-through", color: "#999", fontSize: wp('3%') }}>
-                            {item.originalPrice}
-                        </AppText>
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <AppText variant="title" style={{ fontSize: wp('4.6%') }}>
-                                {item.currentPrice}
-                            </AppText>
-                            <AppText variant="labels" style={{ color: "#FF5722", marginLeft: wp('2%'), fontWeight: "bold" }}>
-                                20% OFF
-                            </AppText>
-                        </View>
-                        <AppText variant="caption" style={{ marginTop: 2, color: "#999" }}>
-                            {item.subtitle}
-                        </AppText>
-                    </View>
+                    <View style={styles.priceContainer}>
+                        <AppText style={styles.originalPrice}>{item.originalPrice}</AppText>
 
-                    <TouchableOpacity style={styles.buyBtn} activeOpacity={0.85} onPress={() => navigation.navigate(NavigationRoutes.WEEKLY_PLAN)}>
-                        <AppText variant="button" color="#fff">
-                            Buy Plan
-                        </AppText>
+                        <View style={styles.currentPriceRow}>
+                            <AppText style={styles.currentPrice}>{item.currentPrice}</AppText>
+                            <AppText style={styles.discountLabel}>20% OFF</AppText>
+                        </View>
+
+                        <AppText style={styles.includesText}>Includes 2 Meals/Day</AppText>
+                    </View>
+                    <TouchableOpacity
+                        style={styles.buyBtn}
+                        onPress={() => navigation.navigate(NavigationRoutes.WEEKLY_PLAN)}
+                    >
+                        <AppText variant="button" color="#fff">Buy Plan</AppText>
                     </TouchableOpacity>
                 </View>
             </View>
-        </TouchableOpacity >
+        </View>
     );
 };
+
 
 export default function NutritionalOverviewScreen() {
     const navigation = useNavigation<any>();
     const { data: profile } = useProfile();
+    const { data: analysisData, isLoading: isAnalysisLoading, error: analysisError } = useProfileAnalysis();
     const user = profile?.data?.basic || {};
     const stats = profile?.data?.physicalStats || {};
-    // const goals = profile?.data?.goalPref || {};
+    const displayAge = user.age || "24";
+    const displayHeight = stats.height ? `${stats.height}cm` : "180cm";
+    const displayWeight = stats.weight ? `${stats.weight}kg` : "71.3kg";
+    const displayGender = user.gender ? (user.gender.charAt(0).toUpperCase() + user.gender.slice(1)) : "Male";
+    const displayActivity = stats.activityLevel ? (stats.activityLevel.charAt(0).toUpperCase() + stats.activityLevel.slice(1)) : "Sedentary";
+    if (isAnalysisLoading) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <AppText variant="body" style={{ color: '#7C8394' }}>Loading analysis...</AppText>
+                </View>
+            </SafeAreaView>
+        );
+    }
 
-    const displayAge = user.age || "--";
-    const displayHeight = stats.height || "--";
-    const displayWeight = stats.weight || "--";
-    const displayGender = user.gender ? (user.gender.charAt(0).toUpperCase() + user.gender.slice(1)) : "--";
-    const displayActivity = stats.activityLevel ? (stats.activityLevel.charAt(0).toUpperCase() + stats.activityLevel.slice(1)) : "--";
+    if (analysisError) {
+        console.log('Analysis API error:', analysisError);
+    }
 
-    // Calculate BMI if height and weight exist
-    const bmi = (stats.height && stats.weight)
-        ? (stats.weight / ((stats.height / 100) * (stats.height / 100))).toFixed(1)
-        : "--";
+
+    const analysis = analysisData ?? {
+        bmi: '22',
+        nutritionalNeeds: {
+            protein: 'High',
+            carb: 'Moderate',
+            fat: 'Low',
+        },
+    };
+
+    const bmi = analysis.bmi;
+    const needs = analysis.nutritionalNeeds;
 
     useEffect(() => {
         if (Platform.OS === 'android') {
@@ -132,97 +129,127 @@ export default function NutritionalOverviewScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                {/* Header */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
                         <BackArrow width={16} height={16} />
                     </TouchableOpacity>
-                    <AppText variant="title" style={styles.headerTitle}>Overview</AppText>
-                    <View style={{ width: 40 }} />
+                    <AppText variant="title" align="center" style={styles.headerTitle}>Overview</AppText>
+                    <View style={{ width: 44 }} />
                 </View>
 
-                {/* Title Section */}
                 <View style={styles.titleSection}>
                     <AppText variant="title1" style={styles.mainTitle}>Your Nutritional Overview</AppText>
                     <AppText variant="body" style={styles.subtitle}>Quick insights into your overall dietary balance.</AppText>
                 </View>
 
-                {/* Profile Summary Card */}
                 <View style={styles.card}>
-                    <AppText variant="title" style={styles.cardTitle}>Profile Summary</AppText>
+                    <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
+                        <Defs>
+                            <LinearGradient id="summaryGrad" x1="0" y1="0" x2="0" y2="1">
+                                <Stop offset="0" stopColor="#F9FAFB" stopOpacity="1" />
+                                <Stop offset="0.9999" stopColor="#FCBDA6" stopOpacity="0.57" />
+                                <Stop offset="1" stopColor="#FF6B35" stopOpacity="0.01" />
+                            </LinearGradient>
+                        </Defs>
+                        <Rect x="0" y="0" width="100%" height="100%" rx={24} ry={24} fill="url(#summaryGrad)" />
+                    </Svg>
+                    <View style={styles.cardContent}>
+                        <AppText variant="title" style={styles.cardTitle}>Profile Summery</AppText>
 
-                    <View style={styles.profileGrid}>
-                        <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>{displayAge}</AppText>
-                            <View style={styles.iconPlaceholder}>
-                                <AgeIcon width={40} height={40} />
+                        <View style={styles.summaryList}>
+                            <View style={styles.summaryItem}>
+                                <View style={styles.summaryLeft}>
+                                    <View style={styles.summaryIconContainer}>
+                                        <AgeIcon width={24} height={24} />
+                                    </View>
+                                    <AppText variant="labels" style={styles.summaryLabel}>Age</AppText>
+                                </View>
+                                <AppText style={styles.summaryValue}>{displayAge}</AppText>
                             </View>
-                            <AppText variant="labels" style={styles.profileLabel}>Age</AppText>
-                        </View>
-                        <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>{displayHeight}</AppText>
-                            <View style={styles.iconPlaceholder}>
-                                <HeightIcon width={40} height={40} />
-                            </View>
-                            <AppText variant="labels" style={styles.profileLabel}>height</AppText>
-                        </View>
-                        <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>{displayWeight}</AppText>
-                            <View style={styles.iconPlaceholder}>
-                                <WeightIcon width={40} height={40} />
-                            </View>
-                            <AppText variant="labels" style={styles.profileLabel}>Weight</AppText>
-                        </View>
-                    </View>
 
-                    <View style={[styles.profileGrid, { marginTop: 20 }]}>
-                        <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>{displayGender}</AppText>
-                            <View style={styles.iconPlaceholder}>
-                                <GenderIcon width={40} height={40} />
+                            <View style={styles.summaryItem}>
+                                <View style={styles.summaryLeft}>
+                                    <View style={styles.summaryIconContainer}>
+                                        <HeightIcon width={24} height={24} />
+                                    </View>
+                                    <AppText variant="labels" style={styles.summaryLabel}>height</AppText>
+                                </View>
+                                <AppText style={styles.summaryValue}>{displayHeight}</AppText>
                             </View>
-                            <AppText variant="labels" style={styles.profileLabel}>Gender</AppText>
-                        </View>
-                        <View style={styles.profileItem}>
-                            <AppText variant="title1" style={styles.profileValue}>{displayActivity}</AppText>
-                            <View style={styles.iconPlaceholder}>
-                                <ActivityIcon width={40} height={40} />
+
+                            <View style={styles.summaryItem}>
+                                <View style={styles.summaryLeft}>
+                                    <View style={styles.summaryIconContainer}>
+                                        <WeightIcon width={24} height={24} />
+                                    </View>
+                                    <AppText variant="labels" style={styles.summaryLabel}>Weight</AppText>
+                                </View>
+                                <AppText style={styles.summaryValue}>{displayWeight}</AppText>
                             </View>
-                            <AppText variant="labels" style={styles.profileLabel}>Activity Level</AppText>
+
+                            <View style={styles.summaryItem}>
+                                <View style={styles.summaryLeft}>
+                                    <View style={styles.summaryIconContainer}>
+                                        <GenderIcon width={24} height={24} />
+                                    </View>
+                                    <AppText variant="labels" style={styles.summaryLabel}>Gender</AppText>
+                                </View>
+                                <AppText style={styles.summaryValue}>{displayGender}</AppText>
+                            </View>
+
+                            <View style={styles.summaryItem}>
+                                <View style={styles.summaryLeft}>
+                                    <View style={styles.summaryIconContainer}>
+                                        <ActivityIcon width={24} height={24} />
+                                    </View>
+                                    <AppText variant="labels" style={styles.summaryLabel}>Activity Level</AppText>
+                                </View>
+                                <AppText style={styles.summaryValue}>{displayActivity}</AppText>
+                            </View>
                         </View>
-                        <View style={styles.profileItem} />
                     </View>
                 </View>
 
-                {/* Body Composition Card */}
-                <View style={[styles.card, styles.bodyCompCard]}>
-                    <AppText variant="title" style={styles.cardTitle}>Body Composition</AppText>
+                <View style={styles.card}>
+                    <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
+                        <Defs>
+                            <LinearGradient id="bodyGrad" x1="0" y1="1" x2="0" y2="0">
+                                <Stop offset="1" stopColor="#FF6B35" stopOpacity="0.01" />
+                                <Stop offset="0.9999" stopColor="#FCBDA6" stopOpacity="0.57" />
+                                <Stop offset="0" stopColor="#F9FAFB" stopOpacity="1" />
+                            </LinearGradient>
+                        </Defs>
+                        <Rect x="0" y="0" width="100%" height="100%" rx={24} ry={24} fill="url(#bodyGrad)" />
+                    </Svg>
+                    <View style={styles.cardContent}>
+                        <AppText variant="title" style={styles.cardTitle}>Body Composition</AppText>
 
-                    <View style={styles.bmiSection}>
-                        <View style={styles.bmiValueContainer}>
-                            <AppText variant="title1" style={{ fontSize: 32 }}>{bmi}</AppText>
-                            <AppText variant="body" style={{ color: Colors.secondary }}>BMI</AppText>
+                        <View style={styles.bmiSection}>
+                            <View style={styles.bmiValueContainer}>
+                                <AppText style={styles.bmiValue}>{bmi}</AppText>
+                                <AppText style={styles.bmiLabel}>BMI</AppText>
+                            </View>
+                            <View style={styles.bmiMessageContainer}>
+                                <GymGirl width={100} height={80} />
+                                <AppText style={styles.crushingItText}>Crushing it!</AppText>
+                                <AppText style={styles.crushingItSubText}>Stay consistent with our plans.</AppText>
+                            </View>
                         </View>
-                        <View style={styles.bmiMessageContainer}>
-                            <GymGirl width={100} height={80} />
-                            <AppText variant="caption" style={styles.crushingItText}>Crushing it!</AppText>
-                            <AppText variant="caption" style={styles.crushingItSubText}>Stay consistent with our plans.</AppText>
-                        </View>
-                    </View>
 
-                    <AppText variant="title" style={[styles.cardTitle, { marginTop: 20 }]}>Your needs</AppText>
-                    <View style={styles.needsContainer}>
-                        <View style={styles.needItem}>
-                            <AppText variant="title" style={styles.needValue}>High</AppText>
-                            <AppText variant="labels" style={styles.needLabel}>Protein</AppText>
-                        </View>
-                        <View style={styles.needItem}>
-                            <AppText variant="title" style={styles.needValue}>Moderate</AppText>
-                            <AppText variant="labels" style={styles.needLabel}>Carb</AppText>
-                        </View>
-                        <View style={styles.needItem}>
-                            <AppText variant="title" style={styles.needValue}>Low</AppText>
-                            <AppText variant="labels" style={styles.needLabel}>Fat</AppText>
+                        <AppText variant="title" style={styles.needsSectionTitle}>Your needs</AppText>
+                        <View style={styles.needsContainer}>
+                            <View style={styles.needItem}>
+                                <AppText style={styles.needValue}>{needs.protein}</AppText>
+                                <AppText style={styles.needLabel}>Protein</AppText>
+                            </View>
+                            <View style={styles.needItem}>
+                                <AppText style={styles.needValue}>{needs.carb}</AppText>
+                                <AppText style={styles.needLabel}>Carb</AppText>
+                            </View>
+                            <View style={styles.needItem}>
+                                <AppText style={styles.needValue}>{needs.fat}</AppText>
+                                <AppText style={styles.needLabel}>Fat</AppText>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -233,18 +260,18 @@ export default function NutritionalOverviewScreen() {
                     <AppText variant="body" style={styles.sectionSubtitle}>Move toward our healthier balanced meal plans.</AppText>
 
                     {MEALS_DATA.map((meal) => (
-                        <View key={meal.id} style={{ marginBottom: 16 }}>
+                        <View key={meal.id}>
                             <MealCard item={meal} />
                         </View>
                     ))}
 
                     <TouchableOpacity style={styles.viewAllButton} onPress={() => navigation.navigate(NavigationRoutes.EXPLORE_PLANS)}>
-                        <AppText variant="button" style={{ color: Colors.primary, textDecorationLine: 'underline' }}>View all</AppText>
+                        <AppText style={styles.viewAllText}>View all</AppText>
                     </TouchableOpacity>
                 </View>
 
                 <View style={{ height: 40 }} />
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
