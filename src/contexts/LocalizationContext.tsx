@@ -14,20 +14,20 @@ export const translations = new LocalizedContent(languages);
 
 export const LocalizationContext = createContext({
   translations,
-  setAppLanguage: () => {},
+  setAppLanguage: (language: string) => { },
   appLanguage: DEFAULT_LANGUAGE,
-  initializeAppLanguage: () => {},
-  formatString: () => {},
+  initializeAppLanguage: () => { },
+  formatString: (...param: any[]) => { },
 });
 
-export function LocalizationProvider({ children }) {
-  const [appLanguage, setAppLanguage] = 'en';
+export function LocalizationProvider({ children }: { children: React.ReactNode }) {
+  const [appLanguage, setAppLanguage] = useState(DEFAULT_LANGUAGE);
 
   useEffect(() => {
     initializeAppLanguage();
   }, [appLanguage]);
 
-  const formatString = (...param) => translations.formatString(...param);
+  const formatString = (...param: any[]) => (translations.formatString as any)(...param);
 
   const initializeAppLanguage = () => {
     let localeCode = DEFAULT_LANGUAGE;
@@ -54,7 +54,7 @@ export function LocalizationProvider({ children }) {
     <LocalizationContext.Provider
       value={{
         translations,
-        setAppLanguage: appLanguage,
+        setAppLanguage,
         appLanguage,
         initializeAppLanguage,
         formatString,

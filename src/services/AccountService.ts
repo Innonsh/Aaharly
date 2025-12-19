@@ -52,6 +52,10 @@ export const AccountService = {
         const response = await HttpClient.post('/profile/goal-pref', payload);
         return response.data;
     },
+    getProfileAnalysis: async () => {
+        const response = await HttpClient.get('/profile/analysis');
+        return response.data;
+    },
 };
 
 

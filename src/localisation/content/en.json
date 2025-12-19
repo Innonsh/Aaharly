@@ -5,10 +5,10 @@
     "Ok": "Ok",
     "skip": "Skip",
     "continue": "Continue",
-    "verify":"verify"
+    "verify": "verify"
   },
   "login": {
-    "title": "Login" ,
+    "title": "Login",
     "subtitle": "Enter your phone number to continue!",
     "phonePlaceholder": "+91 -",
     "orLoginWith": "Or login with"
@@ -22,7 +22,6 @@
     "screen3Subtitle": "Home, office, or college!\n We deliver wherever you are.",
     "getStarted": "Get Started"
   },
-
   "profile": {
     "setupTitle": "Set Up Profile",
     "step1Title": "Basic Information",
@@ -68,9 +67,9 @@
     "subtitle": "Email address",
     "verification": "To confirm your email addrees, please enter the OTP we sent to"
   },
-   "Verification":{
-    "title":"Verification",
-    "subtitle":"Please enter the 6-digit verification"
+  "Verification": {
+    "title": "Verification",
+    "subtitle": "Please enter the 6-digit verification"
   },
   "errors": {
     "invalidMobile": "Please enter a valid mobile number"
