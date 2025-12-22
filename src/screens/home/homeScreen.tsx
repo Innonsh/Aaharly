@@ -1,5 +1,5 @@
-// src/screens/home/HomeScreen.tsx
-import React, { useEffect, useState, useMemo } from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -26,38 +26,30 @@ import { styles } from "./homeStyle";
 import { HomeNavProp } from "../../types/home/home";
 import { MealCard } from "../../common/cards/mealCard";
 
-/* ✅ ADD: real service */
+import { useQuery } from "@tanstack/react-query";
 import { MealService } from "../../services/MealServices";
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
 
-  /* 🔹 ORIGINAL STATE (unchanged) */
+  
   const [profileExists, setProfileExists] = useState<boolean>(false);
   const [profileComplete, setProfileComplete] = useState<boolean>(false);
 
-  /* 🔹 ADD: meal plans state */
-  const [meals, setMeals] = useState<any[]>([]);
-
-  /* ================= PROFILE EFFECT (UNCHANGED) ================= */
   useEffect(() => {
     setProfileExists(false);
     setProfileComplete(false);
   }, []);
 
-  /* ================= FETCH MEALS (NEW, SAFE) ================= */
-  useEffect(() => {
-    const loadMeals = async () => {
-      try {
-        const data = await MealService.getAllMealPlans();
-        setMeals(data.filter((m) => m.isActive));
-      } catch (err) {
-        console.log("Failed to load meals", err);
-      }
-    };
-
-    loadMeals();
-  }, []);
+  const {
+    data: meals = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["meal-plans"],
+    queryFn: MealService.getAllMealPlans,
+    select: (data) => data.filter((m) => m.isActive),
+  });
 
   const handleSetupProfile = () =>
     navigation.navigate(NavigationRoutes.PROFILE_SETUP1);
@@ -65,7 +57,6 @@ export default function HomeScreen() {
   const handleExplorePlans = () =>
     navigation.navigate(NavigationRoutes.EXPLORE_PLANS);
 
-  /* ================= HEADER (100% ORIGINAL) ================= */
   const ListHeader = useMemo(() => {
     return (
       <View>
@@ -168,7 +159,7 @@ export default function HomeScreen() {
     );
   }, [profileExists, profileComplete]);
 
-  /* ================= ANDROID FIX (UNCHANGED) ================= */
+
   useEffect(() => {
     if (Platform.OS === "android") {
       if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -177,7 +168,6 @@ export default function HomeScreen() {
     }
   }, []);
 
-  /* ================= FOOTER (UNCHANGED) ================= */
   const ListFooter = (
     <View style={styles.footerCard}>
       <AppText variant="title" color="#fff" style={{ textAlign: "center" }}>
@@ -196,11 +186,11 @@ export default function HomeScreen() {
     </View>
   );
 
-  /* ================= RENDER ================= */
+ 
   return (
     <SafeAreaView style={styles.safe}>
       <FlatList
-        data={meals}               
+        data={meals}
         keyExtractor={(it) => it.id || it._id}
         renderItem={({ item }) => <MealCard item={item} />}
         contentContainerStyle={styles.listContent}
