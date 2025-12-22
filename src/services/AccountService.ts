@@ -22,10 +22,19 @@ export interface PhysicalStatsPayload {
 
 export interface GoalPreferencesPayload {
     weightGoal: WeightGoal;
-    dietType: 'veg' | 'nonveg' | 'vegan';
+    dietType: 'veg' | 'non_veg' | 'vegan';
     allergies?: string;
     targetWeight?: number;
     weeklyGoal?: string;
+}
+
+export interface ProfileAnalysisData {
+    bmi: string | number;
+    nutritionalNeeds: {
+        protein: string;
+        carb: string;
+        fat: string;
+    };
 }
 
 export const AccountService = {
@@ -52,7 +61,7 @@ export const AccountService = {
         const response = await HttpClient.post('/profile/goal-pref', payload);
         return response.data;
     },
-    getProfileAnalysis: async () => {
+    getProfileAnalysis: async (): Promise<ProfileAnalysisData> => {
         const response = await HttpClient.get('/profile/analysis');
         return response.data;
     },

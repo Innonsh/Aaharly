@@ -1,19 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import HttpClient from '../services/HttpClient';
+import { AccountService, ProfileAnalysisData } from '../services/AccountService';
 
 export const useProfileAnalysis = () => {
-    return useQuery({
+    return useQuery<ProfileAnalysisData>({
         queryKey: ['profileAnalysis'],
-        queryFn: async () => {
-            console.log('Calling /profile/analysis API');
-
-            const response = await HttpClient.get('/profile/analysis');
-
-            console.log(' /profile/analysis response:', response.data);
-
-
-            return response.data;
-        },
+        queryFn: AccountService.getProfileAnalysis,
         retry: false,
     });
 };
+
