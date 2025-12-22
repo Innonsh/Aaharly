@@ -15,6 +15,7 @@ import { AuthProvider } from "./src/contexts/AuthContext";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
+import { toastConfig } from "./src/components/CustomToast";
 import { useAppDispatch } from "./src/store/hooks";
 import { listenForTokenRefresh } from "./src/services/tokenManager";
 import { setAccessToken } from "./src/store/reducer/authSlice";
@@ -85,7 +86,7 @@ const AppContent = () => {
             </LocalizationProvider>
           </SafeAreaView>
         </PaperProvider>
-        <Toast />
+        <Toast config={toastConfig} />
       </AuthProvider>
     </QueryClientProvider>
   );
