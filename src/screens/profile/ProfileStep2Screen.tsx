@@ -99,7 +99,9 @@ const ProfileStep2Screen: React.FC = () => {
                   setHeightError(false);
                 }}
                 keyboardType="numeric"
-                style={[styles.input, heightError && { borderColor: '#EF4444', borderWidth: 1.5 }]}
+                outlineColor={heightError ? '#EF4444' : undefined}
+                activeOutlineColor={heightError ? '#EF4444' : undefined}
+                style={styles.input}
                 returnKeyType="next"
                 blurOnSubmit={false}
                 onSubmitEditing={() => weightRef.current?.focus()}
@@ -119,7 +121,9 @@ const ProfileStep2Screen: React.FC = () => {
                   setWeightError(false);
                 }}
                 keyboardType="numeric"
-                style={[styles.input, weightError && { borderColor: '#EF4444', borderWidth: 1.5 }]}
+                outlineColor={weightError ? '#EF4444' : undefined}
+                activeOutlineColor={weightError ? '#EF4444' : undefined}
+                style={styles.input}
                 returnKeyType="done"
               />
             </View>

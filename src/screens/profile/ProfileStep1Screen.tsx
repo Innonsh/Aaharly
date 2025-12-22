@@ -92,7 +92,9 @@ const ProfileStep1Screen: React.FC = () => {
               setName(text.replace(/[^a-zA-Z\s]/g, ""));
               setNameError(false);
             }}
-            style={[styles.input, nameError && { borderColor: '#EF4444', borderWidth: 1.5 }]}
+            outlineColor={nameError ? '#EF4444' : undefined}
+            activeOutlineColor={nameError ? '#EF4444' : undefined}
+            style={styles.input}
             returnKeyType="next"
             blurOnSubmit={false}
             onSubmitEditing={() => ageRef.current?.focus()}
@@ -110,7 +112,9 @@ const ProfileStep1Screen: React.FC = () => {
               setAgeError(false);
             }}
             keyboardType="numeric"
-            style={[styles.input, ageError && { borderColor: '#EF4444', borderWidth: 1.5 }]}
+            outlineColor={ageError ? '#EF4444' : undefined}
+            activeOutlineColor={ageError ? '#EF4444' : undefined}
+            style={styles.input}
             returnKeyType="done"
           />
 
