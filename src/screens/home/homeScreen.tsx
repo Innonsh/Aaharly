@@ -1,5 +1,5 @@
-// src/screens/home/HomeScreen.tsx
-import React, { useEffect, useState, useMemo } from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { BlurView } from '@sbaiahmed1/react-native-blur';
+import { BlurView } from "@sbaiahmed1/react-native-blur";
 import Svg, { Defs, LinearGradient, Stop, Rect } from "react-native-svg";
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
@@ -25,33 +25,44 @@ import LocationIcon from "../../assets/HomePage/LocationIcon.svg";
 import { styles } from "./homeStyle";
 import { HomeNavProp } from "../../types/home/home";
 import { MealCard } from "../../common/cards/mealCard";
-import { DUMMY_MEALS } from "./homeMock";
 
-export default function homeScreen() {
+import { useQuery } from "@tanstack/react-query";
+import { MealService } from "../../services/MealServices";
+
+export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
 
+  
   const [profileExists, setProfileExists] = useState<boolean>(false);
   const [profileComplete, setProfileComplete] = useState<boolean>(false);
 
-
   useEffect(() => {
-
     setProfileExists(false);
     setProfileComplete(false);
   }, []);
 
-  const handleSetupProfile = () => navigation.navigate(NavigationRoutes.PROFILE_SETUP1);
-  const handleExplorePlans = () => navigation.navigate(NavigationRoutes.EXPLORE_PLANS);
+  const {
+    data: meals = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["meal-plans"],
+    queryFn: MealService.getAllMealPlans,
+    select: (data) => data.filter((m) => m.isActive),
+  });
+
+  const handleSetupProfile = () =>
+    navigation.navigate(NavigationRoutes.PROFILE_SETUP1);
+
+  const handleExplorePlans = () =>
+    navigation.navigate(NavigationRoutes.EXPLORE_PLANS);
+
   const ListHeader = useMemo(() => {
     return (
       <View>
         <View style={styles.bannerWrapper}>
           <View style={styles.bannerInner}>
-            { }
-            <HomeBannerSVG
-              width={wp("100%")}
-              height={hp("48%")}
-            />
+            <HomeBannerSVG width={wp("100%")} height={hp("48%")} />
             <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
               <Defs>
                 <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
@@ -59,12 +70,11 @@ export default function homeScreen() {
                   <Stop offset="1" stopColor="#000000" stopOpacity="0" />
                 </LinearGradient>
               </Defs>
-              <Rect x="0" y="0" width="100%" height="100%" fill="url(#grad)" />
+              <Rect width="100%" height="100%" fill="url(#grad)" />
             </Svg>
           </View>
 
           <View style={styles.centerContainer}>
-
             <View style={styles.topHeader}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <AppText variant="labels" style={{ color: "#fff", fontSize: 16, marginRight: 8 }}>
@@ -81,23 +91,17 @@ export default function homeScreen() {
             </View>
 
             <View style={styles.searchBox}>
-              <BlurView
-                blurAmount={16}
-                blurType="light"
-                style={StyleSheet.absoluteFill}
-              />
+              <BlurView blurAmount={16} blurType="light" style={StyleSheet.absoluteFill} />
               <View style={styles.searchContent}>
                 <SearchIcon width={20} height={20} color="#FFF" />
-                <AppText variant="body" style={{ color: "#fff", marginLeft: 10 }}>Search for Meal</AppText>
+                <AppText variant="body" style={{ color: "#fff", marginLeft: 10 }}>
+                  Search for Meal
+                </AppText>
               </View>
             </View>
 
             <View style={styles.promoBox}>
-              <BlurView
-                blurAmount={6}
-                blurType="light"
-                style={StyleSheet.absoluteFill}
-              />
+              <BlurView blurAmount={6} blurType="light" style={StyleSheet.absoluteFill} />
               <View style={styles.promoContent}>
                 <AppText variant="title" color="#fff" style={{ textAlign: "center", fontSize: 24 }}>
                   Flat 20% OFF
@@ -110,7 +114,6 @@ export default function homeScreen() {
           </View>
         </View>
 
-
         <View style={styles.ctaCard}>
           <View style={[StyleSheet.absoluteFill, { borderRadius: 18, overflow: "hidden" }]}>
             <CtaIllustration
@@ -119,11 +122,7 @@ export default function homeScreen() {
               preserveAspectRatio="xMidYMid slice"
               style={styles.ctaBackground}
             />
-            <BlurView
-              blurAmount={0.4}
-              blurType="light"
-              style={StyleSheet.absoluteFill}
-            />
+            <BlurView blurAmount={0.4} blurType="light" style={StyleSheet.absoluteFill} />
           </View>
 
           <View style={styles.ctaContent}>
@@ -160,8 +159,9 @@ export default function homeScreen() {
     );
   }, [profileExists, profileComplete]);
 
+
   useEffect(() => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       if (UIManager.setLayoutAnimationEnabledExperimental) {
         UIManager.setLayoutAnimationEnabledExperimental(true);
       }
@@ -177,15 +177,21 @@ export default function homeScreen() {
         Join thousands who've improved their fitness with personalized nutrition.
       </AppText>
 
-      <Button title="Get Started Now" onPress={handleSetupProfile} variant="primary" style={{ marginTop: 16, width: "100%" }} />
+      <Button
+        title="Get Started Now"
+        onPress={handleSetupProfile}
+        variant="primary"
+        style={{ marginTop: 16, width: "100%" }}
+      />
     </View>
   );
 
+ 
   return (
     <SafeAreaView style={styles.safe}>
       <FlatList
-        data={DUMMY_MEALS}
-        keyExtractor={(it) => it.id}
+        data={meals}
+        keyExtractor={(it) => it.id || it._id}
         renderItem={({ item }) => <MealCard item={item} />}
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
