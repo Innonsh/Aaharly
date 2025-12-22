@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, StyleSheet, Image } from 'react-native';
+import { View, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -74,10 +74,16 @@ const MealCard = ({ item }: { item: Meal }) => {
 };
 
 
+const calculateBMI = (height: number, weight: number): string => {
+    if (!height || !weight) return "N/A";
+    const heightInMeters = height / 100;
+    return (weight / (heightInMeters * heightInMeters)).toFixed(1);
+};
+
 export default function NutritionalOverviewScreen() {
     const navigation = useNavigation<any>();
     const { data: profile } = useProfile();
-    const { data: analysisData, isLoading: isAnalysisLoading, error: analysisError } = useProfileAnalysis();
+    const { data: analysisData, isLoading: isAnalysisLoading, error: analysisError, refetch } = useProfileAnalysis();
     const user = profile?.data?.basic || {};
     const stats = profile?.data?.physicalStats || {};
     const displayAge = user.age || "24";
@@ -85,32 +91,6 @@ export default function NutritionalOverviewScreen() {
     const displayWeight = stats.weight ? `${stats.weight}kg` : "71.3kg";
     const displayGender = user.gender ? (user.gender.charAt(0).toUpperCase() + user.gender.slice(1)) : "Male";
     const displayActivity = stats.activityLevel ? (stats.activityLevel.charAt(0).toUpperCase() + stats.activityLevel.slice(1)) : "Sedentary";
-    if (isAnalysisLoading) {
-        return (
-            <SafeAreaView style={styles.container}>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <AppText variant="body" style={{ color: '#7C8394' }}>Loading analysis...</AppText>
-                </View>
-            </SafeAreaView>
-        );
-    }
-
-    if (analysisError) {
-        console.log('Analysis API error:', analysisError);
-    }
-
-
-    const analysis = analysisData ?? {
-        bmi: '22',
-        nutritionalNeeds: {
-            protein: 'High',
-            carb: 'Moderate',
-            fat: 'Low',
-        },
-    };
-
-    const bmi = analysis.bmi;
-    const needs = analysis.nutritionalNeeds;
 
     useEffect(() => {
         if (Platform.OS === 'android') {
@@ -119,6 +99,55 @@ export default function NutritionalOverviewScreen() {
             }
         }
     }, []);
+
+    if (isAnalysisLoading) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color={Colors.primary} />
+                    <AppText variant="body" style={{ color: '#7C8394', marginTop: 16 }}>Loading analysis...</AppText>
+                </View>
+            </SafeAreaView>
+        );
+    }
+
+    if (analysisError) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+                    <AppText variant="title" style={{ color: Colors.secondary, marginBottom: 8 }}>Oops!</AppText>
+                    <AppText variant="body" style={{ color: '#7C8394', textAlign: 'center', marginBottom: 24 }}>
+                        We couldn't fetch your profile analysis. Please check your connection and try again.
+                    </AppText>
+                    <TouchableOpacity
+                        onPress={() => refetch()}
+                        style={{ paddingHorizontal: 24, paddingVertical: 12, backgroundColor: Colors.primary, borderRadius: 24 }}
+                    >
+                        <AppText variant="button" color="#fff">Retry</AppText>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
+        );
+    }
+
+    if (!analysisData) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <AppText variant="body" style={{ color: '#7C8394' }}>No analysis data available.</AppText>
+                </View>
+            </SafeAreaView>
+        );
+    }
+
+    const { bmi, nutritionalNeeds } = analysisData;
+    const needs = nutritionalNeeds || { protein: 'N/A', carb: 'N/A', fat: 'N/A' };
+
+    // Calculate BMI fallback
+    const calculatedBMI = calculateBMI(stats.height, stats.weight);
+    const displayBMI = bmi || calculatedBMI;
+
+
 
     const handleGoBack = () => {
         if (navigation.canGoBack()) {
@@ -226,7 +255,7 @@ export default function NutritionalOverviewScreen() {
 
                         <View style={styles.bmiSection}>
                             <View style={styles.bmiValueContainer}>
-                                <AppText style={styles.bmiValue}>{bmi}</AppText>
+                                <AppText style={styles.bmiValue}>{displayBMI}</AppText>
                                 <AppText style={styles.bmiLabel}>BMI</AppText>
                             </View>
                             <View style={styles.bmiMessageContainer}>
