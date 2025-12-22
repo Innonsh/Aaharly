@@ -29,6 +29,7 @@ import { RootStackParamList } from "./NavigationRoutes";
 import EmailLoginScreen from "../screens/login/EmailLoginScreen";
 import EmailVerification from "../screens/verification/EmailVerification";
 import HomeScreen from "../screens/home/homeScreen";
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Navigator = () => {
   const themeMode = ThemeMode.Light;
