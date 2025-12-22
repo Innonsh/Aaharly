@@ -78,5 +78,27 @@
     "title": "Verify Email",
     "subtitle": "We have sent a verification code to",
     "resend": "Resend OTP"
+  },
+  "nutrition": {
+    "title": "Overview",
+    "mainTitle": "Your Nutritional Overview",
+    "subtitle": "Quick insights into your overall dietary balance.",
+    "profileSummary": "Profile Summary",
+    "bodyComposition": "Body Composition",
+    "crushingIt": "Crushing it!",
+    "stayConsistent": "Stay consistent with our plans.",
+    "yourNeeds": "Your needs",
+    "protein": "Protein",
+    "carb": "Carb",
+    "fat": "Fat",
+    "sampleMealPlan": "Sample meal plan for you",
+    "sampleMealPlanSubtitle": "Move toward our healthier balanced meal plans.",
+    "viewAll": "View all",
+    "buyPlan": "Buy Plan",
+    "includes2Meals": "Includes 2 Meals/Day",
+    "errorFetch": "We couldn't fetch your profile analysis.",
+    "profileIncomplete": "Profile Incomplete",
+    "profileIncompleteDesc": "Please complete your profile to see your nutritional analysis.",
+    "setupProfile": "Set up Profile"
   }
 }
