@@ -23,19 +23,14 @@ export const styles = StyleSheet.create({
 
   detailsWrapper: {
     backgroundColor: "#FFF",
-    // These radii create the inner curved overlap seen in the image
+
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2.5%"),
     paddingBottom: hp("2.2%"),
     width: "100%",
-    // Shadow specifically for the white box floating over the image
-  //   elevation: 12,
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: -5 },
-  //   shadowOpacity: 0.1,
-  //   shadowRadius: 10,
+    
   },
 
   title: {

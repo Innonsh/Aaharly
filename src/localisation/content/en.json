@@ -79,5 +79,29 @@
     "title": "Verify Email",
     "subtitle": "We have sent a verification code to",
     "resend": "Resend OTP"
+  },
+  
+  "home": {
+    "locationName": "Baner",
+    "locationAddress": "Nandan Spectra, Pune, 411045",
+
+    "searchPlaceholder": "Search for Meal",
+
+    "promoTitle": "Flat 20% OFF",
+    "promoSubtitle": "on your first plan!",
+
+    "ctaTitle": "Eat Clean, Transform Faster",
+    "setupProfile": "Set Up Profile",
+    "explorePlans": "Explore Plans",
+
+    "popularTitle": "Popular Meal Plans",
+    "popularSubtitle": "Meals crafted for you",
+
+    "footerTitle": "Ready to Transform Your Diet?",
+    "footerSubtitle": "Join thousands who've improved their fitness with personalized nutrition.",
+    "footerButton": "Get Started Now"
   }
+
+
+
 }
