@@ -36,16 +36,11 @@ export default function Button({
   const theme = useTheme();
 
   useEffect(() => {
-    if (onChange) {
-      onChange(disabled);
-    }
+    onChange?.(disabled);
   }, [disabled, onChange]);
 
-  // Decide text color based on variant + disabled
   const getTextColor = () => {
-    if (disabled) {
-      return Colors.background;
-    }
+    if (disabled) return Colors.background;
 
     switch (variant) {
       case "secondary":
@@ -53,9 +48,8 @@ export default function Button({
       case "third":
       case "outline":
         return Colors.secondary;
-      case "primary":
       default:
-        return theme.colors?.onPrimary || "#ffffff";
+        return theme.colors?.onPrimary || "#fff";
     }
   };
 
@@ -63,6 +57,7 @@ export default function Button({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled}
+      activeOpacity={0.7}
       style={[
         styles.base,
         variant === "primary" && styles.primary,
@@ -72,24 +67,23 @@ export default function Button({
         disabled && styles.disabled,
         style,
       ]}
-      activeOpacity={0.7}
     >
       <View style={styles.row}>
-        {/* Left Icon */}
         {icon && iconPosition === "left" && (
           <View style={styles.icon}>{icon}</View>
         )}
+
         <AppText
           style={[
             styles.text,
             { color: getTextColor() },
             textStyle,
           ]}
+          numberOfLines={1}
         >
           {title}
         </AppText>
 
-        {/* Right Icon */}
         {icon && iconPosition === "right" && (
           <View style={styles.icon}>{icon}</View>
         )}
@@ -100,22 +94,15 @@ export default function Button({
 
 const styles = StyleSheet.create({
   base: {
-    paddingVertical: 14,
+    paddingHorizontal: 16,      // ✅ no vertical padding
     borderRadius: 10,
     alignItems: "center",
+    justifyContent: "center",   // ✅ centers text
   },
   primary: {
-    width: 360,
-    alignSelf: "center",
-    marginTop: 50,
     backgroundColor: Colors.primary,
-    borderRadius: 8,
   },
   secondary: {
-    width: 360,
-    alignSelf: "center",
-    marginTop: 50,
-    borderRadius: 8,
     backgroundColor: Colors.background,
     borderWidth: 1,
     borderColor: Colors.primary,
@@ -129,17 +116,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#D9D9D9",
     backgroundColor: "transparent",
-    width: 360,
-    alignSelf: "center",
   },
   disabled: {
     backgroundColor: Colors.primaryDisabled,
   },
   text: {
-
-    fontWeight: "600",
     fontFamily: fonts.SemiBold,
-    fontSize: 20,
+    fontSize: 16,
+    lineHeight: 18, // ✅ ANDROID FIX
   },
   row: {
     flexDirection: "row",
