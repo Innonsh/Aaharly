@@ -107,9 +107,15 @@
     "healthy": "Healthy",
     "includes": "Includes",
     "mealsPerDay": "Meals/Day"
-  }
-  
-
-
+  },
+  "exploreMeals": {
+    "title": "Explore Meals",
+    "categories": {
+      "starter": "Starter",
+      "balanced": "Balanced",
+      "essential": "Essential",
+      "premium": "Premium"
+    }
+}
 
 }
