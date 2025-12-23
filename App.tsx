@@ -19,6 +19,7 @@ import { toastConfig } from "./src/components/CustomToast";
 import { useAppDispatch } from "./src/store/hooks";
 import { listenForTokenRefresh } from "./src/services/tokenManager";
 import { setAccessToken } from "./src/store/reducer/authSlice";
+import { ShimmerProvider } from "react-native-fast-shimmer";
 
 
 const styles = StyleSheet.create({
