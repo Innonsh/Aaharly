@@ -1,164 +1,105 @@
-import React, { useState } from "react";
-import {
-    View,
-    SafeAreaView,
-    TouchableOpacity,
-    ScrollView,
-    FlatList,
-    Alert,
-    LayoutAnimation,
-} from "react-native";
-import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import React, { useState, useContext } from "react";
+import { View, TouchableOpacity, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { useQuery } from "@tanstack/react-query";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
+import BackIcon from "../../assets/Icons/back_arrow.svg";
 import AppText from "../../components/AppText";
-import { fonts } from "../../theme/Fonts";
-
-import MealIllustration from "../../assets/HomePage/home2.svg";
-
 import { styles } from "./explorePlansStyle";
-import { DUMMY_MEALS, FILTERS } from "./explorePlansMock";
-import { ExplorePlansNavProp, Meal } from "../../types/exploreplans/explorePlans";
+import { LocalizationContext } from "../../contexts/LocalizationContext";
+import { MealService } from "../../services/MealServices";
+import { MealCard } from "../../common/cards/mealCard";
 
-const MealCard = ({ item }: { item: Meal }) => {
-    const [expanded, setExpanded] = useState(false);
+export default function ExploreMeals() {
+  const navigation = useNavigation();
+  const { translations } = useContext(LocalizationContext);
+  const strings = translations as any;
 
-    const toggleExpand = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        setExpanded(!expanded);
-    };
+  const [activeCategory, setActiveCategory] = useState("starter");
 
-    return (
+  const categories = [
+    { key: "starter", label: strings.exploreMeals.categories.starter },
+    { key: "balanced", label: strings.exploreMeals.categories.balanced },
+    { key: "essential", label: strings.exploreMeals.categories.essential },
+    { key: "premium", label: strings.exploreMeals.categories.premium },
+  ];
+
+  const { data: meals = [] } = useQuery({
+    queryKey: ["meal-plans"],
+    queryFn: MealService.getAllMealPlans,
+  });
+
+  return (
+    <SafeAreaView style={styles.safe}>
+      {/* 🔒 FIXED HEADER (DOES NOT SCROLL) */}
+      <View style={styles.headerRow}>
         <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={toggleExpand}
-            style={styles.largeMealCard}
+          onPress={() => navigation.goBack()}
+          style={styles.backBtn}
+          activeOpacity={0.7}
         >
-            <View style={styles.largeMealImage}>
-                <MealIllustration width={wp('91.8%')} height={hp('37.2%')} />
-            </View>
-
-            <View style={[
-                styles.largeMealDetails,
-                {
-                    height: expanded ? undefined : hp('15.8%'), // approx 135px
-                    gap: expanded ? hp('2.3%') : hp('1.4%'), // 20px : 12px
-                }
-            ]}>
-                <View>
-                    <AppText variant="title" numberOfLines={1} style={{ fontSize: wp('4.6%') }}> {/* 18px */}
-                        {item.title}
-                    </AppText>
-
-                    <AppText variant="subtitle" style={{ marginTop: hp('0.5%'), color: "#666", fontSize: wp('3.6%') }}> {/* 14px */}
-                        High-protein, low-carb meal
-                    </AppText>
-
-                    {expanded && (
-                        <View style={styles.badgesContainer}>
-                            <View style={styles.badge}>
-                                <AppText variant="labels" style={styles.badgeText}>High Proteins</AppText>
-                            </View>
-                            <View style={styles.badge}>
-                                <AppText variant="labels" style={styles.badgeText}>Low Carbs</AppText>
-                            </View>
-                            <View style={styles.badge}>
-                                <AppText variant="labels" style={styles.badgeText}>2 Meals/day</AppText>
-                            </View>
-                        </View>
-                    )}
-                </View>
-
-                <View style={styles.cardBottom}>
-                    <View>
-                        <AppText variant="labels" style={{ textDecorationLine: "line-through", color: "#999", fontSize: wp('3%') }}> {/* 12px */}
-                            ₹1799/Week
-                        </AppText>
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <AppText variant="title" style={{ fontSize: wp('4.6%') }}> {/* 18px */}
-                                {item.pricePerWeek}
-                            </AppText>
-                            <AppText variant="labels" style={{ color: "#FF5722", marginLeft: wp('2%'), fontWeight: "bold" }}>
-                                20% OFF
-                            </AppText>
-                        </View>
-                        <AppText variant="caption" style={{ marginTop: 2, color: "#999" }}>
-                            {item.subtitle}
-                        </AppText>
-                    </View>
-
-                    <TouchableOpacity style={styles.buyBtn} activeOpacity={0.85} onPress={() => Alert.alert("Buy Plan", "Purchase flow")}>
-                        <AppText variant="button" color="#fff">
-                            Buy Plan
-                        </AppText>
-                    </TouchableOpacity>
-                </View>
-            </View>
+          <BackIcon width={16} height={16} />
         </TouchableOpacity>
-    );
-};
 
-export default function ExplorePlansScreen() {
-    const navigation = useNavigation<ExplorePlansNavProp>();
-    const [selectedFilter, setSelectedFilter] = useState("Starter");
+        <AppText variant="title" style={styles.headerTitle}>
+          {strings.exploreMeals.title}
+        </AppText>
 
-    return (
-        <SafeAreaView style={styles.safe}>
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    {/* Placeholder for Back Icon if SVG not available, using text arrow for now if needed, but user likely has asset */}
-                    {/* Assuming BackIcon is available or using a simple arrow */}
-                    <AppText variant="title" style={{ fontSize: wp('6%') }}>←</AppText>
-                </TouchableOpacity>
-                <AppText variant="title" style={styles.headerTitle}>Explore Meals</AppText>
+        <View style={{ width: wp("12%") }} />
+      </View>
+
+      {/* 📜 SCROLLING CONTENT */}
+      <FlatList
+        data={meals}
+        keyExtractor={(it) => it.id || it._id}
+        renderItem={({ item }) => <MealCard item={item} />}
+
+        /* ✅ CATEGORY TABS MOVE HERE */
+        ListHeaderComponent={
+          <View>
+            <View style={styles.categoryContainer}>
+              {categories.map((item) => {
+                const isActive = activeCategory === item.key;
+                return (
+                  <TouchableOpacity
+                    key={item.key}
+                    style={[
+                      styles.categoryBox,
+                      isActive && styles.categoryBoxActive,
+                    ]}
+                    activeOpacity={0.8}
+                    onPress={() => setActiveCategory(item.key)}
+                  >
+                    <AppText
+                      variant="chip"
+                      style={[
+                        styles.categoryText,
+                        isActive && styles.categoryTextActive,
+                      ]}
+                    >
+                      {item.label}
+                    </AppText>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
 
-            {/* Filter Bar */}
-            <View style={styles.filterContainer}>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.filterContent}
-                >
-                    {FILTERS.map((filter) => {
-                        const isSelected = selectedFilter === filter;
-                        return (
-                            <TouchableOpacity
-                                key={filter}
-                                style={[
-                                    styles.filterButton,
-                                    isSelected && styles.filterButtonActive,
-                                ]}
-                                onPress={() => setSelectedFilter(filter)}
-                            >
-                                <AppText
-                                    variant="labels"
-                                    style={[
-                                        styles.filterText,
-                                        isSelected && styles.filterTextActive,
-                                    ]}
-                                >
-                                    {filter}
-                                </AppText>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </ScrollView>
-            </View>
+            {/* ✅ 18px RESPONSIVE GAP */}
+            <View style={{ height: hp("2.2%") }} />
+          </View>
+        }
 
-            {/* Meal List */}
-            <View style={styles.mealListContainer}>
-                <FlatList
-                    data={DUMMY_MEALS}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => <MealCard item={item} />}
-                    contentContainerStyle={styles.listContent}
-                    ItemSeparatorComponent={() => <View style={{ height: hp('1.4%') }} />} // 12px
-                />
-            </View>
-        </SafeAreaView>
-    );
+        ItemSeparatorComponent={() => (
+          <View style={{ height: hp("2%") }} />
+        )}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
+  );
 }

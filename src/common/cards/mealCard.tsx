@@ -76,13 +76,13 @@ export const MealCard = ({ item }: Props) => {
         {expanded && (
           <View style={styles.badgesContainer}>
             <View style={styles.badge}>
-              <AppText variant="labels">
+              <AppText variant="chip">
                 {strings.home.healthy}
               </AppText>
             </View>
 
             <View style={styles.badge}>
-              <AppText variant="labels">
+              <AppText variant="chip">
                 {item.duration}
               </AppText>
             </View>

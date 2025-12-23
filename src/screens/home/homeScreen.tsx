@@ -207,16 +207,20 @@ export default function HomeScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <FlatList
-        data={meals}
-        keyExtractor={(it) => it.id || it._id}
-        renderItem={({ item }) => <MealCard item={item} />}
-        contentContainerStyle={styles.listContent}
-        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-        ListHeaderComponent={ListHeader}
-        ListFooterComponent={ListFooter}
-      />
-    </SafeAreaView>
-  );
+  <SafeAreaView style={styles.safe}>
+    <FlatList
+      data={meals}
+      keyExtractor={(it) => it.id || it._id}
+      renderItem={({ item }) => <MealCard item={item} />}
+      contentContainerStyle={styles.listContent}
+      ItemSeparatorComponent={() => (
+        <View style={{ height: hp("2%") }} />
+      )}
+      ListHeaderComponent={ListHeader}
+      ListFooterComponent={ListFooter}
+      showsVerticalScrollIndicator={false}
+    />
+  </SafeAreaView>
+);
+
 }
