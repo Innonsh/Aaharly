@@ -26,19 +26,13 @@ export const styles = StyleSheet.create({
 
   detailsWrapper: {
     backgroundColor: "#FFF",
-    // These radii create the inner curved overlap seen in the image
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2.5%"),
     paddingBottom: hp("2.2%"),
     width: "100%",
-    // Shadow specifically for the white box floating over the image
-  //   elevation: 12,
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: -5 },
-  //   shadowOpacity: 0.1,
-  //   shadowRadius: 10,
+    
   },
 
   title: {
@@ -53,23 +47,27 @@ export const styles = StyleSheet.create({
     color: "#777",
     fontSize: wp("3.6%"),
     marginTop: 2,
-    marginBottom:-10
+    marginBottom:0
   },
 
-  badgesContainer: {
-    flexDirection: "row",
-    gap: wp("2%"),
-    marginTop: hp("1.5%"),
-  },
+ badgesContainer: {
+  flexDirection: "row",
+  gap: wp("2.6%"),
+  marginTop: hp("1%"),
+},
 
-  badge: {
-    backgroundColor: "#F9F9F9",
-    paddingHorizontal: wp("3%"),
-    paddingVertical: hp("0.4%"),
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#F0F0F0",
-  },
+badge: {
+  width: wp("19.5%"),
+  height: hp("3.6%"),
+  borderRadius: 999,
+  backgroundColor: "#F7F7F7",
+  borderWidth: 1,
+  borderColor: "#EDEDED",
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+
 
   badgeText: {
     fontFamily: fonts.Medium,
@@ -81,7 +79,7 @@ export const styles = StyleSheet.create({
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "flex-end",
-  marginTop: 2, // ✅ IMPORTANT
+  marginTop: 10, // ✅ IMPORTANT
   // marginBottom:12
 },
 

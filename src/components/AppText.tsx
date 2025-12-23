@@ -15,6 +15,7 @@ export type TextVariant =
   | "button"
   | "label"
   | "smallCenterd"
+  |"chip"
   | "labels";
 
 interface AppTextProps {
@@ -132,5 +133,11 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
   lineHeight: 19,
   color: theme.colors.secondary,
 },
+chip: {
+    fontSize: 12,          // ✅ SMALL
+    lineHeight: 14,
+    fontFamily: fonts.Medium,
+    color: "#000000"
+  },
 
 });
