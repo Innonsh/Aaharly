@@ -13,6 +13,9 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     overflow: "hidden", // Ensures image follows card radius
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+
   },
 
   imageWrapper: {
@@ -23,14 +26,19 @@ export const styles = StyleSheet.create({
 
   detailsWrapper: {
     backgroundColor: "#FFF",
-
+    // These radii create the inner curved overlap seen in the image
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2.5%"),
     paddingBottom: hp("2.2%"),
     width: "100%",
-    
+    // Shadow specifically for the white box floating over the image
+  //   elevation: 12,
+  //   shadowColor: "#000",
+  //   shadowOffset: { width: 0, height: -5 },
+  //   shadowOpacity: 0.1,
+  //   shadowRadius: 10,
   },
 
   title: {
@@ -45,6 +53,7 @@ export const styles = StyleSheet.create({
     color: "#777",
     fontSize: wp("3.6%"),
     marginTop: 2,
+    marginBottom:-10
   },
 
   badgesContainer: {
@@ -68,12 +77,14 @@ export const styles = StyleSheet.create({
     color: "#666",
   },
 
-  cardBottom: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center", 
-    marginTop: hp("2.8%"),
-  },
+ cardBottom: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "flex-end",
+  marginTop: 2, // ✅ IMPORTANT
+  // marginBottom:12
+},
+
 
   priceContainer: { 
     flex: 1,
@@ -120,16 +131,16 @@ export const styles = StyleSheet.create({
 
   buyBtn: {
     backgroundColor: "#FF6D3F",
-    width: wp("38%"),
-    height: hp("6.5%"),
-    borderRadius: 18,
+    width: wp("32%"),
+    height: hp("5.4%"),
+    borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
   },
 
   buyBtnText: {
     fontFamily: fonts.Bold,
-    fontSize: wp("4.5%"),
+    fontSize: wp("5.5%"),
     color: "#FFF",
   },
 });

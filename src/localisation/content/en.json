@@ -5,7 +5,9 @@
     "Ok": "Ok",
     "skip": "Skip",
     "continue": "Continue",
-    "verify":"verify"
+    "verify":"verify",
+     "currencySymbol": "₹",
+    "percentOff": "% OFF"
   },
   "login": {
     "title": "Login" ,
@@ -99,8 +101,14 @@
 
     "footerTitle": "Ready to Transform Your Diet?",
     "footerSubtitle": "Join thousands who've improved their fitness with personalized nutrition.",
-    "footerButton": "Get Started Now"
+    "footerButton": "Get Started Now",
+
+    "buyPlan": "Buy Plan",
+    "healthy": "Healthy",
+    "includes": "Includes",
+    "mealsPerDay": "Meals/Day"
   }
+  
 
 
 
