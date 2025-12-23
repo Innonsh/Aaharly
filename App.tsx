@@ -19,7 +19,6 @@ import { toastConfig } from "./src/components/CustomToast";
 import { useAppDispatch } from "./src/store/hooks";
 import { listenForTokenRefresh } from "./src/services/tokenManager";
 import { setAccessToken } from "./src/store/reducer/authSlice";
-import { ShimmerProvider } from "react-native-fast-shimmer";
 
 
 const styles = StyleSheet.create({
@@ -79,18 +78,16 @@ const AppContent = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ShimmerProvider>
-        <AuthProvider>
-          <PaperProvider theme={theme}>
-            <SafeAreaView style={styles.container}>
-              <LocalizationProvider>
-                <Navigator />
-              </LocalizationProvider>
-            </SafeAreaView>
-          </PaperProvider>
-          <Toast config={toastConfig} />
-        </AuthProvider>
-      </ShimmerProvider>
+      <AuthProvider>
+        <PaperProvider theme={theme}>
+          <SafeAreaView style={styles.container}>
+            <LocalizationProvider>
+              <Navigator />
+            </LocalizationProvider>
+          </SafeAreaView>
+        </PaperProvider>
+        <Toast config={toastConfig} />
+      </AuthProvider>
     </QueryClientProvider>
   );
 };
