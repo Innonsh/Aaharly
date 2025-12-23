@@ -11,6 +11,7 @@ export type TextVariant =
   | "subtitle"
   | "body"
   | "caption"
+  |"caption1"
   | "button"
   | "label"
   | "smallCenterd"
@@ -96,6 +97,12 @@ const variantStyles = (theme: any): Record<TextVariant, TextStyle> => ({
   },
   caption: {
     fontFamily: fonts.Light,
+    fontSize: 12,
+    lineHeight: 16,
+    color: theme.colors.outlineVariant,
+  },
+  caption1: {
+    fontFamily: fonts.Bold,
     fontSize: 12,
     lineHeight: 16,
     color: theme.colors.outlineVariant,
