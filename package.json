@@ -26,6 +26,7 @@
     "react-localization": "^2.0.6",
     "react-native": "0.82.1",
     "react-native-device-info": "^11.1.0",
+    "react-native-fast-shimmer": "^1.3.4",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-localize": "^3.6.0",
     "react-native-mmkv": "^3.3.3",

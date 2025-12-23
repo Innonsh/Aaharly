@@ -18,78 +18,24 @@ import BackArrow from '../../assets/Icons/back_arrow.svg';
 import { useProfile } from '../../hooks/useAccount';
 import { useProfileAnalysis } from '../../hooks/useProfileAnalysis';
 import { LocalizationContext } from '../../contexts/LocalizationContext';
-
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import { styles } from './nutritionStyle';
-import { MEALS_DATA } from './nutritionMock';
-import { Meal } from '../../types/nutritionaloverview/nutrition';
-
-
-
+import { MealCard } from '../../common/cards/mealCard';
+import { useQuery } from '@tanstack/react-query';
+import { MealService, CreateMealPlanPayload } from '../../services/MealServices';
 import NutritionSkeleton from './NutritionSkeleton';
-
-const MealCard = ({ item }: { item: Meal }) => {
-    const navigation = useNavigation<any>();
-    const { translations } = useContext(LocalizationContext);
-    const strings = translations as any;
-
-
-    return (
-        <View style={styles.largeMealCard}>
-            <View style={styles.mealImageContainer}>
-                <MealIllustration
-                    width="100%"
-                    height="100%"
-                    preserveAspectRatio="xMidYMid slice"
-                />
-            </View>
-
-            <View style={styles.largeMealDetails}>
-                <AppText variant="labels" style={styles.mealTitle}>
-                    {item.title}
-                </AppText>
-                <AppText variant="subtitle" style={styles.mealDesc}>
-                    {item.desc}
-                </AppText>
-                <View style={styles.badgesContainer}>
-                    <View style={styles.badge}><AppText style={styles.badgeText}>{item.tag1}</AppText></View>
-                    <View style={styles.badge}><AppText style={styles.badgeText}>{item.tag2}</AppText></View>
-                    <View style={styles.badge}><AppText style={styles.badgeText}>{item.tag3}</AppText></View>
-                </View>
-
-                <View style={styles.cardBottom}>
-                    <View style={styles.priceContainer}>
-                        <AppText style={styles.originalPrice}>{item.originalPrice}</AppText>
-
-                        <View style={styles.currentPriceRow}>
-                            <AppText style={styles.currentPrice}>{item.currentPrice}</AppText>
-                            <AppText style={styles.discountLabel}>20% OFF</AppText>
-                        </View>
-
-                        <AppText style={styles.includesText}>{strings.nutrition.includes2Meals}</AppText>
-                    </View>
-                    <TouchableOpacity
-                        style={styles.buyBtn}
-                        onPress={() => navigation.navigate(NavigationRoutes.WEEKLY_PLAN)}
-                    >
-                        <AppText variant="button" color="#fff">{strings.nutrition.buyPlan}</AppText>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
-    );
-};
-
-
-
 
 export default function NutritionalOverviewScreen() {
     const navigation = useNavigation<any>();
     const { translations } = useContext(LocalizationContext);
     const strings = translations as any;
-
     const { data: profile } = useProfile();
     const { data: analysisData, isLoading: isAnalysisLoading, error: analysisError, refetch } = useProfileAnalysis();
+    const { data: meals = [], isLoading: isMealsLoading } = useQuery({
+        queryKey: ["meal-plans"],
+        queryFn: MealService.getAllMealPlans,
+        select: (data: any[]) => data.filter((m: any) => m.isActive),
+    });
     const user = profile?.data?.basic || {};
     const stats = profile?.data?.physicalStats || {};
     const displayAge = user.age || "24";
@@ -118,7 +64,7 @@ export default function NutritionalOverviewScreen() {
         }
     }, [analysisError, navigation]);
 
-    if (isAnalysisLoading) {
+    if (isAnalysisLoading || isMealsLoading) {
         return <NutritionSkeleton />;
     }
 
@@ -287,8 +233,8 @@ export default function NutritionalOverviewScreen() {
                     <AppText variant="title" style={styles.sectionTitle}>{strings.nutrition.sampleMealPlan}</AppText>
                     <AppText variant="body" style={styles.sectionSubtitle}>{strings.nutrition.sampleMealPlanSubtitle}</AppText>
 
-                    {MEALS_DATA.map((meal) => (
-                        <View key={meal.id}>
+                    {meals.slice(0, 2).map((meal) => (
+                        <View key={meal.id || meal._id} style={{ marginBottom: 12 }}>
                             <MealCard item={meal} />
                         </View>
                     ))}
