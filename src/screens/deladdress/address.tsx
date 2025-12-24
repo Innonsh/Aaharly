@@ -1,174 +1,187 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import {
-    View,
-    SafeAreaView,
-    TouchableOpacity,
-    ScrollView,
-    KeyboardAvoidingView,
-    Platform
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Alert
+} from "react-native";
+import MapView, { Marker, Region } from "react-native-maps";
+import Geolocation from "react-native-geolocation-service";
+import auth from "@react-native-firebase/auth";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-import AppText from '../../components/AppText';
-import Input from '../../components/TextInput';
-import { Colors } from '../../theme/Colors';
-import BackArrow from '../../assets/Icons/back_arrow.svg';
-import { NavigationRoutes } from '../../navigation/NavigationRoutes';
+import AppText from "../../components/AppText";
+import Input from "../../components/TextInput";
+import BackArrow from "../../assets/Icons/back_arrow.svg";
+import { NavigationRoutes } from "../../navigation/NavigationRoutes";
+import config, { GOOGLE_MAPS_KEY } from "../../utils/config";
+import { styles } from "./addressStyle";
 
-import { styles } from './addressStyle';
+export default function AddressScreen({ navigation }: any) {
+  const mapRef = useRef<MapView>(null);
 
-const CustomToggle = ({ value, onValueChange }: { value: boolean, onValueChange: (val: boolean) => void }) => {
-    return (
-        <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => onValueChange(!value)}
-            style={{
-                width: wp('18.61%'), // approx 67
-                height: hp('3.75%'), // approx 30
-                borderRadius: 100,
-                borderWidth: 2,
-                borderColor: value ? Colors.primary : '#E6E6E6',
-                backgroundColor: value ? Colors.primary : '#FFFFFF',
-                justifyContent: 'center',
-                paddingHorizontal: wp('0.5%'),
-                alignItems: value ? 'flex-end' : 'flex-start',
-            }}
-        >
-            <View
-                style={{
-                    width: wp('6.11%'), // approx 22
-                    height: wp('6.11%'), // approx 22 (keep it round)
-                    borderRadius: wp('3.055%'),
-                    backgroundColor: value ? '#FFFFFF' : '#E6E6E6',
-                }}
-            />
-        </TouchableOpacity>
-    );
+  const [address, setAddress] = useState("");
+  const [details, setDetails] = useState("");
+  const [note, setNote] = useState("");
+  const [city, setCity] = useState("");
+  const [pincode, setPincode] = useState("");
+
+  const [region, setRegion] = useState<Region>({
+    latitude: 20.5937,
+    longitude: 78.9629,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05
+  });
+
+  useEffect(() => {
+    locateUser();
+  }, []);
+
+  const locateUser = () => {
+  Geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+
+      const newRegion = {
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01
+      };
+
+      // 1️⃣ Move map
+      mapRef.current?.animateToRegion(newRegion, 1000);
+
+      // 2️⃣ Update pin + state
+      setRegion(newRegion);
+
+      // 3️⃣ Update address
+      reverseGeocode(latitude, longitude);
+    },
+    () => Alert.alert("Permission required", "Location permission is required"),
+    { enableHighAccuracy: true }
+  );
 };
 
-export default function AddressScreen() {
-    const navigation = useNavigation();
-    const [fullAddress, setFullAddress] = useState('');
-    const [landmark, setLandmark] = useState('');
-    const [pincode, setPincode] = useState('');
-    const [city, setCity] = useState('');
-    const [deliveryNote, setDeliveryNote] = useState('');
-    const [addressType, setAddressType] = useState('Home');
-    const [isDefault, setIsDefault] = useState(false);
 
-    return (
-        <SafeAreaView style={styles.safeArea}>
-            {/* Header - Sticky Top */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <BackArrow width={wp('4%')} height={wp('4%')} color="#000" />
-                </TouchableOpacity>
-                <AppText variant="title" style={styles.headerTitle}>Add Address</AppText>
-            </View>
+  const reverseGeocode = async (lat: number, lng: number) => {
+    try {
+      const res = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_KEY}`
+      );
+      const data = await res.json();
 
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                style={{ flex: 1 }}
-            >
-                <ScrollView
-                    contentContainerStyle={styles.scrollContent}
-                    showsVerticalScrollIndicator={false}
-                >
-                    {/* Form */}
-                    <View style={styles.formContainer}>
-                        <View style={styles.inputGroup}>
-                            <AppText variant="labels" style={styles.label}>Full Address</AppText>
-                            <Input
-                                value={fullAddress}
-                                onChangeText={setFullAddress}
-                                style={styles.input}
-                            />
-                        </View>
+      if (!data.results || data.results.length === 0) return;
 
-                        <View style={styles.inputGroup}>
-                            <AppText variant="labels" style={styles.label}>Landmark</AppText>
-                            <Input
-                                value={landmark}
-                                onChangeText={setLandmark}
-                                style={styles.input}
-                            />
-                        </View>
+      const result = data.results[0];
+      setAddress(result.formatted_address);
 
-                        <View style={styles.row}>
-                            <View style={{ flex: 1 }}>
-                                <AppText variant="labels" style={styles.label}>Pincode</AppText>
-                                <Input
-                                    value={pincode}
-                                    onChangeText={setPincode}
-                                    style={styles.input}
-                                    keyboardType="numeric"
-                                />
-                            </View>
-                            <View style={{ width: wp('3%') }} />
-                            <View style={{ flex: 1 }}>
-                                <AppText variant="labels" style={styles.label}>City</AppText>
-                                <Input
-                                    value={city}
-                                    onChangeText={setCity}
-                                    style={styles.input}
-                                />
-                            </View>
-                        </View>
+      const cityComp = result.address_components.find(
+        (c: { long_name: string; types: string[] }) => c.types.includes("locality")
+      );
+      const pinComp = result.address_components.find(
+        (c: { long_name: string; types: string[] }) => c.types.includes("postal_code")
+      );
 
-                        {/* Address Type Chips */}
-                        <View style={styles.chipsContainer}>
-                            {['Home', 'Office', 'College', 'Other'].map((type) => (
-                                <TouchableOpacity
-                                    key={type}
-                                    style={[
-                                        styles.chip,
-                                        addressType === type && styles.chipSelected,
-                                    ]}
-                                    onPress={() => setAddressType(type)}
-                                >
-                                    <AppText
-                                        variant="label"
-                                        style={[
-                                            styles.chipText,
-                                            addressType === type && styles.chipTextSelected,
-                                        ]}
-                                    >
-                                        {type}
-                                    </AppText>
-                                </TouchableOpacity>
-                            ))}
-                        </View>
+      if (cityComp) setCity(cityComp.long_name);
+      if (pinComp) setPincode(pinComp.long_name);
+    } catch (err) {
+      console.log("Geocode error", err);
+    }
+  };
 
-                        <View style={styles.inputGroup}>
-                            <AppText variant="labels" style={styles.label}>
-                                Delivery Note <AppText variant="caption" style={{ color: '#999' }}>(Optional)</AppText>
-                            </AppText>
-                            <Input
-                                value={deliveryNote}
-                                onChangeText={setDeliveryNote}
-                                style={styles.input}
-                            />
-                        </View>
+  const saveAddress = async () => {
+    try {
+      const token = await auth().currentUser?.getIdToken();
 
-                        {/* Default Toggle */}
-                        <View style={styles.defaultContainer}>
-                            <AppText variant="labels" style={styles.defaultLabel}>Set as Default Address</AppText>
-                            <CustomToggle value={isDefault} onValueChange={setIsDefault} />
-                        </View>
-                    </View>
-                </ScrollView>
+      await fetch(`${config.BASE_URL}/addresses`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          address,
+          details,
+          note,
+          type: "HOME",
+          lat: region.latitude,
+          lng: region.longitude
+        })
+      });
 
-                {/* Save Button - Sticky Bottom */}
-                <View style={styles.saveButtonContainer}>
-                    <TouchableOpacity
-                        style={styles.saveButton}
-                        onPress={() => navigation.navigate(NavigationRoutes.DELIVERY_SETTINGS as never)}
-                    >
-                        <AppText variant="button" style={styles.saveButtonText}>Save Address</AppText>
-                    </TouchableOpacity>
-                </View>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
-    );
+      navigation.navigate(NavigationRoutes.DELIVERY_SETTINGS);
+    } catch (err) {
+      Alert.alert("Error", "Failed to save address");
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <BackArrow width={18} height={18} />
+        </TouchableOpacity>
+        <AppText style={styles.headerTitle}>Add Address</AppText>
+      </View>
+
+      {/* Search */}
+      <GooglePlacesAutocomplete
+        placeholder="Search location"
+        fetchDetails
+        styles={{ container: { padding: 10 } }}
+        onPress={(data, details) => {
+          if (!details) return;
+
+          const lat = details.geometry.location.lat;
+          const lng = details.geometry.location.lng;
+          const newRegion = {
+            latitude: lat,
+            longitude: lng,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01
+          };
+          setRegion(newRegion);
+          mapRef.current?.animateToRegion(newRegion, 1000);
+          reverseGeocode(lat, lng);
+        }}
+        query={{ key: GOOGLE_MAPS_KEY, language: "en" }}
+      />
+
+      {/* Map */}
+      <MapView
+        ref={mapRef}
+        style={{ height: 250 }}
+        region={region}
+        showsUserLocation
+        onRegionChangeComplete={(r) => {
+          setRegion(r);
+          reverseGeocode(r.latitude, r.longitude);
+        }}
+      >
+        <Marker coordinate={region} />
+      </MapView>
+
+      <TouchableOpacity onPress={locateUser} style={{ alignSelf: "center", margin: 10 }}>
+        <AppText>📍 Use my current location</AppText>
+      </TouchableOpacity>
+
+      {/* Form */}
+      <ScrollView contentContainerStyle={styles.formContainer}>
+        <Input value={address} editable={false} />
+        <Input placeholder="Address details" value={details} onChangeText={setDetails} />
+        <Input placeholder="Delivery note" value={note} onChangeText={setNote} />
+      </ScrollView>
+
+      <View style={styles.saveButtonContainer}>
+        <TouchableOpacity style={styles.saveButton} onPress={saveAddress}>
+          <AppText style={styles.saveButtonText}>Save Address</AppText>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 }

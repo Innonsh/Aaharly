@@ -59,7 +59,7 @@ export default function HomeScreen() {
     navigation.navigate(NavigationRoutes.PROFILE_SETUP1);
 
   const handleExplorePlans = () =>
-    navigation.navigate(NavigationRoutes.EXPLORE_PLANS);
+    navigation.navigate(NavigationRoutes.DELIVERY_ADDRESS);
 
   const ListHeader = useMemo(() => {
     return (
