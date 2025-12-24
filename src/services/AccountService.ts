@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import HttpClient from "./HttpClient";
+import { WeightGoal } from "../types/profile/profile";
 
 export interface CreateAccountPayload {
     name?: string | null;
@@ -20,9 +21,20 @@ export interface PhysicalStatsPayload {
 }
 
 export interface GoalPreferencesPayload {
-    goal: string;
+    weightGoal: WeightGoal;
+    dietType: 'veg' | 'non_veg' | 'vegan';
+    allergies?: string;
     targetWeight?: number;
     weeklyGoal?: string;
+}
+
+export interface ProfileAnalysisData {
+    bmi: string | number;
+    nutritionalNeeds: {
+        protein: string;
+        carb: string;
+        fat: string;
+    };
 }
 
 export const AccountService = {
@@ -47,6 +59,10 @@ export const AccountService = {
     },
     updateGoalPreferences: async (payload: GoalPreferencesPayload): Promise<any> => {
         const response = await HttpClient.post('/profile/goal-pref', payload);
+        return response.data;
+    },
+    getProfileAnalysis: async (): Promise<ProfileAnalysisData> => {
+        const response = await HttpClient.get('/profile/analysis');
         return response.data;
     },
 };

@@ -6,7 +6,7 @@ import { Colors } from '../../theme/Colors';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F9F9F9',
+        backgroundColor: '#FFFFFF',
     },
     scrollContent: {
         paddingBottom: hp('4%'),
@@ -16,208 +16,307 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         width: wp('100%'),
-        height: hp('5.2%'),
-        marginTop: hp('1.6%'),
-        paddingHorizontal: wp('6.1%'),
+        marginTop: hp('1.8%'),
+        paddingHorizontal: wp('6%'),
     },
     backButton: {
-        padding: 12,
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        elevation: 2,
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'center',
+        alignItems: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
+        shadowOpacity: 0.08,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+        elevation: 2,
     },
     headerTitle: {
-        fontSize: wp('5.5%'),
+        fontSize: wp('5%'),
         fontFamily: fonts.SemiBold,
+        textAlign: 'center',
+        flex: 1,
+        marginRight: wp('11%'),
     },
     titleSection: {
-        marginTop: hp('2.9%'),
-        marginLeft: wp('4.1%'),
-        width: wp('91.9%'),
+        marginTop: hp('3%'),
+        paddingHorizontal: wp('6%'),
     },
     mainTitle: {
-        fontSize: wp('5.3%'),
-        marginBottom: hp('0.6%'),
-        fontFamily: fonts.SemiBold,
+        fontSize: wp('5%'),
+        fontFamily: fonts.Bold,
+        color: '#1F2937',
+        marginBottom: hp('0.5%'),
     },
     subtitle: {
-        color: '#666',
-        fontSize: wp('3.6%'), //
+        fontSize: wp('3.5%'),
+        fontFamily: fonts.Regular,
+        color: '#6B7280',
     },
     card: {
-        backgroundColor: '#F8FAFC', // Profile Summary Color
-        borderRadius: wp('5.1%'), // 20px
-        padding: wp('5.1%'), // 20px
-        marginTop: hp('2.6%'), // Top 73px
-        width: wp('91.9%'), // 361px
-        alignSelf: 'center', // Center it since we use width
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        elevation: 3,
+        width: wp('92%'),
+        minHeight: hp('45%'),
+        alignSelf: 'center',
+        marginTop: hp('3.5%'),
+        borderRadius: wp('6%'),
+        overflow: 'hidden',
+        position: 'relative',
     },
-    bodyCompCard: {
-        backgroundColor: '#FFF7F3', // Body Composition Color
+    summaryCard: {
+        width: wp('92%'),
+        minHeight: hp('40%'),
+        alignSelf: 'center',
+        marginTop: hp('2.5%'),
+        borderRadius: wp('6%'),
+        overflow: 'hidden',
+        position: 'relative',
+    },
+    bodyCard: {
+        width: wp('92%'),
+        minHeight: hp('35%'),
+        alignSelf: 'center',
+        marginTop: hp('2.5%'),
+        borderRadius: wp('5.3%'),
+        borderWidth: 1,
+        borderColor: '#F3F4F6',
+        overflow: 'hidden',
+        position: 'relative',
+    },
+    cardContent: {
+        padding: wp('6%'),
+        zIndex: 1,
     },
     cardTitle: {
-        fontSize: wp('4.4%'), // 16px
-        fontFamily: fonts.SemiBold,
-        marginBottom: hp('1.8%'), // 15px
-    },
-    profileGrid: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    profileItem: {
-        alignItems: 'center',
-        width: '30%',
-    },
-    profileValue: {
-        fontSize: wp('4.6%'), // 18px
+        fontSize: wp('4.5%'),
         fontFamily: fonts.Bold,
+        color: '#111827',
+        marginBottom: hp('2.5%'),
     },
-    iconPlaceholder: {
-        marginVertical: hp('0.6%'),
+    summaryList: {
+        width: '100%',
+        marginBottom: hp('2%'),
     },
-    profileLabel: {
-        color: '#888',
-        fontSize: wp('3%'), // 12px
+    summaryItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: hp('1.5%'),
+        width: '100%',
+    },
+    summaryLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+    },
+    summaryIconContainer: {
+        width: wp('12%'),
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    summaryLabel: {
+        fontSize: wp('4.2%'),
+        fontFamily: fonts.Regular,
+        color: '#7C8394',
+        marginLeft: wp('2%'),
+        flexShrink: 1,
+    },
+    summaryValue: {
+        fontSize: wp('4.5%'),
+        fontFamily: fonts.Bold,
+        color: '#111827',
+        textAlign: 'right',
+        minWidth: wp('15%'),
     },
     bmiSection: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: hp('1.2%'),
+        marginTop: hp('1%'),
+        marginBottom: hp('1%'),
     },
     bmiValueContainer: {
         alignItems: 'center',
         justifyContent: 'center',
+        width: '30%',
+    },
+    bmiValue: {
+        fontSize: wp('11%'),
+        fontFamily: fonts.Bold,
+        color: '#111827',
+        lineHeight: wp('12%'),
+    },
+    bmiLabel: {
+        fontSize: wp('4%'),
+        fontFamily: fonts.Medium,
+        color: '#7C8394',
+        marginTop: hp('0.5%'),
     },
     bmiMessageContainer: {
         alignItems: 'center',
         justifyContent: 'center',
+        width: '65%',
     },
     crushingItText: {
-        fontSize: wp('3.6%'), // 14px
-        fontFamily: fonts.Medium,
-        color: '#555',
-        marginTop: hp('0.6%'),
+        fontSize: wp('4%'),
+        fontFamily: fonts.Bold,
+        color: '#1F2937',
+        marginTop: hp('1.2%'),
     },
     crushingItSubText: {
-        fontSize: wp('2.5%'), // 10px
-        color: '#888',
+        fontSize: wp('3%'),
+        fontFamily: fonts.Regular,
+        color: '#6B7280',
         textAlign: 'center',
+        marginTop: hp('0.5%'),
+    },
+    needsSectionTitle: {
+        fontSize: wp('4.5%'),
+        fontFamily: fonts.Bold,
+        color: '#111827',
+        marginTop: hp('4%'),
+        marginBottom: hp('2.5%'),
     },
     needsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: hp('1.2%'),
+        paddingHorizontal: wp('2.5%'),
     },
     needItem: {
         alignItems: 'center',
-        width: '30%',
+        flex: 1,
     },
     needValue: {
-        fontSize: wp('4.1%'), // 16px
-        fontFamily: fonts.SemiBold,
+        fontSize: wp('4.5%'),
+        fontFamily: fonts.Bold,
+        color: '#111827',
+        marginBottom: hp('0.5%'),
     },
     needLabel: {
-        color: '#666',
-        marginTop: hp('0.5%'),
+        fontSize: wp('3.8%'),
+        fontFamily: fonts.Regular,
+        color: '#7C8394',
     },
     mealPlanSection: {
-        marginTop: hp('2.1%'), // Consistent with spacing
-        width: wp('91.9%'),
-        alignSelf: 'center',
+        marginTop: hp('4%'),
+        paddingHorizontal: wp('6%'),
     },
     sectionTitle: {
-        fontSize: wp('4.6%'), // 18px
-        fontFamily: fonts.SemiBold,
-        marginBottom: hp('0.6%'),
+        fontSize: wp('4.5%'),
+        fontFamily: fonts.Bold,
+        color: '#1F2937',
+        marginBottom: hp('0.5%'),
     },
     sectionSubtitle: {
-        fontSize: wp('3.3%'), // 13px
-        color: '#666',
-        marginBottom: hp('1.8%'),
+        fontSize: wp('3.5%'),
+        fontFamily: fonts.Regular,
+        color: '#6B7280',
+        marginBottom: hp('2.5%'),
     },
     largeMealCard: {
-        backgroundColor: "transparent",
-        borderRadius: wp('5.1%'), // 20px
-        padding: 0,
-        flexDirection: "column",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
+        backgroundColor: '#FFFFFF',
+        borderRadius: wp('6%'),
+        marginBottom: hp('2.5%'),
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: '#F3F4F6',
+        shadowColor: '#000',
         shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
-        alignItems: "center",
-        width: wp('91.9%'), // 361px
-        height: wp('86%'), // Aspect ratio preserved
-
-        alignSelf: "center",
-        position: "relative",
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 10,
+        elevation: 3,
     },
     largeMealImage: {
-        width: wp('91.9%'),
-        height: wp('86%'),
-        borderRadius: wp('5.1%'), // 20px
-        overflow: "hidden",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        backgroundColor: "#fff",
+        width: '100%',
+        height: hp('22%'),
     },
     largeMealDetails: {
-        position: "absolute",
-        bottom: 0,
-        width: wp('91.9%'), // 361px
-        backgroundColor: "#FFF",
-        borderRadius: wp('4.6%'), // 18px
-        borderWidth: 1,
-        borderColor: "#F0F0F0",
-        padding: wp('4.1%'), // 16px
-        justifyContent: "space-between",
+        padding: wp('5%'),
     },
-    cardBottom: {
-        marginTop: "auto",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
+    mealTitle: {
+        fontSize: wp('4.5%'),
+        fontFamily: fonts.Bold,
+        color: '#111827',
     },
-    buyBtn: {
-        backgroundColor: "#FF5722",
-        paddingHorizontal: wp('5.1%'), // 20px
-        paddingVertical: hp('1.2%'), // 10px
-        borderRadius: 25,
+    mealDesc: {
+        fontSize: wp('3.5%'),
+        fontFamily: fonts.Regular,
+        color: '#6B7280',
+        marginTop: hp('0.5%'),
     },
     badgesContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        gap: wp('2%'), // 8px
-        marginTop: hp('1.4%'), // 12px
+        flexDirection: 'row',
+        marginTop: hp('2%'),
+        gap: wp('2%'),
     },
     badge: {
-        backgroundColor: "#F8F8F8",
-        paddingHorizontal: wp('3%'), // 12px
-        paddingVertical: hp('0.7%'), // 6px
-        borderRadius: 100,
+        backgroundColor: '#F3F4F6',
+        paddingHorizontal: wp('3%'),
+        paddingVertical: hp('0.7%'),
+        borderRadius: wp('2%'),
     },
     badgeText: {
-        fontSize: wp('3%'), // 12px
-        color: "#333",
-        fontWeight: "500",
+        fontSize: wp('3%'),
+        fontFamily: fonts.Medium,
+        color: '#374151',
+    },
+    cardBottom: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        marginTop: hp('2.5%'),
+    },
+    priceContainer: {
+        flex: 1,
+    },
+    originalPrice: {
+        fontSize: wp('3.5%'),
+        color: '#9CA3AF',
+        textDecorationLine: 'line-through',
+    },
+    currentPriceRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: hp('0.2%'),
+    },
+    currentPrice: {
+        fontSize: wp('5%'),
+        fontFamily: fonts.Bold,
+        color: '#111827',
+    },
+    discountLabel: {
+        fontSize: wp('3.5%'),
+        fontFamily: fonts.Bold,
+        color: '#EF4444',
+        marginLeft: wp('2%'),
+    },
+    includesText: {
+        fontSize: wp('3%'),
+        color: '#9CA3AF',
+        marginTop: hp('0.5%'),
+    },
+    buyBtn: {
+        backgroundColor: '#FF6B35',
+        paddingHorizontal: wp('6%'),
+        paddingVertical: hp('1.5%'),
+        borderRadius: wp('5%'),
     },
     viewAllButton: {
-        width: wp('14.5%'), // 57px
-        height: hp('2.2%'), // 19px
-        marginTop: hp('2%'),
-        alignSelf: 'flex-end', // Left 320px relative to container
-        padding: 0, // Reset padding
+        alignSelf: 'flex-end',
+        paddingVertical: hp('1.5%'),
+        marginTop: hp('1.2%'),
+    },
+    viewAllText: {
+        fontSize: wp('4%'),
+        fontFamily: fonts.Bold,
+        color: '#FF6B35',
+        textDecorationLine: 'underline',
+    },
+    mealImageContainer: {
+        width: '100%',
+        height: hp('22%'),
+        backgroundColor: '#F3F4F6',
+        overflow: 'hidden',
         justifyContent: 'center',
         alignItems: 'center',
     },

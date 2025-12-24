@@ -1,8 +1,3 @@
-// This mock data is used in ProfileStep2Screen and ProfileStep3Screen.
-// Note: The actual strings are pulled from the LocalizationContext, so the arrays here
-// are primarily defining the keys and structure if needed, or we can export a function that
-// takes the `strings` object and returns the data array.
-
 import { ActivityOption, GoalOption } from "../../types/profile/profile";
 
 export const getActivityOptions = (strings: any): ActivityOption[] => [
@@ -25,17 +20,17 @@ export const getActivityOptions = (strings: any): ActivityOption[] => [
 
 export const getGoalOptions = (strings: any): GoalOption[] => [
     {
-        key: "lose",
+        key: "lose_weight",
         title: strings.profile.goalLoseTitle,
         subtitle: strings.profile.goalLoseSubtitle,
     },
     {
-        key: "maintain",
+        key: "maintain_weight",
         title: strings.profile.goalMaintainTitle,
         subtitle: strings.profile.goalMaintainSubtitle,
     },
     {
-        key: "gain",
+        key: "gain_weight",
         title: strings.profile.goalGainTitle,
         subtitle: strings.profile.goalGainSubtitle,
     },

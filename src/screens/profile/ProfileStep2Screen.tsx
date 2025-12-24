@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef } from "react";
 import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Toast from "react-native-toast-message";
 
 import BackIcon from "../../assets/Icons/back_arrow.svg";
 import AppText from "../../components/AppText";
@@ -27,6 +28,10 @@ const ProfileStep2Screen: React.FC = () => {
   const [activity, setActivity] = useState<
     "sedentary" | "moderate" | "active" | null
   >(null);
+  const [heightError, setHeightError] = useState(false);
+  const [weightError, setWeightError] = useState(false);
+
+  const isNextDisabled = !height || !weight || !activity;
 
   const weightRef = useRef<any>(null);
 
@@ -91,8 +96,11 @@ const ProfileStep2Screen: React.FC = () => {
                 onChangeText={(text: string) => {
                   const cleaned = text.replace(/[^0-9]/g, "");
                   setHeight(cleaned);
+                  setHeightError(false);
                 }}
                 keyboardType="numeric"
+                outlineColor={heightError ? '#EF4444' : undefined}
+                activeOutlineColor={heightError ? '#EF4444' : undefined}
                 style={styles.input}
                 returnKeyType="next"
                 blurOnSubmit={false}
@@ -110,8 +118,11 @@ const ProfileStep2Screen: React.FC = () => {
                 onChangeText={(text: string) => {
                   const cleaned = text.replace(/[^0-9]/g, "");
                   setWeight(cleaned);
+                  setWeightError(false);
                 }}
                 keyboardType="numeric"
+                outlineColor={weightError ? '#EF4444' : undefined}
+                activeOutlineColor={weightError ? '#EF4444' : undefined}
                 style={styles.input}
                 returnKeyType="done"
               />
@@ -152,15 +163,44 @@ const ProfileStep2Screen: React.FC = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.primaryBtn}
+            style={[styles.primaryBtn, isNextDisabled && { opacity: 0.5 }]}
             onPress={() => {
+              const numHeight = Number(height);
+              const numWeight = Number(weight);
+              let hasError = false;
+
+              if (numHeight < 50 || numHeight > 250) {
+                setHeightError(true);
+                hasError = true;
+                Toast.show({
+                  type: 'error',
+                  text1: 'Height must be between 50 and 250 cm',
+                  position: 'bottom'
+                });
+              }
+
+              if (numWeight < 20 || numWeight > 300) {
+                setWeightError(true);
+                hasError = true;
+                Toast.show({
+                  type: 'error',
+                  text1: 'Weight must be between 20 and 300 kg',
+                  position: 'bottom'
+                });
+              }
+
+              if (hasError) return;
+
               dispatch(updateUserProfile({
-                height: Number(height),
-                weight: Number(weight),
-                activityLevel: activity || 'moderate'
+                physicalStats: {
+                  height: numHeight,
+                  weight: numWeight,
+                  activityLevel: activity || 'moderate'
+                }
               }));
               navigation.navigate(NavigationRoutes.PROFILE_SETUP3);
             }}
+            disabled={isNextDisabled}
             activeOpacity={0.8}
           >
             <AppText variant="button" color="#FFFFFF">

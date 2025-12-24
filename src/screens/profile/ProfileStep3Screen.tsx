@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Toast from "react-native-toast-message";
 
 import BackIcon from "../../assets/Icons/back_arrow.svg";
 import AppText from "../../components/AppText";
@@ -13,12 +14,14 @@ import VeganIcon from "../../assets/Icons/vegan.svg";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { updateUserProfile } from "../../store/reducer/userSlice";
+import { setUserProfile, updateUserProfile } from "../../store/reducer/userSlice";
+import { WeightGoal } from "../../types/profile/profile";
 import {
   useUpdateBasicProfile,
   useUpdatePhysicalStats,
-  useUpdateGoalPreferences
+  useUpdateGoalPreferences,
 } from "../../hooks/useAccount";
+import { AccountService } from "../../services/AccountService";
 
 import { styles } from "./profileStep3Style";
 import { ProfileNavProp } from "../../types/profile/profile";
@@ -31,14 +34,17 @@ const ProfileStep3Screen: React.FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.user.data);
 
-  // API Hooks
   const basicMutation = useUpdateBasicProfile();
   const statsMutation = useUpdatePhysicalStats();
   const goalMutation = useUpdateGoalPreferences();
 
-  const [goal, setGoal] = useState<"lose" | "maintain" | "gain" | null>(null);
-  const [diet, setDiet] = useState<"veg" | "nonveg" | "vegan" | null>(null);
+  const [goal, setGoal] = useState<WeightGoal | null>(null);
+  const [diet, setDiet] = useState<"veg" | "non_veg" | "vegan" | null>(null);
   const [allergies, setAllergies] = useState("");
+  const [goalError, setGoalError] = useState(false);
+  const [dietError, setDietError] = useState(false);
+
+  const isNextDisabled = !goal || !diet;
 
   const goalOptions = getGoalOptions(strings);
 
@@ -102,8 +108,12 @@ const ProfileStep3Screen: React.FC = () => {
               style={[
                 styles.goalOption,
                 goal === item.key && styles.goalSelected,
+                goalError && !goal && { borderColor: '#EF4444', borderWidth: 1.5 }
               ]}
-              onPress={() => setGoal(item.key)}
+              onPress={() => {
+                setGoal(item.key);
+                setGoalError(false);
+              }}
               activeOpacity={0.8}
             >
               <AppText variant="labels">{item.title}</AppText>
@@ -119,8 +129,15 @@ const ProfileStep3Screen: React.FC = () => {
 
           <View style={styles.dietRow}>
             <TouchableOpacity
-              style={[styles.dietBtn, diet === "veg" && styles.dietSelected]}
-              onPress={() => setDiet("veg")}
+              style={[
+                styles.dietBtn,
+                diet === "veg" && styles.dietSelected,
+                dietError && !diet && { borderColor: '#EF4444', borderWidth: 1.5 }
+              ]}
+              onPress={() => {
+                setDiet("veg");
+                setDietError(false);
+              }}
               activeOpacity={0.8}
             >
               <VegIcon width={20} height={20} />
@@ -133,9 +150,13 @@ const ProfileStep3Screen: React.FC = () => {
               style={[
                 styles.dietBtn,
                 styles.lastDietBtnInRow,
-                diet === "nonveg" && styles.dietSelected,
+                diet === "non_veg" && styles.dietSelected,
+                dietError && !diet && { borderColor: '#EF4444', borderWidth: 1.5 }
               ]}
-              onPress={() => setDiet("nonveg")}
+              onPress={() => {
+                setDiet("non_veg");
+                setDietError(false);
+              }}
               activeOpacity={0.8}
             >
               <NonVegIcon width={20} height={20} />
@@ -151,8 +172,12 @@ const ProfileStep3Screen: React.FC = () => {
                 styles.dietBtn,
                 styles.singleDietBtn,
                 diet === "vegan" && styles.dietSelected,
+                dietError && !diet && { borderColor: '#EF4444', borderWidth: 1.5 }
               ]}
-              onPress={() => setDiet("vegan")}
+              onPress={() => {
+                setDiet("vegan");
+                setDietError(false);
+              }}
               activeOpacity={0.8}
             >
               <VeganIcon width={20} height={20} />
@@ -166,7 +191,6 @@ const ProfileStep3Screen: React.FC = () => {
             {strings.profile.allergiesLabel}
           </AppText>
           <Input
-            placeholder={strings.profile.allergiesPlaceholder}
             value={allergies}
             onChangeText={setAllergies}
             style={styles.allergyInput}
@@ -186,52 +210,49 @@ const ProfileStep3Screen: React.FC = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.primaryBtn}
+            style={[styles.primaryBtn, isNextDisabled && { opacity: 0.5 }]}
             activeOpacity={0.8}
             onPress={async () => {
               if (!goal || !diet) {
-                // Simple validation
-                console.warn("Please select goal and diet");
+                if (!goal) setGoalError(true);
+                if (!diet) setDietError(true);
+                Toast.show({
+                  type: 'error',
+                  text1: 'Required Selection',
+                  text2: 'Please select both a goal and a diet preference.',
+                  position: 'bottom'
+                });
                 return;
               }
 
-              // 1. Prepare Payload
-              // Data from Redux (Steps 1 & 2)
               const basicData = {
-                name: user?.name || "User",
-                age: Number(user?.age) || 25,
-                gender: user?.gender || 'male'
+                name: user?.basic?.name || "User",
+                age: Number(user?.basic?.age) || 25,
+                gender: user?.basic?.gender || 'male'
               };
-
               const statsData = {
-                height: Number(user?.height) || 170,
-                weight: Number(user?.weight) || 70,
-                activityLevel: (user?.activityLevel || 'moderate') as any
+                height: Number(user?.physicalStats?.height) || 170,
+                weight: Number(user?.physicalStats?.weight) || 70,
+                activityLevel: (user?.physicalStats?.activityLevel || 'moderate') as any
               };
-
               const goalData = {
-                goal: goal,
+                weightGoal: goal!,
                 dietType: diet,
                 allergies: allergies
               };
 
               try {
-                // 2. Call APIs sequentially or parallel
-                // We use the mutations from useAccount.ts
                 await basicMutation.mutateAsync(basicData as any);
                 await statsMutation.mutateAsync(statsData as any);
                 await goalMutation.mutateAsync(goalData as any);
-
-                // 3. Update Redux with final pieces (optional but good for syncing)
-                dispatch(updateUserProfile({ goal: goal }));
-
-                // 4. Navigate
+                const profileRes = await AccountService.getProfile();
+                dispatch(setUserProfile(profileRes.data));
                 navigation.navigate(NavigationRoutes.NUTRITIONAL_OVERVIEW);
               } catch (err) {
                 console.error("Failed to save profile", err);
-                // You might want to show an alert here
               }
             }}
+            disabled={isNextDisabled}
           >
             <AppText variant="button" color="#FFFFFF">
               {basicMutation.isPending || statsMutation.isPending ? "Saving..." : strings.profile.generatePlan}
