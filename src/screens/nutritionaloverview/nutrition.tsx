@@ -87,10 +87,18 @@ export default function NutritionalOverviewScreen() {
         );
     }
 
-    const { bmi, nutritionalNeeds } = analysisData;
-    const needs = nutritionalNeeds || { protein: 'N/A', carb: 'N/A', fat: 'N/A' };
+    const bodyComp = analysisData?.data?.bodyComposition;
+    const bmiValue = bodyComp?.bmi;
+    const apiNeeds = bodyComp?.needs;
 
-    const displayBMI = bmi || "N/A";
+    // Map API needs to display format
+    const needs = {
+        protein: apiNeeds?.heigh === 'protein' ? 'High' : (apiNeeds?.modarate === 'protein' ? 'Moderate' : 'Low'),
+        carb: apiNeeds?.heigh === 'carbs' ? 'High' : (apiNeeds?.modarate === 'carbs' ? 'Moderate' : 'Low'),
+        fat: apiNeeds?.heigh === 'fat' ? 'High' : (apiNeeds?.modarate === 'fat' ? 'Moderate' : 'Low'),
+    };
+
+    const displayBMI = bmiValue ? bmiValue.toFixed(1) : "N/A";
 
 
 
@@ -242,6 +250,7 @@ export default function NutritionalOverviewScreen() {
                     <TouchableOpacity style={styles.viewAllButton} onPress={() => navigation.navigate(NavigationRoutes.EXPLORE_PLANS)}>
                         <AppText style={styles.viewAllText}>{strings.nutrition.viewAll}</AppText>
                     </TouchableOpacity>
+
                 </View>
 
                 <View style={{ height: 40 }} />

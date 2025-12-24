@@ -29,11 +29,23 @@ export interface GoalPreferencesPayload {
 }
 
 export interface ProfileAnalysisData {
-    bmi: string | number;
-    nutritionalNeeds: {
-        protein: string;
-        carb: string;
-        fat: string;
+    success: boolean;
+    data: {
+        bodyComposition: {
+            bmi: number;
+            needs: {
+                heigh: string;
+                modarate: string;
+                low: string;
+            };
+        };
+        summery?: {
+            age: number;
+            height: number;
+            weight: number;
+            gender: string;
+            activityLevel: string;
+        };
     };
 }
 

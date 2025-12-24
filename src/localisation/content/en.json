@@ -26,6 +26,7 @@
   },
   "profile": {
     "setupTitle": "Set Up Profile",
+    "subtitle": "Profile",
     "step1Title": "Basic Information",
     "step1Subtitle": "Tell about yourself to get started",
     "step2Title": "Physical Stats",
@@ -62,7 +63,17 @@
     "back": "Back",
     "next": "Next",
     "generatePlan": "Next",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "healthOverview": "Your Health Overview",
+    "yourPlans": "Your Plans",
+    "deliveryPreferences": "Delivery Preferences",
+    "support": "Support",
+    "editProfile": "Edit Profile",
+    "logout": "Logout",
+    "logoutConfirm": "Are you sure you want to logout?",
+    "personalInfo": "Personal Information",
+    "saveChanges": "Save Changes",
+    "updateSuccess": "Profile updated successfully"
   },
   "Email": {
     "title": "Login With Email",

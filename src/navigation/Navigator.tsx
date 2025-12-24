@@ -17,6 +17,7 @@ import OnboardingScreen from "../screens/Onboarding/OnboardingScreens";
 import ProfileStep1Screen from "../screens/profile/ProfileStep1Screen";
 import ProfileStep2Screen from "../screens/profile/ProfileStep2Screen";
 import ProfileStep3Screen from "../screens/profile/ProfileStep3Screen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
 import ExplorePlansScreen from "../screens/exploreplans/explorePlans";
 import NutritionalOverviewScreen from "../screens/nutritionaloverview/nutrition";
 import WeeklyPlanScreen from "../screens/weeklyplan/plan";
@@ -158,6 +159,11 @@ const Navigator = () => {
         <Stack.Screen
           name={NavigationRoutes.PROFILE_SETUP3}
           component={ProfileStep3Screen}
+          options={{ headerShown: false, animation: "none" }}
+        />
+        <Stack.Screen
+          name={NavigationRoutes.PROFILE}
+          component={ProfileScreen}
           options={{ headerShown: false, animation: "none" }}
         />
         <Stack.Screen

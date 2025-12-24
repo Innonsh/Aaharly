@@ -4,10 +4,17 @@ import { storage } from '../storage';
 import authReducer from './reducer/authSlice';
 import userReducer from './reducer/userSlice';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     auth: authReducer,
     user: userReducer,
 });
+
+const rootReducer = (state: any, action: any) => {
+    if (action.type === 'LOGOUT') {
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
 
 const persistConfig = {
     key: 'root',
@@ -26,6 +33,12 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+export const appLogout = () => async (dispatch: AppDispatch) => {
+    dispatch({ type: 'LOGOUT' });
+    await persistor.purge();
+    await storage.clearAll();
+};
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

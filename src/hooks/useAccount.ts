@@ -49,10 +49,7 @@ export const useUpdateBasicProfile = () => {
 
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["profile"] });
-            Toast.show({
-                type: "success",
-                text1: "Profile Updated",
-            });
+            queryClient.invalidateQueries({ queryKey: ["profileAnalysis"] });
         },
 
         onError: (error: any) => {
@@ -74,10 +71,7 @@ export const useUpdatePhysicalStats = () => {
 
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["profile"] });
-            Toast.show({
-                type: "success",
-                text1: "Stats Updated",
-            });
+            queryClient.invalidateQueries({ queryKey: ["profileAnalysis"] });
         },
 
         onError: (error: any) => {
@@ -99,10 +93,7 @@ export const useUpdateGoalPreferences = () => {
 
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["profile"] });
-            Toast.show({
-                type: "success",
-                text1: "Goals Updated",
-            });
+            queryClient.invalidateQueries({ queryKey: ["profileAnalysis"] });
         },
 
         onError: (error: any) => {

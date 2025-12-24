@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from "react";
 import { View, TouchableOpacity, SafeAreaView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Toast from "react-native-toast-message";
 
@@ -14,19 +14,36 @@ import { NavigationRoutes } from "../../navigation/NavigationRoutes";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { useAppDispatch } from "../../store/hooks";
 import { updateUserProfile } from "../../store/reducer/userSlice";
+import { useProfile } from "../../hooks/useAccount";
 
 import { styles } from "./profileStep1Style";
 import { Step1NavProp } from "../../types/profile/profile";
 
 const ProfileStep1Screen: React.FC = () => {
   const navigation = useNavigation<Step1NavProp>();
+  const route = useRoute<any>();
+  const isEdit = route.params?.isEdit;
   const dispatch = useAppDispatch();
   const { translations } = useContext(LocalizationContext);
   const strings = translations as any;
 
+  const { data: profileResponse, isLoading } = useProfile();
+
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState<"male" | "female" | null>(null);
+
+  React.useEffect(() => {
+    // Only pre-fill IF we are in edit mode.
+    // This prevents "previous data" from appearing for a fresh setup.
+    if (isEdit && profileResponse?.data?.basic) {
+      const { name: pName, age: pAge, gender: pGender } = profileResponse.data.basic;
+      setName(pName || "");
+      setAge(pAge?.toString() || "");
+      setGender(pGender as any || null);
+    }
+  }, [profileResponse, isEdit]);
+
   const [nameError, setNameError] = useState(false);
   const [ageError, setAgeError] = useState(false);
 
@@ -196,7 +213,7 @@ const ProfileStep1Screen: React.FC = () => {
                   gender: gender || 'male',
                 }
               }));
-              navigation.navigate(NavigationRoutes.PROFILE_SETUP2);
+              navigation.navigate(NavigationRoutes.PROFILE_SETUP2, { isEdit });
             }}
             disabled={isNextDisabled}
           >
