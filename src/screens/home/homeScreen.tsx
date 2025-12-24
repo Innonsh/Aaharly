@@ -32,12 +32,14 @@ import LocationIcon from "../../assets/HomePage/LocationIcon.svg";
 import { useQuery } from "@tanstack/react-query";
 import { MealService } from "../../services/MealServices";
 import { useProfile, useProfileAnalysis } from "../../hooks/useAccount";
+import { useFcmTokenSync } from "../../hooks/useFcmTokenSync";
 
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
+  useFcmTokenSync();
 
   const { translations } = useContext(LocalizationContext);
   const { user: authUser } = useContext(AuthContext);
@@ -227,20 +229,20 @@ export default function HomeScreen() {
   );
 
   return (
-  <SafeAreaView style={styles.safe}>
-    <FlatList
-      data={meals}
-      keyExtractor={(it) => it.id || it._id}
-      renderItem={({ item }) => <MealCard item={item} />}
-      contentContainerStyle={styles.listContent}
-      ItemSeparatorComponent={() => (
-        <View style={{ height: hp("2%") }} />
-      )}
-      ListHeaderComponent={ListHeader}
-      ListFooterComponent={ListFooter}
-      showsVerticalScrollIndicator={false}
-    />
-  </SafeAreaView>
-);
+    <SafeAreaView style={styles.safe}>
+      <FlatList
+        data={meals}
+        keyExtractor={(it) => it.id || it._id}
+        renderItem={({ item }) => <MealCard item={item} />}
+        contentContainerStyle={styles.listContent}
+        ItemSeparatorComponent={() => (
+          <View style={{ height: hp("2%") }} />
+        )}
+        ListHeaderComponent={ListHeader}
+        ListFooterComponent={ListFooter}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
+  );
 
 }
