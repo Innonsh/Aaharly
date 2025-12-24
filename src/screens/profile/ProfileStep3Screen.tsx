@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { View, TouchableOpacity, SafeAreaView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Toast from "react-native-toast-message";
 
@@ -21,6 +21,7 @@ import {
   useUpdatePhysicalStats,
   useUpdateGoalPreferences,
 } from "../../hooks/useAccount";
+import * as useAccount from "../../hooks/useAccount";
 import { AccountService } from "../../services/AccountService";
 
 import { styles } from "./profileStep3Style";
@@ -38,9 +39,24 @@ const ProfileStep3Screen: React.FC = () => {
   const statsMutation = useUpdatePhysicalStats();
   const goalMutation = useUpdateGoalPreferences();
 
+  const { data: profileResponse } = useAccount.useProfile();
+
   const [goal, setGoal] = useState<WeightGoal | null>(null);
   const [diet, setDiet] = useState<"veg" | "non_veg" | "vegan" | null>(null);
   const [allergies, setAllergies] = useState("");
+
+  const route = useRoute<any>();
+  const isEdit = route.params?.isEdit;
+
+  React.useEffect(() => {
+    if (isEdit && profileResponse?.data?.goalPref) {
+      const { weightGoal, dietType, allergies: pAllergies } = profileResponse.data.goalPref;
+      setGoal(weightGoal as WeightGoal || null);
+      setDiet(dietType as any || null);
+      setAllergies(pAllergies || "");
+    }
+  }, [profileResponse, isEdit]);
+
   const [goalError, setGoalError] = useState(false);
   const [dietError, setDietError] = useState(false);
 
@@ -225,29 +241,58 @@ const ProfileStep3Screen: React.FC = () => {
                 return;
               }
 
+              // Only pull from server if we are explicitly editing.
+              // For a first-time setup, we want to ignore any partial server data.
+              const profileData = isEdit ? profileResponse?.data : null;
+
               const basicData = {
-                name: user?.basic?.name || "User",
-                age: Number(user?.basic?.age) || 25,
-                gender: user?.basic?.gender || 'male'
+                name: user?.basic?.name || profileData?.basic?.name || "User",
+                age: Number(user?.basic?.age || profileData?.basic?.age) || 25,
+                gender: user?.basic?.gender || profileData?.basic?.gender || 'male'
               };
               const statsData = {
-                height: Number(user?.physicalStats?.height) || 170,
-                weight: Number(user?.physicalStats?.weight) || 70,
-                activityLevel: (user?.physicalStats?.activityLevel || 'moderate') as any
+                height: Number(user?.physicalStats?.height || profileData?.physicalStats?.height) || 170,
+                weight: Number(user?.physicalStats?.weight || profileData?.physicalStats?.weight) || 70,
+                activityLevel: (user?.physicalStats?.activityLevel || profileData?.physicalStats?.activityLevel || 'moderate') as any
               };
               const goalData = {
-                weightGoal: goal!,
-                dietType: diet,
-                allergies: allergies
+                weightGoal: goal || profileData?.goalPref?.weightGoal || 'maintain_weight',
+                dietType: diet || profileData?.goalPref?.dietType || 'veg',
+                allergies: allergies || profileData?.goalPref?.allergies || ""
               };
 
               try {
+                const action = isEdit ? "Updating" : "Saving";
+                console.log(`[DEBUG] Starting Profile ${isEdit ? "Update" : "Save"} Process...`);
+
+                console.log(`[DEBUG] ${action} Basic Profile:`, JSON.stringify(basicData));
                 await basicMutation.mutateAsync(basicData as any);
+                console.log(`[DEBUG] Basic Profile ${action} SUCCESS`);
+
+                console.log(`[DEBUG] ${action} Physical Stats:`, JSON.stringify(statsData));
                 await statsMutation.mutateAsync(statsData as any);
+                console.log(`[DEBUG] Physical Stats ${action} SUCCESS`);
+
+                console.log(`[DEBUG] ${action} Goal Preferences:`, JSON.stringify(goalData));
                 await goalMutation.mutateAsync(goalData as any);
+                console.log(`[DEBUG] Goal Preferences ${action} SUCCESS`);
+
+                console.log("[DEBUG] Fetching Refreshed Profile from Server...");
                 const profileRes = await AccountService.getProfile();
                 dispatch(setUserProfile(profileRes.data));
-                navigation.navigate(NavigationRoutes.NUTRITIONAL_OVERVIEW);
+                console.log("[DEBUG] Profile Refresh and Redux Sync SUCCESS");
+
+                if (isEdit) {
+                  // If we came from Profile, return there with a success param
+                  navigation.navigate(NavigationRoutes.PROFILE, { showUpdateSuccess: true });
+                } else {
+                  // For fresh setup, go to Overview and show "Goal updated"
+                  navigation.navigate(NavigationRoutes.NUTRITIONAL_OVERVIEW);
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Goal updated',
+                  });
+                }
               } catch (err) {
                 console.error("Failed to save profile", err);
               }

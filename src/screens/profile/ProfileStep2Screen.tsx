@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from "react";
 import { View, TouchableOpacity, SafeAreaView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Toast from "react-native-toast-message";
 
@@ -12,6 +12,7 @@ import { NavigationRoutes } from "../../navigation/NavigationRoutes";
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { useAppDispatch } from "../../store/hooks";
 import { updateUserProfile } from "../../store/reducer/userSlice";
+import { useProfile } from "../../hooks/useAccount";
 
 import { styles } from "./profileStep2Style";
 import { Step2NavProp } from "../../types/profile/profile";
@@ -19,15 +20,30 @@ import { getActivityOptions } from "./profileMock";
 
 const ProfileStep2Screen: React.FC = () => {
   const navigation = useNavigation<Step2NavProp>();
+  const route = useRoute<any>();
+  const isEdit = route.params?.isEdit;
   const dispatch = useAppDispatch();
   const { translations } = useContext(LocalizationContext);
   const strings = translations as any;
+
+  const { data: profileResponse } = useProfile();
 
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [activity, setActivity] = useState<
     "sedentary" | "moderate" | "active" | null
   >(null);
+
+  React.useEffect(() => {
+    // Only pre-fill IF we are in edit mode.
+    if (isEdit && profileResponse?.data?.physicalStats) {
+      const { height: pHeight, weight: pWeight, activityLevel } = profileResponse.data.physicalStats;
+      setHeight(pHeight?.toString() || "");
+      setWeight(pWeight?.toString() || "");
+      setActivity(activityLevel as any || null);
+    }
+  }, [profileResponse, isEdit]);
+
   const [heightError, setHeightError] = useState(false);
   const [weightError, setWeightError] = useState(false);
 
@@ -198,7 +214,7 @@ const ProfileStep2Screen: React.FC = () => {
                   activityLevel: activity || 'moderate'
                 }
               }));
-              navigation.navigate(NavigationRoutes.PROFILE_SETUP3);
+              navigation.navigate(NavigationRoutes.PROFILE_SETUP3, { isEdit });
             }}
             disabled={isNextDisabled}
             activeOpacity={0.8}

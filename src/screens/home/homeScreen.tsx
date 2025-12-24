@@ -5,6 +5,7 @@ import {
   FlatList,
   Platform,
   UIManager,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -15,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AppText from "../../components/AppText";
 import Button from "../../components/Button";
 import { fonts } from "../../theme/Fonts";
+import { Colors } from "../../theme/Colors";
 import { NavigationRoutes } from "../../navigation/NavigationRoutes";
 import { styles } from "./homeStyle";
 import { HomeNavProp } from "../../types/home/home";
@@ -29,22 +31,23 @@ import LocationIcon from "../../assets/HomePage/LocationIcon.svg";
 
 import { useQuery } from "@tanstack/react-query";
 import { MealService } from "../../services/MealServices";
+import { useProfile, useProfileAnalysis } from "../../hooks/useAccount";
 
 import { LocalizationContext } from "../../contexts/LocalizationContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
 
   const { translations } = useContext(LocalizationContext);
+  const { user: authUser } = useContext(AuthContext);
   const strings = translations as any;
 
-  const [profileExists, setProfileExists] = useState(false);
-  const [profileComplete, setProfileComplete] = useState(false);
-
-  useEffect(() => {
-    setProfileExists(false);
-    setProfileComplete(false);
-  }, []);
+  const { data: profileResponse } = useProfile();
+  const { data: analysisData } = useProfileAnalysis();
+  const userData = profileResponse?.data || {};
+  const name = userData.basic?.name || "";
+  const initial = name ? name.charAt(0).toUpperCase() : "";
 
   const {
     data: meals = [],
@@ -56,10 +59,13 @@ export default function HomeScreen() {
   });
 
   const handleSetupProfile = () =>
-    navigation.navigate(NavigationRoutes.PROFILE_SETUP1);
+    navigation.navigate(NavigationRoutes.PROFILE_SETUP1, {});
 
   const handleExplorePlans = () =>
     navigation.navigate(NavigationRoutes.EXPLORE_PLANS);
+
+  const handleProfile = () =>
+    navigation.navigate(NavigationRoutes.PROFILE, {});
 
   const ListHeader = useMemo(() => {
     return (
@@ -80,24 +86,38 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.centerContainer}>
-          
+
             <View style={styles.topHeader}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <LocationIcon width={23} height={23} color="#FFF" />
-                <AppText
-                  variant="title"
-                  style={{ color: "#fff", fontSize: 18, marginLeft: 6 }}
-                >
-                  {strings.home.locationName}
+              <View>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <LocationIcon width={23} height={23} color="#FFF" />
+                  <AppText
+                    variant="title"
+                    style={{ color: "#fff", fontSize: 18, marginLeft: 6 }}
+                  >
+                    {strings.home.locationName}
+                  </AppText>
+                </View>
+
+                <AppText variant="labels" style={{ color: "#fff", marginTop: 4 }}>
+                  {strings.home.locationAddress}
                 </AppText>
               </View>
 
-              <AppText variant="labels" style={{ color: "#fff", marginTop: 4 }}>
-                {strings.home.locationAddress}
-              </AppText>
+              <TouchableOpacity
+                onPress={handleProfile}
+                style={initial ? styles.profileAvatarContainer : styles.profileIconContainer}
+                activeOpacity={0.7}
+              >
+                {initial ? (
+                  <AppText style={styles.avatarText}>{initial}</AppText>
+                ) : (
+                  <ProfileIcon width={24} height={24} color="#FF5722" />
+                )}
+              </TouchableOpacity>
             </View>
 
-           
+
             <View style={styles.searchBox}>
               <BlurView blurAmount={16} blurType="light" style={StyleSheet.absoluteFill} />
               <View style={styles.searchContent}>
@@ -108,7 +128,7 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            
+
             <View style={styles.promoBox}>
               <BlurView blurAmount={6} blurType="light" style={StyleSheet.absoluteFill} />
               <View style={styles.promoContent}>
@@ -164,7 +184,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        
+
         <View style={styles.sectionHeader}>
           <AppText variant="title">
             {strings.home.popularTitle}
