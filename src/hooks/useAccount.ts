@@ -105,3 +105,18 @@ export const useUpdateGoalPreferences = () => {
         },
     });
 };
+
+export const useUpdateFcmToken = () => {
+    return useMutation({
+        mutationFn: (fcmToken: string) =>
+            AccountService.updateFcmToken(fcmToken),
+
+        onSuccess: () => {
+            console.log('[FCM] Token successfully synced to backend');
+        },
+
+        onError: (error: any) => {
+            console.error('[FCM] Failed to sync token:', getErrorMessage(error));
+        },
+    });
+};
