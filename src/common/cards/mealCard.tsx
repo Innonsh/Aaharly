@@ -62,12 +62,10 @@ export const MealCard = ({ item }: Props) => {
           { marginTop: expanded ? hp("-10%") : hp("-6.5%") },
         ]}
       >
-        {/* ✅ TITLE — SAME AS HOME */}
         <AppText variant="title" numberOfLines={1}>
           {item.title}
         </AppText>
 
-        {/* ✅ SUBTITLE — SAME AS HOME */}
         <AppText variant="subtitle" style={{ marginTop: 2 }}>
           {item.subTitle}
         </AppText>
@@ -119,17 +117,16 @@ export const MealCard = ({ item }: Props) => {
             </AppText>
           </View>
 
-          {/* ✅ BUTTON — IDENTICAL TO HOME */}
           <Button
             title={strings.home.buyPlan}
             onPress={() =>
-              navigation.navigate(NavigationRoutes.PROFILE_SETUP1)
+              navigation.navigate(NavigationRoutes.PROFILE_SETUP1, {})
             }
             variant="primary"
             style={styles.buyBtn}
             textStyle={{
               fontFamily: fonts.SemiBold,
-              
+
               fontSize: wp("3.8%"),
             }}
           />

@@ -33,12 +33,14 @@ import { useQuery } from "@tanstack/react-query";
 import { MealService } from "../../services/MealServices";
 import { useProfile, useProfileAnalysis } from "../../hooks/useAccount";
 import { useFcmTokenSync } from "../../hooks/useFcmTokenSync";
+import { useNotificationPermission } from "../../hooks/useNotificationPermission";
 
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
+  useNotificationPermission();
   useFcmTokenSync();
 
   const { translations } = useContext(LocalizationContext);
@@ -72,7 +74,6 @@ export default function HomeScreen() {
   const ListHeader = useMemo(() => {
     return (
       <View>
-        {/* Banner */}
         <View style={styles.bannerWrapper}>
           <View style={styles.bannerInner}>
             <HomeBannerSVG width={wp("100%")} height={hp("48%")} />

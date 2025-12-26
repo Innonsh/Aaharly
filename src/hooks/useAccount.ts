@@ -16,7 +16,6 @@ export const useCreateAccount = () =>
     useMutation({
         mutationFn: AccountService.createAccount,
         onError: (error: any) => {
-            console.error("Create Account Error:", error);
             Toast.show({
                 type: "error",
                 text1: "Account Creation Failed",
@@ -112,11 +111,11 @@ export const useUpdateFcmToken = () => {
             AccountService.updateFcmToken(fcmToken),
 
         onSuccess: () => {
-            console.log('[FCM] Token successfully synced to backend');
+            // Token successfully synced
         },
 
         onError: (error: any) => {
-            console.error('[FCM] Failed to sync token:', getErrorMessage(error));
+            // Failed to sync token
         },
     });
 };
