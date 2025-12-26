@@ -1,39 +1,36 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  Alert
-} from "react-native";
+import React, { useEffect, useRef, useState, useContext } from "react";
+import { View, SafeAreaView, TouchableOpacity, ScrollView, Alert, Keyboard } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 import Geolocation from "react-native-geolocation-service";
-import auth from "@react-native-firebase/auth";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from "react-native-google-places-autocomplete";
 
 import AppText from "../../components/AppText";
-import Input from "../../components/TextInput";
+import Input from "../../components/TextInput"; 
 import BackArrow from "../../assets/Icons/back_arrow.svg";
-import { NavigationRoutes } from "../../navigation/NavigationRoutes";
-import config, { GOOGLE_MAPS_KEY } from "../../utils/config";
+import SearchIcon from "../../assets/Icons/search.svg";
+import { GOOGLE_MAPS_KEY } from "../../utils/config";
 import { styles } from "./addressStyle";
+import { Colors } from "../../theme/Colors";
+import { LocalizationContext } from "../../contexts/LocalizationContext";
 
 export default function AddressScreen({ navigation }: any) {
-  const mapRef = useRef<MapView>(null);
+  const googleRef = useRef<GooglePlacesAutocompleteRef>(null);
+  const mapRef = useRef<MapView | null>(null);
+  const { translations } = useContext(LocalizationContext);
+  const strings = translations as any;
 
   const [address, setAddress] = useState("");
   const [details, setDetails] = useState("");
   const [note, setNote] = useState("");
-  const [city, setCity] = useState("");
-  const [pincode, setPincode] = useState("");
+  const [type, setType] = useState("OFFICE");
+  const [isDefault, setIsDefault] = useState(true);
+  const [isTyping, setIsTyping] = useState(false);
 
   const [region, setRegion] = useState<Region>({
-    latitude: 20.5937,
-    longitude: 78.9629,
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05
+    latitude: 18.5204, 
+    longitude: 73.8567,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01
   });
 
   useEffect(() => {
@@ -41,147 +38,169 @@ export default function AddressScreen({ navigation }: any) {
   }, []);
 
   const locateUser = () => {
-  Geolocation.getCurrentPosition(
-    (pos) => {
-      const { latitude, longitude } = pos.coords;
-
-      const newRegion = {
-        latitude,
-        longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01
-      };
-
-      // 1️⃣ Move map
-      mapRef.current?.animateToRegion(newRegion, 1000);
-
-      // 2️⃣ Update pin + state
-      setRegion(newRegion);
-
-      // 3️⃣ Update address
-      reverseGeocode(latitude, longitude);
-    },
-    () => Alert.alert("Permission required", "Location permission is required"),
-    { enableHighAccuracy: true }
-  );
-};
-
+    Geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setRegion({ latitude, longitude, latitudeDelta: 0.005, longitudeDelta: 0.005 });
+        mapRef.current?.animateToRegion({ latitude, longitude, latitudeDelta: 0.005, longitudeDelta: 0.005 }, 1000);
+      },
+      () => Alert.alert("Error", "GPS Error"),
+      { enableHighAccuracy: true }
+    );
+  };
 
   const reverseGeocode = async (lat: number, lng: number) => {
     try {
-      const res = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_KEY}`
-      );
+      const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_KEY}`);
       const data = await res.json();
-
-      if (!data.results || data.results.length === 0) return;
-
-      const result = data.results[0];
-      setAddress(result.formatted_address);
-
-      const cityComp = result.address_components.find(
-        (c: { long_name: string; types: string[] }) => c.types.includes("locality")
-      );
-      const pinComp = result.address_components.find(
-        (c: { long_name: string; types: string[] }) => c.types.includes("postal_code")
-      );
-
-      if (cityComp) setCity(cityComp.long_name);
-      if (pinComp) setPincode(pinComp.long_name);
-    } catch (err) {
-      console.log("Geocode error", err);
-    }
+      if (data?.results?.length) {
+        const cleanAddress = data.results.find((r: any) => !r.types.includes("plus_code"))?.formatted_address || data.results[0].formatted_address;
+        setAddress(cleanAddress); 
+      }
+    } catch (e) { console.log(e); }
   };
 
-  const saveAddress = async () => {
+  /**
+   * Deep Search Logic:
+   * Instead of a basic geocode, we fetch the first suggestion 
+   * from the Google Places API to ensure accuracy.
+   */
+  const handleDeepSearch = async () => {
+    const currentText = googleRef.current?.getAddressText();
+    if (!currentText || currentText.length < 2) return;
+
     try {
-      const token = await auth().currentUser?.getIdToken();
+      // Fetching the deep location data for the current input string
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(currentText)}&key=${GOOGLE_MAPS_KEY}&components=country:in`
+      );
+      const data = await response.json();
 
-      await fetch(`${config.BASE_URL}/addresses`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          address,
-          details,
-          note,
-          type: "HOME",
-          lat: region.latitude,
-          lng: region.longitude
-        })
-      });
+      if (data.predictions && data.predictions.length > 0) {
+        // Automatically select the very first (most accurate) prediction
+        const firstResult = data.predictions[0];
+        
+        // Now get the coordinates for that specific Place ID
+        const detailRes = await fetch(
+          `https://maps.googleapis.com/maps/api/place/details/json?place_id=${firstResult.place_id}&key=${GOOGLE_MAPS_KEY}`
+        );
+        const detailData = await detailRes.json();
 
-      navigation.navigate(NavigationRoutes.DELIVERY_SETTINGS);
-    } catch (err) {
-      Alert.alert("Error", "Failed to save address");
+        if (detailData.result) {
+          const { lat, lng } = detailData.result.geometry.location;
+          const fullAddr = detailData.result.formatted_address;
+
+          setAddress(fullAddr);
+          setRegion({ latitude: lat, longitude: lng, latitudeDelta: 0.005, longitudeDelta: 0.005 });
+          mapRef.current?.animateToRegion({ latitude: lat, longitude: lng, latitudeDelta: 0.005, longitudeDelta: 0.005 }, 1000);
+          
+          // Clear Search Bar text to keep it clean (Empty State design)
+          googleRef.current?.setAddressText(""); 
+          setIsTyping(false);
+          Keyboard.dismiss();
+        }
+      }
+    } catch (error) {
+      console.log("Deep Search error:", error);
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <BackArrow width={18} height={18} />
         </TouchableOpacity>
-        <AppText style={styles.headerTitle}>Add Address</AppText>
+        <AppText style={styles.headerTitle}>{strings?.address?.title}</AppText>
       </View>
 
-      {/* Search */}
-      <GooglePlacesAutocomplete
-        placeholder="Search location"
-        fetchDetails
-        styles={{ container: { padding: 10 } }}
-        onPress={(data, details) => {
-          if (!details) return;
+      <View style={styles.searchBarWrapper}>
+        <GooglePlacesAutocomplete
+          ref={googleRef}
+          placeholder={strings?.address?.search}
+          fetchDetails={true}
+          onPress={(data, details = null) => {
+            if (details) {
+              const { lat, lng } = details.geometry.location;
+              setAddress(details.formatted_address || data.description); 
+              setRegion({ latitude: lat, longitude: lng, latitudeDelta: 0.005, longitudeDelta: 0.005 });
+              mapRef.current?.animateToRegion({ latitude: lat, longitude: lng, latitudeDelta: 0.005, longitudeDelta: 0.005 }, 1000);
+              googleRef.current?.setAddressText(""); // Keep search empty after selection
+              setIsTyping(false);
+              Keyboard.dismiss();
+            }
+          }}
+          textInputProps={{ 
+            onChangeText: (text) => setIsTyping(text.length > 0),
+            placeholderTextColor: '#999',
+            onSubmitEditing: handleDeepSearch, // Now performs a deep search
+            returnKeyType: 'search',
+          }}
+          query={{ key: GOOGLE_MAPS_KEY, language: "en", components: 'country:in' }}
+          renderLeftButton={() => (<View style={styles.searchIconInside}><SearchIcon width={20} height={20} fill="#999" /></View>)}
+          enablePoweredByContainer={false}
+          styles={{
+            container: { flex: 0 },
+            textInputContainer: styles.autocompleteContainer,
+            textInput: styles.autocompleteInput, 
+            listView: [styles.autocompleteList, !isTyping && { height: 0, opacity: 0 }],
+            description: { color: '#000' }, 
+          }}
+        />
+      </View>
 
-          const lat = details.geometry.location.lat;
-          const lng = details.geometry.location.lng;
-          const newRegion = {
-            latitude: lat,
-            longitude: lng,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01
-          };
-          setRegion(newRegion);
-          mapRef.current?.animateToRegion(newRegion, 1000);
-          reverseGeocode(lat, lng);
-        }}
-        query={{ key: GOOGLE_MAPS_KEY, language: "en" }}
-      />
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 40 }}>
+        <View style={styles.mapWrapper}>
+          <MapView ref={mapRef} style={{ flex: 1 }} region={region} showsUserLocation onRegionChangeComplete={(r, gesture) => {
+            if (gesture?.isGesture) reverseGeocode(r.latitude, r.longitude);
+          }}>
+            <Marker coordinate={region} />
+          </MapView>
+          <TouchableOpacity style={styles.gpsButton} onPress={locateUser}>
+            <AppText style={styles.gpsText}>{strings?.address?.useLocation}</AppText>
+          </TouchableOpacity>
+        </View>
 
-      {/* Map */}
-      <MapView
-        ref={mapRef}
-        style={{ height: 250 }}
-        region={region}
-        showsUserLocation
-        onRegionChangeComplete={(r) => {
-          setRegion(r);
-          reverseGeocode(r.latitude, r.longitude);
-        }}
-      >
-        <Marker coordinate={region} />
-      </MapView>
+        <View style={styles.formPadding}>
+          <AppText style={styles.label}>{strings?.address?.address}</AppText>
+          <Input value={address} onChangeText={setAddress} editable={true} multiline={true} style={styles.addressInputFix} />
 
-      <TouchableOpacity onPress={locateUser} style={{ alignSelf: "center", margin: 10 }}>
-        <AppText>📍 Use my current location</AppText>
-      </TouchableOpacity>
+          <AppText style={styles.label}>{strings?.address?.details}</AppText>
+          <Input value={details} onChangeText={setDetails} placeholder="" style={styles.standardInput} />
 
-      {/* Form */}
-      <ScrollView contentContainerStyle={styles.formContainer}>
-        <Input value={address} editable={false} />
-        <Input placeholder="Address details" value={details} onChangeText={setDetails} />
-        <Input placeholder="Delivery note" value={note} onChangeText={setNote} />
+          <View style={styles.labelRow}>
+            <AppText style={styles.label}>{strings?.address?.note}</AppText>
+            <AppText style={styles.optionalText}>(Optional)</AppText>
+          </View>
+          <Input value={note} onChangeText={setNote} placeholder="" style={styles.standardInput} />
+
+          <AppText style={styles.label}>{strings?.address?.type}</AppText>
+          <View style={styles.addressTypeContainer}>
+            {["HOME", "OFFICE", "COLLEGE", "OTHER"].map((t) => (
+              <TouchableOpacity
+                key={t}
+                onPress={() => setType(t)}
+                style={[styles.chipItem, type === t && styles.chipItemActive]}
+              >
+                <AppText style={[styles.chipItemText, type === t && styles.chipItemTextActive]}>
+                  {strings?.address?.[t.toLowerCase()]}
+                </AppText>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <View style={styles.defaultContainerVertical}>
+            <AppText style={styles.defaultLabel}>{strings?.address?.default}</AppText>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => setIsDefault(!isDefault)} style={[styles.toggleTrack, { backgroundColor: isDefault ? Colors.primary : "#ccc" }]}>
+              <View style={[styles.toggleWheel, { alignSelf: isDefault ? "flex-end" : "flex-start" }]} />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity style={styles.saveBtn} onPress={() => navigation.goBack()}>
+            <AppText style={styles.saveBtnText}>{strings?.address?.save}</AppText>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
-
-      <View style={styles.saveButtonContainer}>
-        <TouchableOpacity style={styles.saveButton} onPress={saveAddress}>
-          <AppText style={styles.saveButtonText}>Save Address</AppText>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }

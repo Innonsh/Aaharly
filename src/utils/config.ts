@@ -1,5 +1,6 @@
 const config = {
     BASE_URL: 'https://guadalupe-undedicated-jakobe.ngrok-free.dev/api/v1',
+    // BASE_URL:' http://localhost:4000/api/v1',
     
     ENV: 'development',
 };

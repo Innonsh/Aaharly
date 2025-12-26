@@ -116,6 +116,22 @@
       "essential": "Essential",
       "premium": "Premium"
     }
+},
+"address": {
+  "title": "Add Address",
+  "search": "Search",
+  "useLocation": "Use my current location",
+  "address": "Address",
+  "details": "Address details",
+  "note": "Delivery note",
+  "type": "Address type",
+  "home": "Home",
+  "office": "Office",
+  "college": "College",
+  "other": "Other",
+  "default": "Set as Default Address",
+  "save": "Save Address"
 }
+
 
 }
