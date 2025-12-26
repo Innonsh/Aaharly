@@ -32,12 +32,16 @@ import LocationIcon from "../../assets/HomePage/LocationIcon.svg";
 import { useQuery } from "@tanstack/react-query";
 import { MealService } from "../../services/MealServices";
 import { useProfile, useProfileAnalysis } from "../../hooks/useAccount";
+import { useFcmTokenSync } from "../../hooks/useFcmTokenSync";
+import { useNotificationPermission } from "../../hooks/useNotificationPermission";
 
 import { LocalizationContext } from "../../contexts/LocalizationContext";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
+  useNotificationPermission();
+  useFcmTokenSync();
 
   const { translations } = useContext(LocalizationContext);
   const { user: authUser } = useContext(AuthContext);
@@ -70,7 +74,6 @@ export default function HomeScreen() {
   const ListHeader = useMemo(() => {
     return (
       <View>
-        {/* Banner */}
         <View style={styles.bannerWrapper}>
           <View style={styles.bannerInner}>
             <HomeBannerSVG width={wp("100%")} height={hp("48%")} />
@@ -227,20 +230,20 @@ export default function HomeScreen() {
   );
 
   return (
-  <SafeAreaView style={styles.safe}>
-    <FlatList
-      data={meals}
-      keyExtractor={(it) => it.id || it._id}
-      renderItem={({ item }) => <MealCard item={item} />}
-      contentContainerStyle={styles.listContent}
-      ItemSeparatorComponent={() => (
-        <View style={{ height: hp("2%") }} />
-      )}
-      ListHeaderComponent={ListHeader}
-      ListFooterComponent={ListFooter}
-      showsVerticalScrollIndicator={false}
-    />
-  </SafeAreaView>
-);
+    <SafeAreaView style={styles.safe}>
+      <FlatList
+        data={meals}
+        keyExtractor={(it) => it.id || it._id}
+        renderItem={({ item }) => <MealCard item={item} />}
+        contentContainerStyle={styles.listContent}
+        ItemSeparatorComponent={() => (
+          <View style={{ height: hp("2%") }} />
+        )}
+        ListHeaderComponent={ListHeader}
+        ListFooterComponent={ListFooter}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
+  );
 
 }

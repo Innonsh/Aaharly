@@ -77,6 +77,10 @@ export const AccountService = {
         const response = await HttpClient.get('/profile/analysis');
         return response.data;
     },
+    updateFcmToken: async (fcmToken: string): Promise<any> => {
+        const response = await HttpClient.post('/account/fcm-token', { fcmToken });
+        return response.data;
+    },
 };
 
 

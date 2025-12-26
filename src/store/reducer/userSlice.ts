@@ -23,12 +23,14 @@ export interface UserProfile {
 
 interface UserState {
     data: UserProfile | null;
+    fcmToken: string | null;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: UserState = {
     data: null,
+    fcmToken: null,
     loading: false,
     error: null,
 };
@@ -45,8 +47,6 @@ const userSlice = createSlice({
             if (state.data) {
                 state.data = { ...state.data, ...action.payload };
             } else {
-                // If data is null, initialize it with the payload
-                // Note: userId might be missing here, we should ensure it exists or allowed to be missing
                 state.data = action.payload as any;
             }
         },
@@ -59,10 +59,14 @@ const userSlice = createSlice({
         },
         setUserError: (state, action: PayloadAction<string | null>) => {
             state.error = action.payload;
+        },
+        saveFcmToken: (state, action: PayloadAction<string | null>) => {
+            state.fcmToken = action.payload;
         }
     },
 });
 
-export const { setUserProfile, updateUserProfile, clearUserProfile, setUserLoading, setUserError } = userSlice.actions;
+export const { setUserProfile, updateUserProfile, clearUserProfile, setUserLoading, setUserError, saveFcmToken } = userSlice.actions;
+export const selectFcmTokenFromStore = (state: any) => state.user.fcmToken;
 
 export default userSlice.reducer;

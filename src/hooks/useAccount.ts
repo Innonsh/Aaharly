@@ -16,7 +16,6 @@ export const useCreateAccount = () =>
     useMutation({
         mutationFn: AccountService.createAccount,
         onError: (error: any) => {
-            console.error("Create Account Error:", error);
             Toast.show({
                 type: "error",
                 text1: "Account Creation Failed",
@@ -102,6 +101,21 @@ export const useUpdateGoalPreferences = () => {
                 text1: "Update Failed",
                 text2: getErrorMessage(error),
             });
+        },
+    });
+};
+
+export const useUpdateFcmToken = () => {
+    return useMutation({
+        mutationFn: (fcmToken: string) =>
+            AccountService.updateFcmToken(fcmToken),
+
+        onSuccess: () => {
+            // Token successfully synced
+        },
+
+        onError: (error: any) => {
+            // Failed to sync token
         },
     });
 };
